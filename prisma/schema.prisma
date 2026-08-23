@@ -1,0 +1,179 @@
+// Church AV Assistant — schéma de données (PostgreSQL)
+// Fonctionne avec n'importe quel Postgres gratuit : Neon (recommandé, intégré à Vercel),
+// Supabase ou Railway. DATABASE_URL vient entièrement des variables d'environnement.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Remarque : SQLite ne supporte pas les enums Prisma natifs, donc les champs
+// ci-dessous sont des String contrôlés côté application. Valeurs autorisées :
+// Role             : "ADMIN" | "MEMBER"
+// EquipmentStatus  : "DISPONIBLE" | "EN_UTILISATION" | "A_VERIFIER" | "HORS_SERVICE"
+// ConnectionStepType : "EQUIPEMENT" | "CABLE" | "LOGICIEL" | "SORTIE"
+// Si vous passez à PostgreSQL, ces champs peuvent redevenir de vrais enums.
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("MEMBER")
+  createdAt    DateTime @default(now())
+
+  installationsCreated Installation[]
+  historyEntries       History[]
+  roomsResponsible     Room[]
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  icon      String? // nom d'icône lucide-react facultatif
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  equipment Equipment[]
+}
+
+model Room {
+  id            String   @id @default(cuid())
+  name          String
+  floor         String? // étage
+  description   String?
+  photoUrl      String?
+  planUrl       String? // plan / schéma de la salle
+  notes         String?
+  responsableId String?
+  responsable   User?    @relation(fields: [responsableId], references: [id], onDelete: SetNull)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  equipment     Equipment[]
+  installations Installation[]
+  photos        Photo[]
+}
+
+model Equipment {
+  id          String          @id @default(cuid())
+  name        String
+  categoryId  String?
+  category    Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  brand       String?
+  model       String?
+  serialNumber String?
+  reference   String?
+  quantity    Int             @default(1)
+  status      String          @default("DISPONIBLE")
+
+  location   String? // emplacement précis en texte libre (ex: "Armoire technique, étagère 2")
+  roomId     String?
+  room       Room?   @relation(fields: [roomId], references: [id], onDelete: SetNull)
+
+  photoUrl    String? // photo principale
+  description String?
+  usage       String? // utilisation
+  instructions String? // comment (re)connecter / utiliser, étape par étape
+  cablesNeeded String? // câbles nécessaires (texte libre)
+  accessories  String? // accessoires (texte libre)
+  notes        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photos          Photo[]
+  maintenance     Maintenance[]
+  connectionSteps ConnectionStep[]
+  installations   InstallationEquipment[]
+
+  // matériel connecté <-> matériel connecté (auto-relation many-to-many)
+  connectedTo   Equipment[] @relation("EquipmentConnections")
+  connectedFrom Equipment[] @relation("EquipmentConnections")
+}
+
+model Installation {
+  id            String   @id @default(cuid())
+  name          String
+  roomId        String
+  room          Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  purpose       String? // objectif de l'installation
+  photoUrl      String?
+  diagramUrl    String? // schéma de branchement (image)
+  configuration String?
+  settings      String? // réglages
+  instructions  String? // instructions étape par étape
+  knownIssues   String? // problèmes connus
+  knownFixes    String? // solutions connues
+  createdById   String?
+  createdBy     User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  equipment InstallationEquipment[]
+  steps     ConnectionStep[]
+  photos    Photo[]
+}
+
+// Table de jointure salle <-> équipements utilisés dans une installation
+model InstallationEquipment {
+  installationId String
+  installation   Installation @relation(fields: [installationId], references: [id], onDelete: Cascade)
+  equipmentId    String
+  equipment      Equipment    @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+
+  @@id([installationId, equipmentId])
+}
+
+// Une étape du schéma de branchement (chaîne de connexion ordonnée)
+// Exemple : Caméra -> SDI -> Convertisseur -> Switch -> Ordinateur -> OBS -> Streaming
+model ConnectionStep {
+  id             String       @id @default(cuid())
+  installationId String
+  installation   Installation @relation(fields: [installationId], references: [id], onDelete: Cascade)
+  order          Int
+  label          String // nom affiché du bloc (ex: "Convertisseur SDI-HDMI")
+  type           String       @default("EQUIPEMENT")
+  equipmentId    String? // lié à une fiche matériel si applicable
+  equipment      Equipment?   @relation(fields: [equipmentId], references: [id], onDelete: SetNull)
+  cableType      String? // ex: "SDI", "HDMI", "XLR", "Réseau"
+  notes          String?
+}
+
+model Photo {
+  id             String        @id @default(cuid())
+  url            String
+  caption        String?
+  equipmentId    String?
+  equipment      Equipment?    @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  roomId         String?
+  room           Room?         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  installationId String?
+  installation   Installation? @relation(fields: [installationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+}
+
+model Maintenance {
+  id          String    @id @default(cuid())
+  equipmentId String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  issue       String
+  status      String    @default("OUVERT") // OUVERT, EN_COURS, RESOLU
+  createdAt   DateTime  @default(now())
+  resolvedAt  DateTime?
+}
+
+model History {
+  id          String   @id @default(cuid())
+  action      String // ex: "Équipement déplacé", "Installation modifiée"
+  entityType  String // "Equipment" | "Room" | "Installation"
+  entityId    String
+  description String
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+}
