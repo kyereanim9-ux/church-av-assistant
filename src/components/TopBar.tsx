@@ -18,7 +18,7 @@ export function TopBar() {
   }
 
   return (
-    <header className="flex items-center justify-between border-b border-ink/10 bg-panel/80 px-4 py-3 backdrop-blur dark:border-white/10 dark:bg-stage-panel/80 md:hidden print:hidden">
+    <header className="flex items-center justify-between border-b border-ink/10 bg-panel/80 px-4 py-3 backdrop-blur dark:border-white/10 dark:bg-stage-panel/80 md:hidden">
       <div className="flex items-center gap-2">
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber text-stage">
           <Radio className="h-4 w-4" />

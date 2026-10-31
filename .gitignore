@@ -8,4 +8,3 @@ dev.db-journal
 public/uploads/*
 !public/uploads/.gitkeep
 *.log
-tsconfig.tsbuildinfo

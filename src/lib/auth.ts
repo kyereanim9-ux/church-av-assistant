@@ -19,22 +19,22 @@ export const authOptions: AuthOptions = {
         if (!user) return null;
         const valid = await bcrypt.compare(credentials.password, user.passwordHash);
         if (!valid) return null;
-        return { id: user.id, name: user.name, email: user.email, role: user.role as 'ADMIN' | 'MEMBER' | 'BATIMENT' };
+        return { id: user.id, name: user.name, email: user.email, role: user.role as 'ADMIN' | 'MEMBER' };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as { role: 'ADMIN' | 'MEMBER' | 'BATIMENT' }).role;
+        token.role = (user as { role: 'ADMIN' | 'MEMBER' }).role;
         token.id = (user as { id: string }).id;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as { role?: 'ADMIN' | 'MEMBER' | 'BATIMENT'; id?: string }).role = token.role as 'ADMIN' | 'MEMBER' | 'BATIMENT';
-        (session.user as { role?: 'ADMIN' | 'MEMBER' | 'BATIMENT'; id?: string }).id = token.id as string;
+        (session.user as { role?: 'ADMIN' | 'MEMBER'; id?: string }).role = token.role as 'ADMIN' | 'MEMBER';
+        (session.user as { role?: 'ADMIN' | 'MEMBER'; id?: string }).id = token.id as string;
       }
       return session;
     },

@@ -118,43 +118,6 @@ Recherche globale · Assistant IA basé sur la base de données · Upload de pho
 de matériel par photo avec correspondance automatique dans la base · Catégories et salles
 ajoutables sans toucher au code (Administration) · Historique des modifications importantes.
 
-## 5 bis. Module « Bâtiment » : signalements par QR code
-
-Les fidèles signalent un problème dans le bâtiment (fuite, ampoule grillée, chaise cassée…)
-**sans créer de compte** : ils scannent un QR code affiché dans l'église, prennent une photo,
-décrivent le problème et l'envoient. Les responsables voient tout dans l'application.
-
-**Parcours du fidèle (téléphone)**
-1. Scanne le QR code → page `/signaler/<clé secrète>` (la salle est pré-remplie si c'est le QR
-   code d'une salle).
-2. Photo(s) (appareil photo ou galerie, 3 max, compressées automatiquement sur le téléphone),
-   description, salle / emplacement, type, niveau d'urgence, coordonnées facultatives.
-3. Reçoit un **numéro de suivi** (ex. `K7F3-9QPA`) et peut suivre l'état sur `/suivi/<numéro>`
-   (Reçu → Pris en charge → Résolu) et lire le message de l'équipe. Ses numéros sont gardés sur
-   son téléphone.
-
-**Côté responsables** (menu **Bâtiment**, visible pour les rôles *Administrateur* et
-*Responsable bâtiment*)
-- Liste des signalements, triés par urgence (Danger en premier), filtres par statut et urgence.
-- Fiche : photos, emplacement, contact cliquable (appel / email), statut, personne en charge,
-  message visible par le signaleur, commentaires internes, photo « après intervention », journal
-  automatique de chaque changement.
-- Page **QR codes** (`/batiment/qr`) : un QR code général + un par salle, prêts à imprimer
-  (une affiche par page A4). Un administrateur peut générer une **nouvelle clé** si un QR code a
-  circulé hors de l'église : les anciens cessent alors de fonctionner.
-- Encart sur le tableau de bord avec le nombre de signalements à traiter.
-
-**Rôle « Responsable bâtiment »** : à créer dans Administration → Utilisateurs. Ce rôle voit les
-signalements ; un simple membre de l'équipe AV ne les voit pas.
-
-**Sécurité / vie privée** : la page de suivi publique n'affiche jamais le nom, le contact ni les
-commentaires internes. Protection anti-spam : clé secrète dans le QR code, champ piège invisible,
-limite de signalements par appareil.
-
-**Après mise à jour** : lancez `npx prisma db push` pour créer les nouvelles tables
-(`BuildingReport`, `ReportPhoto`, `ReportComment`, `AppSetting`). Variables facultatives :
-`NEXT_PUBLIC_CHURCH_NAME` et `NEXT_PUBLIC_EMERGENCY_NUMBER` (voir `.env.example`).
-
 ## 6. Prêt pour la suite (architecture prévue, non développée dans cette v1)
 
 - **Mode hors-ligne** : le stockage et les appels API sont isolés (`src/lib/storage.ts`,

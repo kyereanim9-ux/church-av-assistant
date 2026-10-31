@@ -5,16 +5,17 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { Menu as MenuIcon, X, LogOut } from 'lucide-react';
-import { NAV_ITEMS, isNavItemVisible } from '@/lib/nav';
+import { NAV_ITEMS } from '@/lib/nav';
 import { cn } from '@/lib/utils';
 
 export function BottomNav() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'ADMIN';
   const [open, setOpen] = useState(false);
 
   const primary = NAV_ITEMS.filter((i) => i.primary);
-  const overflow = NAV_ITEMS.filter((i) => !i.primary && isNavItemVisible(i, session?.user?.role));
+  const overflow = NAV_ITEMS.filter((i) => !i.primary && (!i.adminOnly || isAdmin));
 
   return (
     <>
@@ -56,7 +57,7 @@ export function BottomNav() {
         </div>
       )}
 
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-ink/10 bg-panel/95 px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur dark:border-white/10 dark:bg-stage-panel/95 md:hidden print:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-ink/10 bg-panel/95 px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur dark:border-white/10 dark:bg-stage-panel/95 md:hidden">
         {primary.map((item) => {
           const active = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
           const Icon = item.icon;

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Tag, Users, DoorOpen, Package, Building2, QrCode } from 'lucide-react';
+import { Tag, Users, DoorOpen, Package } from 'lucide-react';
 import { requireAdmin } from '@/lib/session';
 import { PageHeader } from '@/components/PageHeader';
 
@@ -10,8 +10,6 @@ export default async function AdminPage() {
     { href: '/admin/categories', label: 'Catégories de matériel', desc: 'Ajouter ou consulter les catégories', icon: Tag },
     { href: '/admin/users', label: 'Utilisateurs', desc: "Gérer les comptes de l'équipe", icon: Users },
     { href: '/rooms', label: 'Salles', desc: 'Ajouter, modifier, supprimer des salles', icon: DoorOpen },
-    { href: '/batiment', label: 'Signalements bâtiment', desc: 'Problèmes signalés par les fidèles', icon: Building2 },
-    { href: '/batiment/qr', label: 'QR codes de signalement', desc: 'Imprimer les affiches, changer la clé', icon: QrCode },
     { href: '/equipment', label: 'Matériel', desc: 'Ajouter, modifier, supprimer du matériel', icon: Package },
   ];
 

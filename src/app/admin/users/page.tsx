@@ -5,22 +5,14 @@ import { PlusCircle, Loader2, ShieldCheck, User as UserIcon } from 'lucide-react
 import { PageHeader } from '@/components/PageHeader';
 import { formatDate } from '@/lib/utils';
 
-type Role = 'ADMIN' | 'MEMBER' | 'BATIMENT';
-
-const ROLE_LABEL: Record<Role, string> = {
-  ADMIN: 'Administrateur',
-  MEMBER: "Membre de l'équipe AV",
-  BATIMENT: 'Responsable bâtiment',
-};
-
-type User = { id: string; name: string; email: string; role: Role; createdAt: string };
+type User = { id: string; name: string; email: string; role: 'ADMIN' | 'MEMBER'; createdAt: string };
 
 export default function UsersAdminPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<Role>('MEMBER');
+  const [role, setRole] = useState<'ADMIN' | 'MEMBER'>('MEMBER');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +47,7 @@ export default function UsersAdminPage() {
 
   return (
     <div>
-      <PageHeader eyebrow="Administration" title="Utilisateurs" subtitle="Administrateurs, équipe audiovisuelle et responsables du bâtiment." />
+      <PageHeader eyebrow="Administration" title="Utilisateurs" subtitle="Administrateurs et membres de l'équipe audiovisuelle." />
 
       <form onSubmit={handleSubmit} className="rack-card mb-6 grid gap-3 p-4 md:grid-cols-2">
         <div>
@@ -72,9 +64,8 @@ export default function UsersAdminPage() {
         </div>
         <div>
           <label className="field-label">Rôle</label>
-          <select className="field-input" value={role} onChange={(e) => setRole(e.target.value as Role)}>
-            <option value="MEMBER">Membre de l&apos;équipe AV</option>
-            <option value="BATIMENT">Responsable bâtiment (voit les signalements)</option>
+          <select className="field-input" value={role} onChange={(e) => setRole(e.target.value as 'ADMIN' | 'MEMBER')}>
+            <option value="MEMBER">Membre de l&apos;équipe</option>
             <option value="ADMIN">Administrateur</option>
           </select>
         </div>
@@ -97,7 +88,7 @@ export default function UsersAdminPage() {
                 {u.role === 'ADMIN' ? <ShieldCheck className="h-4 w-4 text-amber-dim dark:text-amber" /> : <UserIcon className="h-4 w-4 text-ink-soft/50" />}
                 <div>
                   <p className="text-sm font-medium">{u.name}</p>
-                  <p className="text-xs text-ink-soft dark:text-cream/50">{u.email} · {ROLE_LABEL[u.role] ?? u.role}</p>
+                  <p className="text-xs text-ink-soft dark:text-cream/50">{u.email}</p>
                 </div>
               </div>
               <p className="text-xs text-ink-soft dark:text-cream/40">Depuis le {formatDate(u.createdAt)}</p>

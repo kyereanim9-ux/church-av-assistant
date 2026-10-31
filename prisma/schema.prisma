@@ -13,7 +13,7 @@ datasource db {
 
 // Remarque : SQLite ne supporte pas les enums Prisma natifs, donc les champs
 // ci-dessous sont des String contrôlés côté application. Valeurs autorisées :
-// Role             : "ADMIN" | "MEMBER" | "BATIMENT" (responsable du bâtiment)
+// Role             : "ADMIN" | "MEMBER"
 // EquipmentStatus  : "DISPONIBLE" | "EN_UTILISATION" | "A_VERIFIER" | "HORS_SERVICE"
 // ConnectionStepType : "EQUIPEMENT" | "CABLE" | "LOGICIEL" | "SORTIE"
 // Si vous passez à PostgreSQL, ces champs peuvent redevenir de vrais enums.
@@ -29,8 +29,6 @@ model User {
   installationsCreated Installation[]
   historyEntries       History[]
   roomsResponsible     Room[]
-  reportsAssigned      BuildingReport[] @relation("ReportAssignee")
-  reportComments       ReportComment[]
 }
 
 model Category {
@@ -59,7 +57,6 @@ model Room {
   equipment     Equipment[]
   installations Installation[]
   photos        Photo[]
-  reports       BuildingReport[]
 }
 
 model Equipment {
@@ -179,68 +176,4 @@ model History {
   userId      String?
   user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   createdAt   DateTime @default(now())
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Module « Bâtiment » : signalements envoyés par les fidèles via QR code.
-// Les personnes qui signalent n'ont PAS de compte : elles accèdent au formulaire
-// via un lien secret (encodé dans le QR code). Seuls ADMIN et BATIMENT voient les
-// signalements.
-// ReportStatus   : "NOUVEAU" | "EN_COURS" | "RESOLU" | "REJETE"
-// ReportUrgency  : "FAIBLE" | "NORMALE" | "URGENTE" | "DANGER"
-// ReportCategory : voir src/lib/reports.ts (REPORT_CATEGORIES)
-// ─────────────────────────────────────────────────────────────────────────────
-
-model BuildingReport {
-  id              String    @id @default(cuid())
-  reference       String    @unique // code court lisible donné au signaleur (ex: "K7F3-9QPA")
-  description     String
-  category        String    @default("AUTRE")
-  urgency         String    @default("NORMALE")
-  status          String    @default("NOUVEAU")
-  location        String? // emplacement précis en texte libre
-  roomId          String?
-  room            Room?     @relation(fields: [roomId], references: [id], onDelete: SetNull)
-  reporterName    String?
-  reporterContact String? // téléphone ou email, facultatif
-  publicNote      String? // message visible par le signaleur sur la page de suivi
-  assignedToId    String?
-  assignedTo      User?     @relation("ReportAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
-  resolvedAt      DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  photos   ReportPhoto[]
-  comments ReportComment[]
-
-  @@index([status])
-  @@index([createdAt])
-}
-
-model ReportPhoto {
-  id        String         @id @default(cuid())
-  url       String
-  kind      String         @default("SIGNALEMENT") // "SIGNALEMENT" | "RESOLUTION"
-  reportId  String
-  report    BuildingReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
-  createdAt DateTime       @default(now())
-}
-
-// Commentaires internes (jamais visibles par le signaleur) + journal des changements
-model ReportComment {
-  id        String         @id @default(cuid())
-  body      String
-  isSystem  Boolean        @default(false) // true = entrée automatique (changement de statut…)
-  reportId  String
-  report    BuildingReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
-  userId    String?
-  user      User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
-  createdAt DateTime       @default(now())
-}
-
-// Réglages clé/valeur (ex: clé secrète du QR code de signalement)
-model AppSetting {
-  key       String   @id
-  value     String
-  updatedAt DateTime @updatedAt
 }
