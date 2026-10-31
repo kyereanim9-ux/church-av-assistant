@@ -5,6 +5,7 @@ export { default } from 'next-auth/middleware';
 // les appels fetch() côté client, qui attendent du JSON et non une redirection HTML).
 export const config = {
   matcher: [
-    '/((?!api|login|_next/static|_next/image|favicon.ico|uploads).*)',
+    // signaler / suivi : pages publiques du module Bâtiment (accès par QR code, sans compte)
+    '/((?!api|login|signaler|suivi|_next/static|_next/image|favicon.ico|uploads).*)',
   ],
 };

@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       name: body.name,
       email: body.email,
       passwordHash: await bcrypt.hash(body.password, 10),
-      role: body.role === 'ADMIN' ? 'ADMIN' : 'MEMBER',
+      role: ['ADMIN', 'BATIMENT'].includes(body.role) ? body.role : 'MEMBER',
     },
     select: { id: true, name: true, email: true, role: true, createdAt: true },
   });

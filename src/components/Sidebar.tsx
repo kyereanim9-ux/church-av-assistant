@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { LogOut, Radio } from 'lucide-react';
-import { NAV_ITEMS } from '@/lib/nav';
+import { NAV_ITEMS, isNavItemVisible } from '@/lib/nav';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -14,7 +14,7 @@ export function Sidebar() {
   const isAdmin = session?.user?.role === 'ADMIN';
 
   return (
-    <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-ink/10 bg-panel px-4 py-6 dark:border-white/10 dark:bg-stage-panel md:flex">
+    <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-ink/10 bg-panel px-4 py-6 dark:border-white/10 dark:bg-stage-panel md:flex print:!hidden">
       <div className="mb-8 flex items-center gap-2 px-2">
         <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber text-stage">
           <Radio className="h-5 w-5" />
@@ -26,7 +26,7 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 space-y-1">
-        {NAV_ITEMS.filter((item) => !item.adminOnly || isAdmin).map((item) => {
+        {NAV_ITEMS.filter((item) => isNavItemVisible(item, session?.user?.role)).map((item) => {
           const active = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
           const Icon = item.icon;
           return (
@@ -53,7 +53,7 @@ export function Sidebar() {
         <div className="mt-2 border-t border-ink/10 pt-4 dark:border-white/10">
           <p className="truncate px-3 text-sm font-medium">{session.user.name}</p>
           <p className="truncate px-3 text-xs text-ink-soft dark:text-cream/50">
-            {isAdmin ? 'Administrateur' : "Membre de l'équipe"}
+            {isAdmin ? 'Administrateur' : session.user.role === 'BATIMENT' ? 'Responsable bâtiment' : "Membre de l'équipe"}
           </p>
           <button
             onClick={() => signOut({ callbackUrl: '/login' })}

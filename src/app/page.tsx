@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import { Package, DoorOpen, Cable, ScanSearch, Sparkles, Search, PlusCircle, AlertTriangle } from 'lucide-react';
+import { Package, DoorOpen, Cable, ScanSearch, Sparkles, Search, PlusCircle, AlertTriangle, Building2 } from 'lucide-react';
 import { requireSession } from '@/lib/session';
 import { db } from '@/lib/db';
 import { PageHeader } from '@/components/PageHeader';
 import { StatusBadge } from '@/components/StatusBadge';
 import { formatDateTime } from '@/lib/utils';
+import { canManageReports, OPEN_STATUSES } from '@/lib/reports';
 
 export default async function DashboardPage() {
   const session = await requireSession();
@@ -18,6 +19,14 @@ export default async function DashboardPage() {
       db.equipment.findMany({ orderBy: { createdAt: 'desc' }, take: 5, include: { room: true } }),
       db.installation.findMany({ orderBy: { updatedAt: 'desc' }, take: 5, include: { room: true } }),
     ]);
+
+  const isReportManager = canManageReports(session.user.role);
+  const [openReports, dangerReports] = isReportManager
+    ? await Promise.all([
+        db.buildingReport.count({ where: { status: { in: OPEN_STATUSES } } }),
+        db.buildingReport.count({ where: { status: { in: OPEN_STATUSES }, urgency: { in: ['DANGER', 'URGENTE'] } } }),
+      ])
+    : [0, 0];
 
   const stats = [
     { label: 'Équipements', value: equipmentCount, icon: Package, href: '/equipment' },
@@ -45,6 +54,22 @@ export default async function DashboardPage() {
         title={`Bonjour, ${session.user.name?.split(' ')[0]}`}
         subtitle="Voici l'état du matériel audiovisuel de l'église."
       />
+
+      {isReportManager && (
+        <Link
+          href="/batiment"
+          className="rack-card mb-4 flex items-center gap-3 border-l-4 border-l-amber p-4 transition hover:-translate-y-0.5"
+        >
+          <Building2 className="h-6 w-6 shrink-0 text-amber-dim dark:text-amber" />
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-sm uppercase tracking-wide">Bâtiment : {openReports} signalement{openReports > 1 ? 's' : ''} à traiter</p>
+            <p className="text-xs text-ink-soft dark:text-cream/50">
+              {dangerReports > 0 ? `dont ${dangerReports} urgent${dangerReports > 1 ? 's' : ''} ou dangereux` : 'Envoyés par les fidèles via QR code'}
+            </p>
+          </div>
+          {dangerReports > 0 && <span className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-danger" />}
+        </Link>
+      )}
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {stats.map((s) => (
