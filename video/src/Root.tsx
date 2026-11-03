@@ -4,6 +4,7 @@ import {
   Announcement,
   announcementDefaults,
 } from "./compositions/Announcement";
+import { FoundMe, foundMeDefaults } from "./compositions/FoundMe";
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
 
 const FPS = 30;
@@ -19,6 +20,18 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         defaultProps={announcementDefaults}
+      />
+      <Composition
+        id="FoundMe"
+        component={FoundMe}
+        durationInFrames={50 * FPS}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        defaultProps={foundMeDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: Math.round(props.durationSeconds * FPS),
+        })}
       />
       <Composition
         id="Lyrics"
