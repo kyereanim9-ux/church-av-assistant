@@ -451,11 +451,16 @@ export const Room: React.FC<{
         fill="#4a3324"
       />
       <path
-        d={`M ${windowSide > 0 ? 220 : 860} 400 v 110 m -34 -72 h 68`}
-        stroke="#d9b676"
-        strokeWidth={10}
-        strokeLinecap="round"
+        d={`M ${windowSide > 0 ? 138 : 778} 562 v -60 q 40 -50 82 -10 q 40 -40 82 20 v 50 Z`}
+        fill="#7a5a3a"
         opacity={0.8}
+      />
+      <circle
+        cx={windowSide > 0 ? 250 : 890}
+        cy={410}
+        r={22}
+        fill="#d9b676"
+        opacity={0.7}
       />
 
       {/* Rayon de lumière */}
