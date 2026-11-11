@@ -5,3 +5,6 @@ dist
 
 # Ignore the output video from Git but not videos you import into src/.
 out
+
+# Voix générées par tools/lui_ou_elle.py
+public/luiouelle
