@@ -407,6 +407,14 @@ export const Room: React.FC<{
           <stop offset="40%" stopColor="#ff9a3c" stopOpacity={0.16} />
           <stop offset="100%" stopColor="#ff9a3c" stopOpacity={0} />
         </radialGradient>
+        <radialGradient id="logoBg" cx="50%" cy="45%" r="75%">
+          <stop offset="0%" stopColor="#2b4fb8" />
+          <stop offset="100%" stopColor="#0a1a5c" />
+        </radialGradient>
+        <radialGradient id="logoGlow">
+          <stop offset="0%" stopColor="#ffd27a" stopOpacity={0.75} />
+          <stop offset="100%" stopColor="#ffb347" stopOpacity={0} />
+        </radialGradient>
         <radialGradient id="vignette" cx="50%" cy="42%" r="75%">
           <stop offset="55%" stopColor="#000" stopOpacity={0} />
           <stop offset="100%" stopColor="#000" stopOpacity={0.62} />
@@ -434,34 +442,30 @@ export const Room: React.FC<{
       <rect x={wx} y={420} width={330} height={14} fill="#20130c" />
       <rect x={wx - 34} y={706} width={398} height={22} rx={6} fill="#2a1a10" />
 
-      {/* Cadre au mur */}
-      <rect
-        x={windowSide > 0 ? 120 : 760}
-        y={330}
-        width={200}
-        height={250}
-        rx={6}
-        fill="#2a1a10"
-      />
-      <rect
-        x={windowSide > 0 ? 138 : 778}
-        y={348}
-        width={164}
-        height={214}
-        fill="#4a3324"
-      />
-      <path
-        d={`M ${windowSide > 0 ? 138 : 778} 562 v -60 q 40 -50 82 -10 q 40 -40 82 20 v 50 Z`}
-        fill="#7a5a3a"
-        opacity={0.8}
-      />
-      <circle
-        cx={windowSide > 0 ? 250 : 890}
-        cy={410}
-        r={22}
-        fill="#d9b676"
-        opacity={0.7}
-      />
+      {/* Cadre au mur : le logo de la page (bougie sur fond bleu) */}
+      <g transform={`translate(${windowSide > 0 ? 220 : 860} 455)`}>
+        <rect
+          x={-112}
+          y={-112}
+          width={224}
+          height={224}
+          rx={8}
+          fill="#2a1a10"
+        />
+        <rect x={-94} y={-94} width={188} height={188} fill="url(#logoBg)" />
+        <circle cy={-14} r={62} fill="url(#logoGlow)" />
+        <ellipse cy={66} rx={46} ry={9} fill="#f2a23a" opacity={0.35} />
+        <rect x={-17} y={8} width={34} height={56} rx={5} fill="#f3dfb0" />
+        <rect x={-17} y={8} width={12} height={56} rx={5} fill="#dcc48e" />
+        <path
+          d="M 0 -44 C 15 -22 12 4 0 6 C -12 4 -15 -22 0 -44 Z"
+          fill="#ffb347"
+        />
+        <path
+          d="M 0 -26 C 7 -14 6 3 0 4 C -6 3 -7 -14 0 -26 Z"
+          fill="#fff3c4"
+        />
+      </g>
 
       {/* Rayon de lumière */}
       <polygon
