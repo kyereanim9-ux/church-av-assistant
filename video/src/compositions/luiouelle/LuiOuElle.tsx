@@ -246,6 +246,7 @@ const EndCard: React.FC<{ episode: Episode; frame: number }> = ({
   const fade = (at: number, len = 14) =>
     interpolate(frame, [at - 4, at - 4 + len], [0, 1], clamp);
   const { outro } = episode;
+  const longest = Math.max(...episode.endLines.map((l) => l.length));
   return (
     <AbsoluteFill
       style={{
@@ -273,12 +274,12 @@ const EndCard: React.FC<{ episode: Episode; frame: number }> = ({
         </defs>
         <Candle frame={frame} x={540} y={1010} s={1.15} />
       </svg>
-      <div style={{ marginTop: 330, padding: "0 80px" }}>
+      <div style={{ marginTop: 330, padding: "0 50px" }}>
         {episode.endLines.map((l, i) => (
           <div
             key={i}
             style={{
-              fontSize: 62,
+              fontSize: longest > 30 ? 50 : 62,
               fontWeight: 800,
               lineHeight: 1.25,
               opacity: fade(said + i * 10),
