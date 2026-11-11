@@ -24,10 +24,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUB = os.path.join(ROOT, "public", "luiouelle")
 OUT = os.path.join(ROOT, "src", "compositions", "luiouelle", "data.ts")
 
+# Voix 100 % françaises : les voix « Multilingual » prononcent parfois les
+# répliques courtes (« Non. », « Elle. ») dans une autre langue.
 V = {  # voix, débit, hauteur
     "M": ("fr-FR-HenriNeural", "-6%", "-6Hz"),
-    "L": ("fr-FR-RemyMultilingualNeural", "+4%", "+0Hz"),
-    "E": ("fr-FR-VivienneMultilingualNeural", "+4%", "+0Hz"),
+    "L": ("fr-CH-FabriceNeural", "+2%", "+2Hz"),
+    "E": ("fr-FR-DeniseNeural", "+0%", "+0Hz"),
 }
 
 # (qui, texte, pause avant en secondes). "LE" = Lui et Elle ensemble : "lui|elle"
@@ -287,12 +289,22 @@ def pcm(path):
     return np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768
 
 
-TRIM = "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse,apad=pad_dur=0.08"
+# On garde 80 ms avant/après la voix pour ne pas rogner les attaques douces (« Il », « Qu'elle »).
+_SR = "silenceremove=start_periods=1:start_threshold=-55dB:start_silence=0.08"
+TRIM = f"{_SR},areverse,{_SR},areverse"
 
 
 async def say(sp, text, out):
     v, r, p = V[sp]
-    await edge_tts.Communicate(text, v, rate=r, pitch=p).save(out + ".raw.mp3")
+    for attempt in range(4):
+        try:
+            await edge_tts.Communicate(text, v, rate=r, pitch=p).save(out + ".raw.mp3")
+            break
+        except Exception as e:  # le service renvoie parfois une réponse vide
+            print("nouvelle tentative :", sp, text, "->", type(e).__name__, file=sys.stderr)
+            if attempt == 3:
+                raise
+            await asyncio.sleep(2 + attempt * 2)
     sh("-i", out + ".raw.mp3", "-af", TRIM, out)
     os.remove(out + ".raw.mp3")
 
