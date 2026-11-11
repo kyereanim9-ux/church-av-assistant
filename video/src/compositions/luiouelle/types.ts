@@ -18,6 +18,8 @@ export type Episode = {
   cast: string;
   endLines: string[];
   endFrom: number;
+  endItems: { file: string; from: number; dur: number }[];
+  outro: { action: string; label: string; next: string; sub: string };
   durationInFrames: number;
   lines: Line[];
 };

@@ -242,12 +242,15 @@ const EndCard: React.FC<{ episode: Episode; frame: number }> = ({
 }) => {
   const k = frame - episode.endFrom;
   if (k < 0) return null;
-  const last = episode.num === 6;
+  const [said, loved, cta] = episode.endItems.map((it) => it.from);
+  const fade = (at: number, len = 14) =>
+    interpolate(frame, [at - 4, at - 4 + len], [0, 1], clamp);
+  const { outro } = episode;
   return (
     <AbsoluteFill
       style={{
         background:
-          "radial-gradient(circle at 50% 62%, #3a2314 0%, #120a06 70%)",
+          "radial-gradient(circle at 50% 54%, #3a2314 0%, #120a06 70%)",
         opacity: interpolate(k, [0, 18], [0, 1], clamp),
         alignItems: "center",
         fontFamily: FONT,
@@ -268,22 +271,17 @@ const EndCard: React.FC<{ episode: Episode; frame: number }> = ({
             <stop offset="100%" stopColor="#ff9a3c" stopOpacity={0} />
           </radialGradient>
         </defs>
-        <Candle frame={frame} x={540} y={1240} s={1.5} />
+        <Candle frame={frame} x={540} y={1010} s={1.15} />
       </svg>
-      <div style={{ marginTop: 380, padding: "0 80px" }}>
+      <div style={{ marginTop: 330, padding: "0 80px" }}>
         {episode.endLines.map((l, i) => (
           <div
             key={i}
             style={{
-              fontSize: 66,
+              fontSize: 62,
               fontWeight: 800,
               lineHeight: 1.25,
-              opacity: interpolate(
-                k,
-                [10 + i * 14, 24 + i * 14],
-                [0, 1],
-                clamp,
-              ),
+              opacity: fade(said + i * 10),
             }}
           >
             {l}
@@ -291,12 +289,12 @@ const EndCard: React.FC<{ episode: Episode; frame: number }> = ({
         ))}
         <div
           style={{
-            marginTop: 70,
+            marginTop: 56,
             fontFamily: SERIF,
             fontStyle: "italic",
             fontSize: 76,
             color: "#f6d48a",
-            opacity: interpolate(k, [55, 75], [0, 1], clamp),
+            opacity: fade(loved),
           }}
         >
           Tu es aimé(e) <Heart size={64} color="#f6d48a" />
@@ -305,16 +303,47 @@ const EndCard: React.FC<{ episode: Episode; frame: number }> = ({
       <div
         style={{
           position: "absolute",
-          bottom: 330,
-          fontSize: 40,
-          fontWeight: 600,
-          opacity: interpolate(k, [80, 100], [0, 0.9], clamp),
+          top: 1250,
+          width: 860,
+          opacity: fade(cta),
+          transform: `translateY(${interpolate(frame, [cta - 4, cta + 12], [24, 0], clamp)}px)`,
         }}
       >
-        {last
-          ? "Fin de la saison 1 · Quel sujet pour la saison 2 ?"
-          : "Dis-le en commentaire · La suite dans l'épisode " +
-            (episode.num + 1)}
+        <div style={{ fontSize: 42, fontWeight: 600, lineHeight: 1.3 }}>
+          {outro.action}
+        </div>
+        <div
+          style={{
+            width: 120,
+            height: 3,
+            background: "#f6d48a",
+            margin: "34px auto 30px",
+            borderRadius: 2,
+          }}
+        />
+        <div
+          style={{
+            fontSize: 28,
+            fontWeight: 700,
+            letterSpacing: 7,
+            color: "#f6d48a",
+          }}
+        >
+          {outro.label}
+        </div>
+        <div style={{ fontSize: 58, fontWeight: 800, marginTop: 12 }}>
+          {outro.next}
+        </div>
+        <div
+          style={{
+            fontSize: 32,
+            fontWeight: 500,
+            opacity: 0.75,
+            marginTop: 14,
+          }}
+        >
+          {outro.sub}
+        </div>
       </div>
     </AbsoluteFill>
   );
@@ -370,6 +399,16 @@ export const LuiOuElle: React.FC<LuiOuElleProps> = ({ episode }) => {
       </div>
       <EndCard episode={episode} frame={frame} />
 
+      {episode.endItems.map((it, i) => (
+        <Sequence
+          key={`fin${i}`}
+          from={it.from}
+          durationInFrames={it.dur + 6}
+          layout="none"
+        >
+          <Audio src={staticFile(it.file)} />
+        </Sequence>
+      ))}
       {lines.map((l, i) => (
         <Sequence
           key={i}
@@ -390,7 +429,7 @@ export const LuiOuElle: React.FC<LuiOuElleProps> = ({ episode }) => {
               f >= l.from - 10 &&
               f <= l.from + l.dur + 10,
           );
-          const base = verse ? 0.05 : f >= endFrom ? 0.3 : 0.14;
+          const base = verse ? 0.05 : f >= endFrom ? 0.1 : 0.14;
           return (
             base *
             interpolate(f, [0, 30], [0, 1], clamp) *

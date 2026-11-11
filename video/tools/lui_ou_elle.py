@@ -19,7 +19,6 @@ import edge_tts
 FPS = 30
 GAP = 0.3      # silence entre deux répliques (s)
 INTRO = 0.4    # silence avant la première réplique (s)
-END = 5.5      # durée de la carte de fin (s)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUB = os.path.join(ROOT, "public", "luiouelle")
 OUT = os.path.join(ROOT, "src", "compositions", "luiouelle", "data.ts")
@@ -259,22 +258,22 @@ EP["ep6_et_si_c_etait_les_deux"] = [
 
 
 META = {
-    "ep1_elle_a_change": dict(num=1, title="Elle a changé", verse="1 Jean 4:18",
+    "ep1_elle_a_change": dict(num=1, love="L", action="Réponds en commentaire", title="Elle a changé", verse="1 Jean 4:18",
         cover=["Elle a changé…", "ou tu l'as éteinte ?"], cast="ML",
         end=["Tu te reconnais en lui…", "ou en elle ?"]),
-    "ep2_il_a_change": dict(num=2, title="Il a changé", verse="Proverbes 12:18",
+    "ep2_il_a_change": dict(num=2, love="E", action="Réponds en commentaire", title="Il a changé", verse="Proverbes 12:18",
         cover=["Il a changé…", "ou tu l'as fait taire ?"], cast="ME",
         end=["Tu te reconnais en elle…", "ou en lui ?"]),
-    "ep3_celle_qui_s_est_eteinte": dict(num=3, title="Celle qui s'est éteinte", verse="Ésaïe 42:3",
+    "ep3_celle_qui_s_est_eteinte": dict(num=3, love="E", action="Partage cette vidéo à quelqu'un qui a besoin de l'entendre", title="Celle qui s'est éteinte", verse="Ésaïe 42:3",
         cover=["Tu n'étais pas", "trop sensible"], cast="ME",
         end=["Tu n'étais pas « trop ».", "Ta lumière n'a pas disparu."]),
-    "ep4_celui_qui_s_est_eteint": dict(num=4, title="Celui qui s'est éteint", verse="Psaume 34:19",
+    "ep4_celui_qui_s_est_eteint": dict(num=4, love="L", action="Partage cette vidéo à quelqu'un qui a besoin de l'entendre", title="Celui qui s'est éteint", verse="Psaume 34:19",
         cover=["Un homme aussi", "a le droit d'avoir mal"], cast="ML",
         end=["Tu n'es pas trop sensible.", "Ce que tu ressens est réel."]),
-    "ep5_je_t_entends": dict(num=5, title="Je t'entends", verse="Jacques 1:19",
+    "ep5_je_t_entends": dict(num=5, love="E", action="Enregistre cette vidéo pour t'en souvenir", title="Je t'entends", verse="Jacques 1:19",
         cover=["Les 3 phrases", "qui sauvent un couple"], cast="ME",
         end=["« Je t'entends. Je suis désolé(e).", "Je vais changer. »", "Dis-le ce soir. Puis montre-le."]),
-    "ep6_et_si_c_etait_les_deux": dict(num=6, title="Et si c'était les deux ?", verse="Colossiens 3:13",
+    "ep6_et_si_c_etait_les_deux": dict(num=6, love="LE", action="Dis-moi en commentaire quel sujet tu veux voir", title="Et si c'était les deux ?", verse="Colossiens 3:13",
         cover=["Qui a commencé ?"], cast="MLE",
         end=["Ce n'est pas toi contre lui ou elle.", "C'est vous deux contre le problème."]),
 }
@@ -372,9 +371,35 @@ async def episode(name, lines):
             line["verse"] = dict(ref=m["verse"], quote=quote, prefixFrac=round(len(pre_txt) / len(text) + 0.03, 3))
         out.append(line)
         t += len(env) / FPS + GAP
+    # Carte de fin : le mentor dit la phrase de fin, le personnage dit « Tu es aimé(e) »,
+    # puis le mentor dit l'appel final.
+    order = list(META)
+    nxt = META[order[order.index(name) + 1]]["title"] if m["num"] < len(order) else None
+    if nxt:
+        outro = dict(action=m["action"], label="PROCHAIN ÉPISODE", next=f"« {nxt} »", sub="Abonne-toi pour ne pas le manquer")
+        say_cta = f"{m['action']}. Prochain épisode : {nxt}. Abonne-toi pour ne pas le manquer."
+    else:
+        outro = dict(action=m["action"], label="SAISON 2", next="Bientôt", sub="Abonne-toi pour ne pas la manquer")
+        say_cta = f"C'était la saison 1 de Lui ou elle. {m['action']}. Et abonne-toi pour ne pas manquer la saison 2."
+    spoken = [("M", " ".join(m["end"]).replace("(e)", "")), (m["love"], "Tu es aimé."), ("M", say_cta)]
     end_from = round((t + 0.5) * FPS)
+    t = end_from / FPS + 0.8
+    items = []
+    for i, (sp, text) in enumerate(spoken, 1):
+        f = os.path.join(d, f"fin{i}.mp3")
+        if not os.path.exists(f):
+            if sp == "LE":
+                await say("L", text, f + ".a.mp3")
+                await say("E", text, f + ".b.mp3")
+                sh("-i", f + ".a.mp3", "-i", f + ".b.mp3", "-filter_complex", "amix=inputs=2:normalize=0", f)
+                os.remove(f + ".a.mp3"); os.remove(f + ".b.mp3")
+            else:
+                await say(sp, text, f)
+        n = len(envelope(pcm(f)))
+        items.append({"file": f"luiouelle/{name}/fin{i}.mp3", "from": round(t * FPS), "dur": n})
+        t += n / FPS + 0.5
     return dict(id=name, num=m["num"], title=m["title"], cover=m["cover"], cast=m["cast"], endLines=m["end"],
-                endFrom=end_from, durationInFrames=end_from + round(END * FPS), lines=out)
+                endFrom=end_from, endItems=items, outro=outro, durationInFrames=round((t + 1.2) * FPS), lines=out)
 
 
 async def main():
