@@ -31,6 +31,8 @@ const activeIndex = (lines: Line[], frame: number) => {
   return idx;
 };
 
+const shotKey = (l: Line) => (l.hook ? "hook" : l.sp);
+
 const mouth = (line: Line, frame: number) => {
   const k = frame - line.from;
   if (k < 0 || k >= line.env.length) return 0;
@@ -47,10 +49,12 @@ const Scene: React.FC<{ episode: Episode; frame: number }> = ({
   const line = lines[i];
   // Début du plan : première réplique consécutive du même locuteur.
   let s = i;
-  while (s > 0 && lines[s - 1].sp === line.sp) s--;
+  while (s > 0 && shotKey(lines[s - 1]) === shotKey(line)) s--;
   const shotStart = s === 0 ? 0 : lines[s - 1].from + lines[s - 1].dur + 4;
-  const zoom = interpolate(frame - shotStart, [0, 300], [1, 1.07], clamp);
-  const open = mouth(line, frame);
+  const zoom = line.hook
+    ? interpolate(frame, [0, line.from + line.dur], [1.02, 1.16], clamp)
+    : interpolate(frame - shotStart, [0, 300], [1, 1.07], clamp);
+  const open = line.hook ? 0 : mouth(line, frame);
   const waiting = frame < line.from ? 1 : 0;
   const down =
     interpolate(line.from - frame, [0, 6, 20], [0, 1, 1], clamp) * waiting;
@@ -83,7 +87,7 @@ const Scene: React.FC<{ episode: Episode; frame: number }> = ({
       </AbsoluteFill>
     );
   }
-  const who = line.sp;
+  const who: Who = line.hook && line.show ? line.show : line.sp;
   const side = who === "M" ? 1 : -1;
   return (
     <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
@@ -93,8 +97,8 @@ const Scene: React.FC<{ episode: Episode; frame: number }> = ({
             who={who}
             frame={frame}
             open={open}
-            down={who === "M" ? 0 : down}
-            sad={who === "M" ? 0 : 0.8}
+            down={line.hook ? 1 : who === "M" ? 0 : down}
+            sad={line.hook ? 1 : who === "M" ? 0 : 0.8}
             lightSide={side}
           />
         </g>
@@ -123,6 +127,12 @@ const chunk = (text: string) => {
     }
     cur.push(w);
     len += w.length + 1;
+    // Une phrase terminée ferme le bloc : pas de mot orphelin de la suivante.
+    if (/[.?!…]$/.test(w)) {
+      out.push(cur);
+      cur = [];
+      len = 0;
+    }
   }
   if (cur.length) out.push(cur);
   // « reste collé au mot suivant
@@ -206,8 +216,8 @@ const Caption: React.FC<{ line: Line; frame: number }> = ({ line, frame }) => {
         style={{
           fontFamily: verse ? SERIF : FONT,
           fontStyle: verse ? "italic" : "normal",
-          fontSize: verse ? 62 : 68,
-          fontWeight: verse ? 700 : 800,
+          fontSize: verse ? 62 : line.hook ? 88 : 68,
+          fontWeight: verse ? 700 : line.hook ? 900 : 800,
           lineHeight: 1.18,
           textAlign: "center",
           maxWidth: 900,

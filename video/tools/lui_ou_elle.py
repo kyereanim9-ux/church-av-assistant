@@ -224,7 +224,7 @@ EP["ep5_je_t_entends"] = [
 EP["ep6_et_si_c_etait_les_deux"] = [
 ("M","Qui a commencé ?",0),
 ("LE","Elle.|Lui.",0),
-("M","Vous voyez le problème ?",1.2),
+("M","Vous voyez le problème ?",0.3),
 ("M","Quand elle te fait un reproche, tu fais quoi ?",0.5),
 ("L","Je me tais.",0),
 ("M","Et quand il se tait ?",0),
@@ -276,6 +276,16 @@ META = {
     "ep6_et_si_c_etait_les_deux": dict(num=6, love="LE", action="Dis-moi en commentaire quel sujet tu veux voir", title="Et si c'était les deux ?", verse="Colossiens 3:13",
         cover=["Qui a commencé ?"], cast="MLE",
         end=["Ce n'est pas toi contre lui ou elle.", "C'est vous deux contre le problème."]),
+}
+
+# Accroche à froid : la phrase la plus forte de l'épisode, dite par le mentor
+# pendant qu'on voit le personnage concerné (qui, texte).
+HOOK = {
+    "ep1_elle_a_change": ("L", "Elle n'a pas changé. Elle a appris à se protéger… de toi."),
+    "ep2_il_a_change": ("E", "Il ne s'en fiche pas. Il a compris que chaque mot se retournait contre lui."),
+    "ep3_celle_qui_s_est_eteinte": ("E", "Qui t'a dit que tu étais « trop » ?"),
+    "ep4_celui_qui_s_est_eteint": ("L", "Un homme ne devrait pas se plaindre. C'est ce qu'elle t'a dit ?"),
+    "ep5_je_t_entends": ("E", "Trois phrases peuvent sauver ton couple. Tu en dis zéro."),
 }
 
 
@@ -346,8 +356,17 @@ async def episode(name, lines):
     m = META[name]
     d = os.path.join(PUB, name)
     os.makedirs(d, exist_ok=True)
-    t = INTRO
+    t = 0.15 if name in HOOK else INTRO
     out = []
+    if name in HOOK:
+        show, text = HOOK[name]
+        f = os.path.join(d, "hook.mp3")
+        if not os.path.exists(f):
+            await say("M", text, f)
+        env = envelope(pcm(f))
+        out.append(dict(sp="M", text=text, file=f"luiouelle/{name}/hook.mp3", **{"from": round(t * FPS)},
+                        dur=len(env), env=env, hook=True, show=show))
+        t += len(env) / FPS + 0.45
     for i, (sp, text, pre) in enumerate(lines, 1):
         f = os.path.join(d, f"{i:02d}.mp3")
         if not os.path.exists(f):

@@ -7,6 +7,9 @@ export type Line = {
   from: number;
   dur: number;
   env: number[];
+  /** Accroche à froid : dite par le mentor, on montre `show`. */
+  hook?: boolean;
+  show?: "L" | "E";
   verse?: { ref: string; quote: string; prefixFrac: number };
 };
 
