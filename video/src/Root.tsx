@@ -6,10 +6,11 @@ import {
 } from "./compositions/Announcement";
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
 import {
-  Paroles,
-  PAROLES_DURATION,
+  Story,
+  courageDefaults,
   parolesDefaults,
-} from "./compositions/Paroles";
+  storyDuration,
+} from "./compositions/Story";
 
 const FPS = 30;
 
@@ -27,12 +28,27 @@ export const RemotionRoot: React.FC = () => {
       />
       <Composition
         id="Paroles"
-        component={Paroles}
-        durationInFrames={PAROLES_DURATION}
+        component={Story}
+        durationInFrames={60}
         fps={FPS}
         width={1080}
         height={1920}
         defaultProps={parolesDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyDuration(props),
+        })}
+      />
+      <Composition
+        id="Courage"
+        component={Story}
+        durationInFrames={60}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        defaultProps={courageDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyDuration(props),
+        })}
       />
       <Composition
         id="Lyrics"
