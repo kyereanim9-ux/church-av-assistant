@@ -30,6 +30,15 @@ export type Scene = Base &
     | { kind: "verse"; text: string; ref: string }
     | { kind: "challenge"; title: string; text: string }
     | { kind: "outro"; icon: "heart" | "sun"; text: string; sub: string }
+    | { kind: "stat"; value: number; unit: string; lines: string[] }
+    | { kind: "checklist"; title: string; items: string[] }
+    | {
+        kind: "poll";
+        title: string;
+        yes: string;
+        no: string;
+        sub: string;
+      }
   );
 
 export type StoryProps = {
@@ -42,7 +51,10 @@ export type StoryProps = {
 };
 
 export const storyDuration = (p: StoryProps) =>
-  Math.max(1, p.scenes.reduce((s, sc) => s + sc.frames, 0));
+  Math.max(
+    1,
+    p.scenes.reduce((s, sc) => s + sc.frames, 0),
+  );
 
 const SERIF = "'Liberation Serif', 'DejaVu Serif', Georgia, serif";
 const SANS = "'DejaVu Sans', Arial, sans-serif";
@@ -389,7 +401,10 @@ const SceneView: React.FC<{ scene: Scene }> = ({ scene }) => {
             <Icon icon={scene.icon} p={p} size={240} beat={p > 0.9} />
           ) : null}
           {scene.lines.map((l, i) => (
-            <Rise key={i} delay={5 + i * Math.round(d * (scene.verse ? 0.12 : 0.25))}>
+            <Rise
+              key={i}
+              delay={5 + i * Math.round(d * (scene.verse ? 0.12 : 0.25))}
+            >
               <div
                 style={{
                   fontFamily: SERIF,
@@ -479,6 +494,281 @@ const SceneView: React.FC<{ scene: Scene }> = ({ scene }) => {
           </Rise>
         </AbsoluteFill>
       );
+    case "stat": {
+      const p = spring({
+        frame: frame - 10,
+        fps,
+        config: { damping: 200 },
+        durationInFrames: 50,
+      });
+      const ring = interpolate(frame, [10, 70], [0, 1], CLAMP);
+      const R = 300;
+      const C = 2 * Math.PI * R;
+      return (
+        <AbsoluteFill style={{ ...center, gap: 70 }}>
+          <div style={{ position: "relative", width: 720, height: 720 }}>
+            <svg width={720} height={720} viewBox="0 0 720 720">
+              <circle
+                cx={360}
+                cy={360}
+                r={R}
+                stroke="rgba(255,255,255,0.12)"
+                strokeWidth={18}
+                fill="none"
+              />
+              <circle
+                cx={360}
+                cy={360}
+                r={R}
+                stroke={GOLD}
+                strokeWidth={18}
+                fill="none"
+                strokeLinecap="round"
+                strokeDasharray={C}
+                strokeDashoffset={C * (1 - ring)}
+                transform="rotate(-90 360 360)"
+                style={{
+                  filter: "drop-shadow(0 0 18px rgba(253,200,120,0.8))",
+                }}
+              />
+            </svg>
+            <AbsoluteFill
+              style={{ alignItems: "center", justifyContent: "center" }}
+            >
+              <div
+                style={{
+                  fontFamily: SERIF,
+                  fontSize: 300,
+                  fontWeight: 700,
+                  color: GOLD,
+                  lineHeight: 1,
+                }}
+              >
+                {Math.round(p * scene.value)}
+              </div>
+              <div
+                style={{
+                  fontFamily: SANS,
+                  fontSize: 56,
+                  letterSpacing: 10,
+                  textTransform: "uppercase",
+                }}
+              >
+                {scene.unit}
+              </div>
+            </AbsoluteFill>
+          </div>
+          {scene.lines.map((l, i) => (
+            <Rise key={i} delay={60 + i * 35}>
+              <div
+                style={{
+                  fontFamily: SERIF,
+                  fontSize: i === 0 ? 64 : 72,
+                  fontStyle: i === 0 ? "italic" : "normal",
+                  fontWeight: i === 0 ? 400 : 700,
+                  color: i === 0 ? "white" : GOLD,
+                  lineHeight: 1.25,
+                }}
+              >
+                {l}
+              </div>
+            </Rise>
+          ))}
+        </AbsoluteFill>
+      );
+    }
+    case "checklist": {
+      const step = (d * 0.75 - 30) / scene.items.length;
+      return (
+        <AbsoluteFill style={{ ...center, gap: 50 }}>
+          <Rise delay={0} style={{ marginBottom: 20 }}>
+            <div style={{ fontFamily: SERIF, fontSize: 84, fontWeight: 700 }}>
+              {scene.title}
+            </div>
+          </Rise>
+          {scene.items.map((it, i) => {
+            const start = Math.round(25 + i * step);
+            const tick = interpolate(
+              frame,
+              [start + 25, start + 45],
+              [0, 1],
+              CLAMP,
+            );
+            return (
+              <Rise key={i} delay={start} style={{ width: "100%" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 40,
+                    textAlign: "left",
+                    padding: "44px 48px",
+                    borderRadius: 36,
+                    background: "rgba(255,255,255,0.08)",
+                    border: `2px solid rgba(252,211,77,${0.25 + tick * 0.5})`,
+                    boxShadow: `0 0 ${tick * 40}px rgba(253,200,120,0.35)`,
+                  }}
+                >
+                  <svg
+                    width={110}
+                    height={110}
+                    viewBox="0 0 100 100"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <rect
+                      x={6}
+                      y={6}
+                      width={88}
+                      height={88}
+                      rx={24}
+                      fill={tick > 0 ? GOLD : "none"}
+                      fillOpacity={tick}
+                      stroke={GOLD}
+                      strokeWidth={6}
+                    />
+                    <path
+                      d="M28 52 L44 67 L73 35"
+                      fill="none"
+                      stroke="#2a1606"
+                      strokeWidth={10}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeDasharray={70}
+                      strokeDashoffset={70 * (1 - tick)}
+                    />
+                  </svg>
+                  <div
+                    style={{
+                      fontFamily: SANS,
+                      fontSize: 52,
+                      fontWeight: 700,
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {it}
+                  </div>
+                </div>
+              </Rise>
+            );
+          })}
+        </AbsoluteFill>
+      );
+    }
+    case "poll": {
+      const btn = (label: string, good: boolean, delay: number) => {
+        const p = spring({
+          frame: frame - delay,
+          fps,
+          config: { damping: 14 },
+        });
+        const glow = 0.5 + 0.5 * Math.sin((frame - delay) / 8);
+        return (
+          <div
+            style={{
+              transform: `scale(${p})`,
+              display: "flex",
+              alignItems: "center",
+              gap: 30,
+              width: 820,
+              padding: "38px 50px",
+              borderRadius: 999,
+              fontFamily: SANS,
+              fontSize: 56,
+              fontWeight: 800,
+              color: good ? "#2a1606" : "white",
+              background: good
+                ? `linear-gradient(90deg, ${GOLD}, #fdba74)`
+                : "rgba(255,255,255,0.1)",
+              border: good ? "none" : "3px solid rgba(255,255,255,0.5)",
+              boxShadow: good
+                ? `0 0 ${30 + glow * 30}px rgba(253,200,120,0.6)`
+                : undefined,
+            }}
+          >
+            <svg width={70} height={70} viewBox="0 0 100 100">
+              <circle
+                cx={50}
+                cy={50}
+                r={44}
+                fill="none"
+                stroke={good ? "#2a1606" : "white"}
+                strokeWidth={8}
+              />
+              {good ? (
+                <path
+                  d="M28 52 L44 67 L73 35"
+                  fill="none"
+                  stroke="#2a1606"
+                  strokeWidth={10}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              ) : (
+                <path
+                  d="M50 26 L50 52 L66 62"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth={8}
+                  strokeLinecap="round"
+                />
+              )}
+            </svg>
+            {label}
+          </div>
+        );
+      };
+      const arrow = Math.sin(frame / 6) * 18;
+      return (
+        <AbsoluteFill style={{ ...center, gap: 56 }}>
+          <Rise delay={0}>
+            <div
+              style={{
+                fontFamily: SERIF,
+                fontSize: 92,
+                fontWeight: 700,
+                color: GOLD,
+                lineHeight: 1.15,
+                textShadow: "0 0 40px rgba(253,200,120,0.6)",
+              }}
+            >
+              {scene.title}
+            </div>
+          </Rise>
+          {btn(scene.yes, true, 25)}
+          {btn(scene.no, false, 40)}
+          <Rise delay={60}>
+            <div
+              style={{
+                fontFamily: SERIF,
+                fontStyle: "italic",
+                fontSize: 54,
+                lineHeight: 1.3,
+              }}
+            >
+              {scene.sub}
+            </div>
+          </Rise>
+          <svg
+            width={90}
+            height={90}
+            viewBox="0 0 100 100"
+            style={{
+              transform: `translateY(${arrow}px)`,
+              opacity: interpolate(frame, [70, 85], [0, 1], CLAMP),
+            }}
+          >
+            <path
+              d="M50 10 L50 85 M22 58 L50 86 L78 58"
+              fill="none"
+              stroke={GOLD}
+              strokeWidth={9}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </AbsoluteFill>
+      );
+    }
   }
 };
 
@@ -624,7 +914,11 @@ export const courageDefaults: StoryProps = {
       kind: "lines",
       frames: 147,
       icon: "sun",
-      lines: ["Relève la tête.", "Continue d'avancer.", "Le meilleur est devant toi."],
+      lines: [
+        "Relève la tête.",
+        "Continue d'avancer.",
+        "Le meilleur est devant toi.",
+      ],
     },
     {
       kind: "outro",
@@ -632,6 +926,63 @@ export const courageDefaults: StoryProps = {
       icon: "sun",
       text: "Dieu est avec toi",
       sub: "Partage à quelqu'un qui en a besoin",
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
+// Video 3 — weekly reminder: 3 minutes of meditation + Weclick, then poll
+export const meditationDefaults: StoryProps = {
+  hues: { from: [225, 245], to: [255, 285] },
+  voice: null,
+  music: "meditation_musique.wav",
+  musicVolume: 0.5,
+  scenes: [
+    {
+      kind: "title",
+      frames: 150,
+      lines: ["Rappel de la semaine", "As-tu nourri ton âme ?"],
+    },
+    {
+      kind: "stat",
+      frames: 210,
+      value: 3,
+      unit: "minutes",
+      lines: ["sur les 1 440 minutes de ta journée…", "pour la Parole."],
+    },
+    {
+      kind: "pills",
+      frames: 270,
+      title: "Pourquoi c'est important",
+      items: [
+        "Nourrir son âme chaque jour",
+        "Rester connecté(e) à la Parole",
+        "Grandir ensemble, pas à pas",
+        "Rester fidèle et constant(e)",
+      ],
+    },
+    {
+      kind: "verse",
+      frames: 300,
+      text: "Heureux celui qui lit et ceux qui entendent les paroles de la prophétie, et qui gardent les choses qui y sont écrites ! Car le temps est proche.",
+      ref: "Apocalypse 1:3",
+    },
+    {
+      kind: "checklist",
+      frames: 240,
+      title: "Cette semaine, as-tu…",
+      items: [
+        "Écouté les 3 minutes de méditation de la parole du PP ?",
+        "Fait Weclick au moins une fois ?",
+      ],
+    },
+    {
+      kind: "poll",
+      frames: 240,
+      title: "Réponds au sondage",
+      yes: "Oui, c'est fait !",
+      no: "Pas encore…",
+      sub: "Il n'est jamais trop tard : fais-le aujourd'hui !",
     },
   ],
 };

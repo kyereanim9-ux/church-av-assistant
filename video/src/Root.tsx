@@ -8,6 +8,7 @@ import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
 import {
   Story,
   courageDefaults,
+  meditationDefaults,
   parolesDefaults,
   storyDuration,
 } from "./compositions/Story";
@@ -46,6 +47,18 @@ export const RemotionRoot: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={courageDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: storyDuration(props),
+        })}
+      />
+      <Composition
+        id="Meditation"
+        component={Story}
+        durationInFrames={60}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        defaultProps={meditationDefaults}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyDuration(props),
         })}
