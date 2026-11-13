@@ -30,7 +30,11 @@ export const Announcement: React.FC<AnnouncementProps> = ({
   const { fps, durationInFrames } = useVideoConfig();
 
   const titleIn = spring({ frame, fps, config: { damping: 200 } });
-  const subtitleIn = spring({ frame: frame - 12, fps, config: { damping: 200 } });
+  const subtitleIn = spring({
+    frame: frame - 12,
+    fps,
+    config: { damping: 200 },
+  });
   const dateIn = spring({ frame: frame - 24, fps, config: { damping: 200 } });
   const fadeOut = interpolate(
     frame,

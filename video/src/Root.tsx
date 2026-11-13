@@ -5,6 +5,7 @@ import {
   announcementDefaults,
 } from "./compositions/Announcement";
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
+import { Rappel, rappelDefaults, rappelDuration } from "./compositions/Rappel";
 import {
   Story,
   courageDefaults,
@@ -61,6 +62,18 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={meditationDefaults}
         calculateMetadata={({ props }) => ({
           durationInFrames: storyDuration(props),
+        })}
+      />
+      <Composition
+        id="Rappel"
+        component={Rappel}
+        durationInFrames={60}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        defaultProps={rappelDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: rappelDuration(props),
         })}
       />
       <Composition

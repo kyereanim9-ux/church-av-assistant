@@ -56,12 +56,15 @@ export const storyDuration = (p: StoryProps) =>
     p.scenes.reduce((s, sc) => s + sc.frames, 0),
   );
 
-const SERIF = "'Liberation Serif', 'DejaVu Serif', Georgia, serif";
-const SANS = "'DejaVu Sans', Arial, sans-serif";
-const GOLD = "#fcd34d";
-const CLAMP = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+export const SERIF = "'Liberation Serif', 'DejaVu Serif', Georgia, serif";
+export const SANS = "'DejaVu Sans', Arial, sans-serif";
+export const GOLD = "#fcd34d";
+export const CLAMP = {
+  extrapolateLeft: "clamp",
+  extrapolateRight: "clamp",
+} as const;
 
-const center: React.CSSProperties = {
+export const center: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   textAlign: "center",
@@ -69,7 +72,7 @@ const center: React.CSSProperties = {
   color: "white",
 };
 
-const Rise: React.FC<{
+export const Rise: React.FC<{
   delay: number;
   children: React.ReactNode;
   style?: React.CSSProperties;
@@ -102,7 +105,9 @@ const Fade: React.FC<{ last?: boolean; children: React.ReactNode }> = ({
   return <AbsoluteFill style={{ opacity: o }}>{children}</AbsoluteFill>;
 };
 
-const Background: React.FC<{ hues: StoryProps["hues"] }> = ({ hues }) => {
+export const Background: React.FC<{ hues: StoryProps["hues"] }> = ({
+  hues,
+}) => {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const t = interpolate(frame, [0, durationInFrames], [0, 1], CLAMP);
@@ -237,11 +242,11 @@ const Icon: React.FC<{
     <Sun rise={p} size={size} />
   );
 
-const Verse: React.FC<{ text: string; reference: string; delay: number }> = ({
-  text,
-  reference,
-  delay,
-}) => {
+export const Verse: React.FC<{
+  text: string;
+  reference: string;
+  delay: number;
+}> = ({ text, reference, delay }) => {
   const frame = useCurrentFrame();
   const words = text.split(" ");
   const step = words.length > 20 ? 3 : 4;
@@ -941,7 +946,7 @@ export const meditationDefaults: StoryProps = {
     {
       kind: "title",
       frames: 150,
-      lines: ["Rappel de la semaine", "As-tu nourri ton âme ?"],
+      lines: ["Rappel de la semaine", "As-tu nourri ton esprit ?"],
     },
     {
       kind: "stat",
@@ -955,7 +960,7 @@ export const meditationDefaults: StoryProps = {
       frames: 270,
       title: "Pourquoi c'est important",
       items: [
-        "Nourrir son âme chaque jour",
+        "Nourrir son esprit chaque jour",
         "Rester connecté(e) à la Parole",
         "Grandir ensemble, pas à pas",
         "Rester fidèle et constant(e)",
