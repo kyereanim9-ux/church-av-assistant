@@ -5,6 +5,11 @@ import {
   announcementDefaults,
 } from "./compositions/Announcement";
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
+import {
+  Paroles,
+  PAROLES_DURATION,
+  parolesDefaults,
+} from "./compositions/Paroles";
 
 const FPS = 30;
 
@@ -19,6 +24,15 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         defaultProps={announcementDefaults}
+      />
+      <Composition
+        id="Paroles"
+        component={Paroles}
+        durationInFrames={PAROLES_DURATION}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        defaultProps={parolesDefaults}
       />
       <Composition
         id="Lyrics"
