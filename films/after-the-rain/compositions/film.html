@@ -1,0 +1,372 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; background: #05070f; }
+    #film-canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  </style>
+  <div id="root" data-composition-id="film" data-width="1920" data-height="1080">
+    <canvas id="film-canvas" class="clip" data-start="0" data-duration="15" data-track-index="1" width="1920" height="1080"></canvas>
+  </div>
+  <script>
+    (function () {
+      const W = 1920, H = 1080, DUR = 15;
+      const cv = document.getElementById("film-canvas");
+      const ctx = cv.getContext("2d");
+      const fig = document.createElement("canvas"); fig.width = W; fig.height = H;
+      const fx = fig.getContext("2d");
+
+      // ---------- helpers ----------
+      function mulberry32(a) { return function () { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+      const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+      const lerp = (a, b, k) => a + (b - a) * k;
+      const ease = (k) => { k = clamp(k, 0, 1); return k * k * (3 - 2 * k); };
+      const easeOut = (k) => { k = clamp(k, 0, 1); return 1 - Math.pow(1 - k, 3); };
+      const seg = (t, a, b) => ease((t - a) / (b - a));
+      const rad = (d) => (d * Math.PI) / 180;
+      function mix(c1, c2, k) { k = clamp(k, 0, 1); return "rgb(" + Math.round(lerp(c1[0], c2[0], k)) + "," + Math.round(lerp(c1[1], c2[1], k)) + "," + Math.round(lerp(c1[2], c2[2], k)) + ")"; }
+      const rgba = (c, a) => "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")";
+      // keyed value: keys = [[t, v], ...], eased between
+      function key(t, keys) {
+        if (t <= keys[0][0]) return keys[0][1];
+        for (let i = 1; i < keys.length; i++) if (t <= keys[i][0]) return lerp(keys[i - 1][1], keys[i][1], ease((t - keys[i - 1][0]) / (keys[i][0] - keys[i - 1][0])));
+        return keys[keys.length - 1][1];
+      }
+
+      // ---------- world constants ----------
+      const GROUND = 800, WALL = 606, LAMP_X = 860, LAMP_Y = 262, LAMP2_X = 2380;
+      const E_X0 = 1040, E_STOP = 1990; let TULIP_X = 1168;
+
+      // seeded scenery
+      const rs = mulberry32(7);
+      const towers = []; let tx = -400;
+      while (tx < 4600) { const w = 60 + rs() * 150, h = 60 + rs() * 230; const wins = []; const n = Math.floor(rs() * 7); for (let i = 0; i < n; i++) wins.push([rs(), rs(), rs() < 0.75 ? 0 : 1]); towers.push({ x: tx, w, h, wins }); tx += w + rs() * 30; }
+      const stones = []; for (let x = -200; x < 4400; x += 118) stones.push(x + (rs() - 0.5) * 16);
+      const cobbles = []; for (let i = 0; i < 520; i++) cobbles.push([rs() * 4600 - 200, rs(), 26 + rs() * 30]);
+      const rr = mulberry32(21);
+      const drops = []; for (let i = 0; i < 620; i++) drops.push({ x: rr(), ph: rr(), sp: 0.9 + rr() * 0.9, len: 0.5 + rr(), layer: rr() < 0.3 ? 1 : 0, thr: rr() });
+      const splashes = []; for (let i = 0; i < 90; i++) splashes.push({ x: rr() * 4600 - 200, d: rr(), ph: rr(), per: 0.7 + rr() * 0.9, thr: rr() });
+      const curls = []; const rc = mulberry32(5);
+      for (let i = 0; i < 46; i++) { const a = rad(-205 + rc() * 190); const r = 30 + rc() * 12; curls.push([Math.cos(a) * r * 1.02 - 6, Math.sin(a) * r * 1.0 - 12, 9 + rc() * 6]); }
+
+      // ---------- state over time ----------
+      function state(t) {
+        const s = {};
+        s.rain = 1 - seg(t, 9.6, 11.9);
+        s.dawn = seg(t, 11.2, 14.6);
+        // walk
+        const wk = clamp((t - 9.0) / 3.7, 0, 1);
+        const prog = wk < 0.12 ? (wk * wk) / 0.24 : wk > 0.86 ? 1 - ((1 - wk) * (1 - wk)) / 0.28 - 0 : wk - 0.06;
+        const pn = clamp(prog / 0.87, 0, 1);
+        s.ex = lerp(E_X0, E_STOP, pn);
+        s.walkPhase = ((s.ex - E_X0) / 172);
+        s.walking = t > 9.0 && t < 12.7 ? Math.min(seg(t, 9.0, 9.4), 1 - seg(t, 12.3, 12.7)) : 0;
+        // head: bow then lift
+        s.head = key(t, [[0, 4], [1.9, 8], [3.1, 10], [4.5, 27], [6.0, 24], [7.6, 30], [8.6, 22], [9.4, 12], [12.6, 10], [14.0, -24]]);
+        s.eye = key(t, [[0, 1], [3.5, 1], [4.1, 0], [6.2, 0], [6.7, 0.7], [12.9, 0.7], [13.6, 0.15]]);
+        // arms: [upper, fore] degrees from straight down, + = forward
+        s.phoneU = key(t, [[0, 50], [2.1, 50], [2.9, 4]]);
+        s.phoneF = key(t, [[0, 158], [2.1, 158], [2.9, 10]]);
+        s.phoneOn = t < 1.75 ? 1 : 1 - seg(t, 1.75, 1.95);
+        s.phoneShow = 1 - seg(t, 2.7, 3.0);
+        s.bU = key(t, [[0, 12], [4.2, 12], [5.5, 4], [6.2, 6], [7.3, 52], [8.3, 52], [9.0, -4]]);
+        s.bF = key(t, [[0, 60], [4.2, 62], [5.5, 10], [6.2, 16], [7.3, 26], [8.3, 26], [9.0, 22]]);
+        s.bqA = key(t, [[0, 24], [4.2, 22], [5.5, 158], [6.2, 150], [7.3, 96]]);
+        s.held = t < 7.45;
+        s.pocket = seg(t, 8.6, 9.2);
+        s.lean = key(t, [[0, 1], [4.5, 4], [6.2, 5], [7.4, 9], [8.6, 5], [9.4, 4], [12.6, 3], [14.0, -2]]);
+        s.breath = Math.sin(t * 1.9) * 1.6;
+        // camera
+        if (t < 3) s.cam = [lerp(985, 1000, t / 3), lerp(545, 525, t / 3), lerp(1.22, 1.4, t / 3)];
+        else if (t < 6) { const k = (t - 3) / 3; s.cam = [lerp(1078, 1086, k), lerp(432, 446, k), lerp(3.5, 3.85, k)]; }
+        else if (t < 9) { const k = (t - 6) / 3; s.cam = [lerp(1195, 1210, k), lerp(585, 592, k), lerp(2.9, 3.15, k)]; }
+        else { const k = ease((t - 9) / 6); s.cam = [lerp(1560, 1500, k), lerp(505, 530, k), lerp(0.92, 1.08, k)]; }
+        s.shot = t < 3 ? 0 : t < 6 ? 1 : t < 9 ? 2 : 3;
+        return s;
+      }
+
+      // ---------- drawing ----------
+      function setCam(c, cam) { c.setTransform(cam[2], 0, 0, cam[2], W / 2 - cam[0] * cam[2], H / 2 - cam[1] * cam[2]); }
+
+      function drawBackdrop(s) {
+        const d = s.dawn, cam = s.cam;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        const bz = 1 + (cam[2] - 1) * 0.28;
+        const hy = H / 2 + (560 - lerp(540, cam[1], 0.35)) * bz; // horizon on screen
+        // sky
+        let g = ctx.createLinearGradient(0, 0, 0, hy);
+        g.addColorStop(0, mix([6, 9, 22], [34, 44, 78], d));
+        g.addColorStop(0.62, mix([13, 19, 40], [96, 84, 118], d));
+        g.addColorStop(1, mix([22, 30, 54], [246, 170, 122], d));
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, hy + 2);
+        if (d > 0) { // dawn band
+          g = ctx.createRadialGradient(W * 0.62, hy + 30, 10, W * 0.62, hy + 30, W * 0.75);
+          g.addColorStop(0, "rgba(255,214,150," + 0.85 * d + ")"); g.addColorStop(0.35, "rgba(245,150,110," + 0.42 * d + ")"); g.addColorStop(1, "rgba(245,150,110,0)");
+          ctx.fillStyle = g; ctx.fillRect(0, 0, W, hy + 2);
+          // lifting clouds
+          ctx.filter = "blur(26px)";
+          for (let i = 0; i < 7; i++) { ctx.fillStyle = i % 2 ? "rgba(24,26,52," + 0.42 * d + ")" : "rgba(255,170,130," + 0.2 * d + ")"; ctx.beginPath(); ctx.ellipse(W * (0.02 + i * 0.17), hy - 300 - (i % 3) * 64 - d * 30, 420, 20 + (i % 3) * 10, -0.03, 0, 7); ctx.fill(); }
+          ctx.filter = "none";
+        }
+        // skyline + river with parallax
+        ctx.save();
+        ctx.translate(W / 2, hy); ctx.scale(bz, bz); ctx.translate(-(1500 + (cam[0] - 1500) * 0.32), 0);
+        ctx.filter = "blur(" + (2 + (cam[2] - 1) * 3.2).toFixed(1) + "px)";
+        for (const b of towers) {
+          ctx.fillStyle = mix([12, 17, 34], [44, 44, 72], d);
+          ctx.fillRect(b.x, -b.h, b.w, b.h + 4);
+          for (const w of b.wins) { ctx.fillStyle = w[2] ? "rgba(150,190,255," + 0.55 * (1 - d * 0.7) + ")" : "rgba(255,186,104," + 0.75 * (1 - d * 0.7) + ")"; ctx.fillRect(b.x + 8 + w[0] * (b.w - 22), -b.h + 10 + w[1] * (b.h - 24), 7, 9); }
+        }
+        // river
+        g = ctx.createLinearGradient(0, 0, 0, 260);
+        g.addColorStop(0, mix([14, 21, 42], [236, 164, 124], d)); g.addColorStop(0.25, mix([9, 14, 30], [120, 96, 122], d)); g.addColorStop(1, mix([6, 9, 20], [40, 46, 78], d));
+        ctx.fillStyle = g; ctx.fillRect(-600, 0, 5600, 420);
+        for (const b of towers) for (const w of b.wins) { ctx.fillStyle = w[2] ? "rgba(150,190,255," + 0.12 * (1 - d) + ")" : "rgba(255,186,104," + 0.2 * (1 - d) + ")"; ctx.fillRect(b.x + 8 + w[0] * (b.w - 22), 6, 7, 40 + w[1] * 90); }
+        ctx.restore(); ctx.filter = "none";
+      }
+
+      function drawBridge(s) {
+        const d = s.dawn;
+        setCam(ctx, s.cam);
+        // parapet wall
+        let g = ctx.createLinearGradient(0, WALL, 0, GROUND);
+        g.addColorStop(0, mix([30, 37, 60], [78, 74, 98], d)); g.addColorStop(1, mix([15, 20, 37], [40, 42, 64], d));
+        ctx.fillStyle = g; ctx.fillRect(-300, WALL, 5000, GROUND - WALL);
+        ctx.strokeStyle = "rgba(4,6,14,0.5)"; ctx.lineWidth = 2;
+        for (const x of stones) { ctx.beginPath(); ctx.moveTo(x, WALL + 22); ctx.lineTo(x, GROUND); ctx.stroke(); }
+        ctx.beginPath(); ctx.moveTo(-300, WALL + 108); ctx.lineTo(4700, WALL + 108); ctx.stroke();
+        // cap
+        ctx.fillStyle = mix([44, 52, 80], [126, 108, 122], d); ctx.fillRect(-300, WALL - 4, 5000, 26);
+        ctx.fillStyle = mix([70, 82, 116], [255, 206, 160], d); ctx.fillRect(-300, WALL - 4, 5000, 4);
+        ctx.fillStyle = "rgba(3,5,12,0.45)"; ctx.fillRect(-300, WALL + 22, 5000, 7);
+        // lamp light on wall
+        for (const lx of [LAMP_X, LAMP2_X]) {
+          const a = 0.62 * (1 - d * 0.75);
+          g = ctx.createRadialGradient(lx, WALL + 10, 10, lx, WALL + 10, 520);
+          g.addColorStop(0, "rgba(255,176,84," + a + ")"); g.addColorStop(1, "rgba(255,176,84,0)");
+          ctx.globalCompositeOperation = "lighter"; ctx.fillStyle = g; ctx.fillRect(lx - 540, WALL - 6, 1080, GROUND - WALL + 6); ctx.globalCompositeOperation = "source-over";
+        }
+        // deck
+        g = ctx.createLinearGradient(0, GROUND, 0, GROUND + 420);
+        g.addColorStop(0, mix([19, 25, 44], [66, 62, 88], d)); g.addColorStop(1, mix([7, 10, 20], [22, 26, 46], d));
+        ctx.fillStyle = g; ctx.fillRect(-300, GROUND, 5000, 700);
+        ctx.strokeStyle = "rgba(120,140,190,0.07)"; ctx.lineWidth = 2;
+        for (const c of cobbles) { const y = GROUND + 10 + c[1] * c[1] * 380; const k = 1 + c[1] * 1.6; ctx.beginPath(); ctx.ellipse(c[0], y, c[2] * k, 5 * k, 0, Math.PI, 0); ctx.stroke(); }
+        // wet reflections
+        ctx.globalCompositeOperation = "lighter";
+        for (const lx of [LAMP_X, LAMP2_X]) {
+          const a = 0.5 * (1 - d * 0.7);
+          g = ctx.createRadialGradient(lx + 30, GROUND + 70, 5, lx + 30, GROUND + 70, 430);
+          g.addColorStop(0, "rgba(255,170,80," + a + ")"); g.addColorStop(0.4, "rgba(255,150,70," + a * 0.35 + ")"); g.addColorStop(1, "rgba(255,150,70,0)");
+          ctx.save(); ctx.translate(0, GROUND + 70); ctx.scale(1, 0.42); ctx.translate(0, -(GROUND + 70)); ctx.fillStyle = g; ctx.fillRect(lx - 430, GROUND - 400, 920, 900); ctx.restore();
+        }
+        if (d > 0) { g = ctx.createLinearGradient(0, GROUND, 0, GROUND + 190); g.addColorStop(0, "rgba(255,170,120," + 0.3 * d + ")"); g.addColorStop(1, "rgba(255,170,120,0)"); ctx.fillStyle = g; ctx.fillRect(-300, GROUND, 5000, 190); }
+        ctx.globalCompositeOperation = "source-over";
+        // lamps
+        for (const lx of [LAMP_X, LAMP2_X]) {
+          ctx.strokeStyle = "#070910"; ctx.lineCap = "round"; ctx.lineWidth = 15; ctx.beginPath(); ctx.moveTo(lx, GROUND + 6); ctx.lineTo(lx, LAMP_Y + 60); ctx.stroke();
+          ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(lx, LAMP_Y + 62); ctx.quadraticCurveTo(lx, LAMP_Y - 12, lx + 38, LAMP_Y - 12); ctx.stroke();
+          ctx.fillStyle = "#070910"; ctx.fillRect(lx - 17, GROUND - 44, 34, 50); ctx.beginPath(); ctx.moveTo(lx + 16, LAMP_Y - 16); ctx.lineTo(lx + 64, LAMP_Y - 16); ctx.lineTo(lx + 56, LAMP_Y - 34); ctx.lineTo(lx + 24, LAMP_Y - 34); ctx.closePath(); ctx.fill();
+          const a = 1 - d * 0.55;
+          ctx.fillStyle = "rgba(255,226,170," + a + ")"; ctx.beginPath(); ctx.moveTo(lx + 22, LAMP_Y - 14); ctx.lineTo(lx + 58, LAMP_Y - 14); ctx.lineTo(lx + 51, LAMP_Y + 22); ctx.lineTo(lx + 29, LAMP_Y + 22); ctx.closePath(); ctx.fill();
+          ctx.globalCompositeOperation = "lighter";
+          g = ctx.createRadialGradient(lx + 40, LAMP_Y + 4, 4, lx + 40, LAMP_Y + 4, 330);
+          g.addColorStop(0, "rgba(255,190,100," + 0.72 * a + ")"); g.addColorStop(0.3, "rgba(255,160,80," + 0.2 * a + ")"); g.addColorStop(1, "rgba(255,160,80,0)");
+          ctx.fillStyle = g; ctx.fillRect(lx - 300, LAMP_Y - 330, 680, 680);
+          // light cone
+          g = ctx.createLinearGradient(0, LAMP_Y, 0, GROUND + 40); g.addColorStop(0, "rgba(255,180,95," + 0.2 * a * (0.4 + 0.6 * s.rain) + ")"); g.addColorStop(1, "rgba(255,180,95,0)");
+          ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(lx + 22, LAMP_Y + 16); ctx.lineTo(lx + 58, LAMP_Y + 16); ctx.lineTo(lx + 330, GROUND + 40); ctx.lineTo(lx - 250, GROUND + 40); ctx.closePath(); ctx.fill();
+          ctx.globalCompositeOperation = "source-over";
+        }
+      }
+
+      function drawBouquet(c, x, y, ang, d, wet) {
+        c.save(); c.translate(x, y); c.rotate(rad(ang));
+        // stems
+        c.lineCap = "round"; c.strokeStyle = mix([34, 82, 58], [70, 128, 76], d); c.lineWidth = 4;
+        const heads = [[-26, -112, -12], [-10, -128, -4], [8, -122, 5], [24, -108, 13], [0, -100, 0]];
+        for (const h of heads) { c.beginPath(); c.moveTo(0, -18); c.quadraticCurveTo(h[0] * 0.3, -70, h[0], h[1] + 16); c.stroke(); }
+        // leaves
+        c.fillStyle = mix([28, 70, 52], [62, 118, 72], d);
+        for (const L of [[-16, -66, -24], [15, -62, 22]]) { c.save(); c.translate(L[0], L[1]); c.rotate(rad(L[2])); c.beginPath(); c.ellipse(0, 0, 7, 30, 0, 0, 7); c.fill(); c.restore(); }
+        // tulip heads
+        for (const h of heads) {
+          c.save(); c.translate(h[0], h[1]); c.rotate(rad(h[2]));
+          c.fillStyle = mix([150, 26, 40], [226, 52, 54], d); c.beginPath(); c.moveTo(0, 18); c.bezierCurveTo(-17, 12, -16, -12, -9, -20); c.lineTo(-3, -9); c.lineTo(0, -23); c.lineTo(3, -9); c.lineTo(9, -20); c.bezierCurveTo(16, -12, 17, 12, 0, 18); c.fill();
+          c.fillStyle = mix([196, 44, 54], [255, 112, 92], d); c.beginPath(); c.moveTo(1, 16); c.bezierCurveTo(13, 10, 13, -10, 8, -17); c.lineTo(3, -7); c.closePath(); c.fill();
+          if (wet) { c.fillStyle = "rgba(255,240,230,0.75)"; c.beginPath(); c.arc(-6, 2, 1.8, 0, 7); c.arc(5, -6, 1.4, 0, 7); c.fill(); }
+          c.restore();
+        }
+        // paper wrap
+        c.fillStyle = mix([108, 84, 62], [176, 138, 98], d); c.beginPath(); c.moveTo(-9, 26); c.lineTo(9, 26); c.lineTo(36, -74); c.lineTo(4, -58); c.lineTo(-34, -78); c.closePath(); c.fill();
+        c.fillStyle = mix([132, 104, 76], [214, 170, 120], d); c.beginPath(); c.moveTo(9, 26); c.lineTo(36, -74); c.lineTo(4, -58); c.lineTo(0, 26); c.closePath(); c.fill();
+        c.strokeStyle = "rgba(240,228,200,0.85)"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(-13, -4); c.lineTo(15, -6); c.stroke();
+        c.restore();
+      }
+
+      // character rig, drawn into c with the camera transform already set. Origin = feet.
+      function drawElias(c, s, t) {
+        const d = s.dawn, x = s.ex, w = s.walking;
+        const ph = s.walkPhase * Math.PI * 2;
+        const bob = w * (-7 * Math.abs(Math.sin(ph))) + s.breath * 0.4;
+        const coat = [17, 24, 46], coatHi = [30, 40, 70], skin = [128, 82, 56], skinSh = [86, 54, 40], hair = [14, 12, 16], trou = [10, 13, 24];
+        c.save(); c.translate(x, GROUND + bob);
+        const leanR = rad(s.lean + w * 3);
+        // --- legs ---
+        function leg(off, front) {
+          const sw = Math.sin(ph + off), th = rad(w * 27 * sw), kn = rad(w * (sw < 0 ? 4 : 4) + w * 34 * Math.max(0, Math.cos(ph + off + 0.5)));
+          const hx = 0, hy = -205 - bob * 0;
+          const kx = hx + Math.sin(th) * 104, ky = hy + Math.cos(th) * 104;
+          const ax = kx + Math.sin(th - kn) * 100, ay = Math.min(ky + Math.cos(th - kn) * 100, -bob - 4);
+          c.strokeStyle = front ? mix(trou, [28, 30, 50], d) : mix([7, 9, 18], [20, 22, 40], d); c.lineCap = "round"; c.lineJoin = "round"; c.lineWidth = 36;
+          c.beginPath(); c.moveTo(hx, hy); c.lineTo(kx, ky); c.lineTo(ax, ay - 14); c.stroke();
+          c.fillStyle = front ? mix([52, 34, 24], [96, 62, 40], d) : mix([34, 22, 16], [70, 46, 32], d);
+          c.save(); c.translate(ax, ay - 8); c.rotate(-(th - kn) * 0.5); c.beginPath(); c.roundRect(-20, -14, 62, 26, 11); c.fill(); c.restore();
+        }
+        leg(Math.PI, false);
+        // --- torso group (leans) ---
+        c.save(); c.translate(0, -205); c.rotate(leanR);
+        const SH = -128; // shoulder y in torso space
+        function arm(u, f, front, withHand) {
+          const ex = Math.sin(rad(u)) * 96, ey = SH + Math.cos(rad(u)) * 96;
+          const hx = ex + Math.sin(rad(f)) * 92, hy = ey + Math.cos(rad(f)) * 92;
+          c.strokeStyle = front ? mix(coatHi, [44, 52, 84], d) : mix([11, 16, 32], [24, 30, 54], d); c.lineCap = "round"; c.lineJoin = "round"; c.lineWidth = 34;
+          c.beginPath(); c.moveTo(0, SH + 4); c.lineTo(ex, ey); c.lineTo(hx, hy); c.stroke();
+          if (withHand > 0.02) { c.globalAlpha = withHand; c.fillStyle = mix(skin, [170, 112, 78], d); c.beginPath(); c.ellipse(hx + Math.sin(rad(f)) * 14, hy + Math.cos(rad(f)) * 14, 15, 13, 0, 0, 7); c.fill(); c.globalAlpha = 1; }
+          return [hx + Math.sin(rad(f)) * 16, hy + Math.cos(rad(f)) * 16];
+        }
+        // far arm (phone)
+        const pk = s.pocket;
+        const ph2 = arm(lerp(s.phoneU, -6, pk), lerp(s.phoneF, 20, pk), false, 1 - pk); const phPt = new DOMPoint(ph2[0], ph2[1] - 16).matrixTransform(c.getTransform());
+        if (s.phoneShow > 0.01) {
+          c.save(); c.translate(ph2[0], ph2[1]); c.rotate(rad(-28)); c.globalAlpha = s.phoneShow;
+          c.fillStyle = "#06080e"; c.beginPath(); c.roundRect(-9, -34, 18, 42, 4); c.fill();
+          c.fillStyle = "rgba(170,205,255," + s.phoneOn + ")"; c.fillRect(-12, -31, 4, 36);
+          c.restore(); c.globalAlpha = 1;
+        }
+        // coat body
+        c.fillStyle = mix(coat, [30, 37, 64], d);
+        c.beginPath(); c.moveTo(-44, SH + 6); c.quadraticCurveTo(-52, -40, -50, 96); c.lineTo(46, 96); c.quadraticCurveTo(50, -30, 40, SH + 8); c.quadraticCurveTo(0, SH - 22, -44, SH + 6); c.fill();
+        c.strokeStyle = "rgba(6,8,18,0.6)"; c.lineWidth = 3; c.beginPath(); c.moveTo(26, SH + 14); c.lineTo(20, 96); c.stroke();
+        // collar
+        c.fillStyle = mix([24, 32, 58], [52, 62, 96], d); c.beginPath(); c.moveTo(-30, SH - 2); c.lineTo(34, SH + 2); c.lineTo(30, SH + 34); c.lineTo(4, SH + 14); c.closePath(); c.fill();
+        // --- head ---
+        c.save(); c.translate(-4, SH - 6); c.rotate(rad(s.head) - leanR * 0.4); c.translate(4, -52);
+        c.fillStyle = mix(skinSh, [150, 98, 70], d); c.beginPath(); c.moveTo(-18, 30); c.lineTo(10, 34); c.lineTo(12, 66); c.lineTo(-22, 64); c.closePath(); c.fill(); // neck
+        c.fillStyle = mix(skin, [184, 122, 86], d);
+        c.beginPath(); c.moveTo(6, -44); c.quadraticCurveTo(28, -40, 32, -18); c.quadraticCurveTo(33, -11, 36, -5); c.quadraticCurveTo(44, 4, 46, 9); c.quadraticCurveTo(44, 13, 36, 13); c.quadraticCurveTo(39, 18, 37, 21); c.lineTo(33, 23); c.quadraticCurveTo(37, 27, 35, 30); c.quadraticCurveTo(31, 34, 32, 40); c.quadraticCurveTo(30, 50, 14, 52); c.quadraticCurveTo(-8, 52, -24, 34); c.quadraticCurveTo(-42, 10, -36, -18); c.quadraticCurveTo(-28, -46, 6, -44); c.fill();
+        // beard
+        c.fillStyle = mix([26, 20, 20], [48, 36, 32], d); c.beginPath(); c.moveTo(-14, 6); c.quadraticCurveTo(2, 22, 20, 17); c.quadraticCurveTo(28, 12, 34, 14); c.quadraticCurveTo(36, 22, 34, 24); c.lineTo(28, 24); c.quadraticCurveTo(34, 30, 33, 40); c.quadraticCurveTo(31, 52, 14, 54); c.quadraticCurveTo(-10, 54, -26, 34); c.quadraticCurveTo(-24, 16, -14, 6); c.fill();
+        c.fillStyle = mix(skin, [184, 122, 86], d); c.beginPath(); c.ellipse(31, 24.5, 4.5, 1.6, 0.1, 0, 7); c.fill(); // lips
+        // ear
+        c.fillStyle = mix(skinSh, [150, 98, 70], d); c.beginPath(); c.ellipse(-12, -2, 7, 11, 0.2, 0, 7); c.fill();
+        // hair
+        c.fillStyle = mix(hair, [30, 26, 30], d); for (const k of curls) { c.beginPath(); c.arc(k[0], k[1], k[2], 0, 7); c.fill(); }
+        // brow + eye
+        c.strokeStyle = "#0c0a0c"; c.lineCap = "round"; c.lineWidth = 3.4; c.beginPath(); c.moveTo(13, -19 + (1 - s.eye) * 2); c.quadraticCurveTo(22, -24 + (1 - s.eye) * 3, 31, -18 + (1 - s.eye) * 3); c.stroke();
+        const eo = s.eye;
+        if (eo > 0.12) { c.fillStyle = "#f1e8dc"; c.beginPath(); c.ellipse(23, -10, 6.5, 4.2 * eo, 0, 0, 7); c.fill(); c.fillStyle = "#1a1210"; c.beginPath(); c.ellipse(25, -9.6, 3.2, 3.6 * eo, 0, 0, 7); c.fill(); }
+        c.lineWidth = 2.4; c.strokeStyle = "#0c0a0c"; c.beginPath(); c.moveTo(16, -10); c.quadraticCurveTo(23, -10 - 4.4 * eo + (1 - eo) * 2.5, 30, -10); c.stroke();
+        // rain on the cheek
+        const wetA = clamp(1 - d * 1.4, 0, 1) * (t > 2.4 ? 1 : 0.5);
+        for (let i = 0; i < 2; i++) { const cyc = ((t * (0.34 + i * 0.07) + i * 0.37) % 1); const yy = -4 + cyc * 44, xx = 14 + i * 6 - cyc * (6 + i * 2); c.fillStyle = "rgba(214,230,255," + 0.55 * wetA * (1 - cyc * 0.6) + ")"; c.beginPath(); c.ellipse(xx, yy, 1.1, 2.4, 0.15, 0, 7); c.fill(); c.strokeStyle = "rgba(210,228,255," + 0.22 * wetA + ")"; c.lineWidth = 1.4; c.beginPath(); c.moveTo(xx + cyc * 2, yy - cyc * 16); c.lineTo(xx, yy); c.stroke(); }
+        c.restore();
+        // near arm (bouquet)
+        const hb = arm(lerp(s.bU, 4, pk), lerp(s.bF, 24, pk), true, 1 - pk);
+        const m = c.getTransform(); const pt = new DOMPoint(hb[0], hb[1]).matrixTransform(m);
+        c.restore(); // torso
+        leg(0, true);
+        // coat skirt over the legs
+        c.save(); c.translate(0, -205); c.rotate(leanR); c.fillStyle = mix(coat, [30, 37, 64], d);
+        const fl = w * 10 * Math.sin(ph * 1 + 1);
+        c.beginPath(); c.moveTo(-50, -24); c.lineTo(46, -24); c.quadraticCurveTo(52, 110, 50 + fl * 0.5, 150); c.lineTo(-56 - fl, 152); c.quadraticCurveTo(-54, 110, -50, -24); c.fill(); c.strokeStyle = "rgba(6,8,18,0.6)"; c.lineWidth = 3; c.beginPath(); c.moveTo(21, -24); c.lineTo(18, 150); c.stroke(); c.restore();
+        c.restore();
+        pt.phone = phPt; return pt; // hand position in screen px
+      }
+
+      function drawFigureLayer(s, t, probe) {
+        fx.setTransform(1, 0, 0, 1, 0, 0); fx.globalCompositeOperation = "source-over"; fx.clearRect(0, 0, W, H);
+        setCam(fx, s.cam);
+        const hand = drawElias(fx, s, t);
+        // bouquet in hand: convert screen hand point back to world
+        const z = s.cam[2]; const wx = (hand.x - W / 2) / z + s.cam[0], wy = (hand.y - H / 2) / z + s.cam[1];
+        let bq;
+        if (s.held) { const k = seg(t, 6.9, 7.4); drawBouquet(fx, wx, lerp(wy, WALL - 15, k), s.bqA, s.dawn, t > 1); }
+        if (probe) probe.x = wx;
+        // light the figure
+        fx.globalCompositeOperation = "source-atop";
+        const d = s.dawn;
+        let g = fx.createRadialGradient(LAMP_X + 40, LAMP_Y + 4, 20, LAMP_X + 40, LAMP_Y + 4, 640);
+        g.addColorStop(0, "rgba(255,170,84," + 0.4 * (1 - d * 0.7) + ")"); g.addColorStop(0.55, "rgba(255,170,84," + 0.12 * (1 - d * 0.7) + ")"); g.addColorStop(1, "rgba(255,170,84,0)"); fx.fillStyle = g; fx.fillRect(-400, -400, 5200, 2000);
+        if (s.phoneOn > 0.01 && s.phoneShow > 0.01) { const pwx = (hand.phone.x - W / 2) / z + s.cam[0], pwy = (hand.phone.y - H / 2) / z + s.cam[1]; g = fx.createRadialGradient(pwx - 8, pwy, 3, pwx - 30, pwy - 20, 120); g.addColorStop(0, "rgba(130,180,255," + 0.75 * s.phoneOn + ")"); g.addColorStop(1, "rgba(130,180,255,0)"); fx.fillStyle = g; fx.fillRect(-400, -400, 5200, 2000); }
+        if (d > 0) { g = fx.createLinearGradient(0, GROUND - 470, 0, GROUND); g.addColorStop(0, "rgba(255,186,130," + 0.2 * d + ")"); g.addColorStop(0.6, "rgba(255,170,120," + 0.05 * d + ")"); g.addColorStop(1, "rgba(255,170,120,0)"); fx.fillStyle = g; fx.fillRect(-400, -400, 5200, 2000); }
+        fx.globalCompositeOperation = "source-over";
+        return bq;
+      }
+
+      function drawRain(s, t) {
+        if (s.rain <= 0.001) return;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        const z = s.cam[2], zs = 0.7 + z * 0.3;
+        ctx.lineCap = "round";
+        for (const dr of drops) {
+          if (dr.thr > s.rain) continue;
+          const near = dr.layer === 1;
+          const cyc = (dr.ph + t * dr.sp * (near ? 1.5 : 1.1)) % 1;
+          const y = cyc * (H + 260) - 130, x = dr.x * (W + 300) - 60 - cyc * 150;
+          const len = (near ? 84 : 46) * dr.len * zs;
+          ctx.strokeStyle = near ? "rgba(196,214,246," + 0.3 * Math.min(1, s.rain * 1.5) + ")" : "rgba(170,190,230," + 0.17 * Math.min(1, s.rain * 1.5) + ")";
+          ctx.lineWidth = near ? 2.6 * zs : 1.3;
+          ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - len * 0.2, y + len); ctx.stroke();
+        }
+      }
+      function drawSplashes(s, t) {
+        if (s.rain <= 0.001) return;
+        setCam(ctx, s.cam);
+        for (const sp of splashes) {
+          if (sp.thr > s.rain) continue;
+          const cyc = ((t / sp.per) + sp.ph) % 1; if (cyc > 0.5) continue; const k = cyc / 0.5;
+          const onWall = sp.d < 0.22; const y = onWall ? WALL - 3 : GROUND + 14 + sp.d * sp.d * 300; const sc = onWall ? 0.5 : 0.6 + sp.d * 1.3;
+          ctx.strokeStyle = "rgba(200,216,246," + 0.5 * (1 - k) + ")"; ctx.lineWidth = 1.6;
+          ctx.beginPath(); ctx.ellipse(sp.x, y, (4 + k * 22) * sc, (1.4 + k * 6) * sc, 0, 0, 7); ctx.stroke();
+        }
+      }
+
+      function render(t) {
+        t = clamp(t, 0, DUR);
+        const s = state(t);
+        ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = "#05070f"; ctx.fillRect(0, 0, W, H);
+        drawBackdrop(s);
+        drawBridge(s);
+        drawSplashes(s, t);
+        // tulips resting on the wall
+        if (!s.held) {
+          setCam(ctx, s.cam);
+          if (s.dawn > 0.2) { ctx.globalCompositeOperation = "lighter"; const a = (s.dawn - 0.2) * 0.42; const g = ctx.createRadialGradient(TULIP_X + 60, WALL - 16, 4, TULIP_X + 60, WALL - 16, 170); g.addColorStop(0, "rgba(255,190,130," + a + ")"); g.addColorStop(1, "rgba(255,190,130,0)"); ctx.fillStyle = g; ctx.fillRect(TULIP_X - 130, WALL - 200, 380, 380); ctx.globalCompositeOperation = "source-over"; }
+          ctx.fillStyle = "rgba(3,5,12,0.45)"; ctx.beginPath(); ctx.ellipse(TULIP_X + 58, WALL - 2, 78, 6, 0, 0, 7); ctx.fill();
+          drawBouquet(ctx, TULIP_X, WALL - 15, 96, s.dawn, s.rain > 0.2 || true);
+        }
+        // figure reflection, then figure
+        const bq = drawFigureLayer(s, t);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        const gy = H / 2 + (GROUND - s.cam[1]) * s.cam[2];
+        if (gy < H) { ctx.save(); ctx.beginPath(); ctx.rect(0, gy, W, H - gy); ctx.clip(); ctx.globalAlpha = 0.2; ctx.translate(0, gy * 2 + 6); ctx.scale(1, -1); ctx.filter = "blur(5px)"; ctx.drawImage(fig, 0, 0); ctx.restore(); ctx.filter = "none"; ctx.globalAlpha = 1; }
+        ctx.drawImage(fig, 0, 0);
+        drawRain(s, t);
+        // grade
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        let g = ctx.createRadialGradient(W / 2, H / 2, H * 0.42, W / 2, H / 2, H * 1.05);
+        g.addColorStop(0, "rgba(2,3,8,0)"); g.addColorStop(1, "rgba(2,3,8," + lerp(0.72, 0.42, s.dawn) + ")"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        if (s.dawn > 0) { ctx.globalCompositeOperation = "soft-light"; ctx.fillStyle = "rgba(255,170,110," + 0.3 * s.dawn + ")"; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = "source-over"; }
+        const fade = Math.max(1 - seg(t, 0, 0.7), seg(t, 14.35, 14.95));
+        if (fade > 0) { ctx.fillStyle = "rgba(3,4,9," + fade + ")"; ctx.fillRect(0, 0, W, H); }
+      }
+
+      { const pr = {}; drawFigureLayer(state(7.449), 7.449, pr); TULIP_X = pr.x; }
+      const clock = { t: 0 };
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(clock, { t: 0 }, { t: DUR, duration: DUR, ease: "none", onUpdate: () => render(clock.t) }, 0);
+      render(0);
+      window.__timelines["film"] = tl;
+    })();
+  </script>
+</template>
