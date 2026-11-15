@@ -360,47 +360,6 @@ const EndCard: React.FC<{ episode: Episode; frame: number }> = ({
   );
 };
 
-/** Rappel discret « abonne-toi » pendant le dialogue : presque personne n'atteint la carte de fin. */
-const FollowHint: React.FC<{ episode: Episode; frame: number }> = ({
-  episode,
-  frame,
-}) => {
-  const from = 14 * 30;
-  const to = 21 * 30;
-  if (frame < from || frame > to || frame >= episode.endFrom) return null;
-  const o =
-    interpolate(frame, [from, from + 10], [0, 1], clamp) *
-    interpolate(frame, [to - 10, to], [1, 0], clamp);
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: 320,
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        opacity: o,
-        transform: `translateY(${interpolate(frame, [from, from + 10], [-12, 0], clamp)}px)`,
-      }}
-    >
-      <div
-        style={{
-          fontFamily: FONT,
-          fontSize: 32,
-          fontWeight: 700,
-          color: "#120a06",
-          background: "#f6d48a",
-          padding: "12px 28px",
-          borderRadius: 999,
-          boxShadow: "0 6px 24px rgba(0,0,0,.5)",
-        }}
-      >
-        Épisode {episode.num}/6 · Abonne-toi pour la suite
-      </div>
-    </div>
-  );
-};
-
 const Tag: React.FC<{ episode: Episode }> = ({ episode }) => (
   <div
     style={{
@@ -436,7 +395,6 @@ export const LuiOuElle: React.FC<LuiOuElleProps> = ({ episode }) => {
         }}
       />
       <Tag episode={episode} />
-      <FollowHint episode={episode} frame={frame} />
       <div
         style={{
           position: "absolute",
