@@ -126,13 +126,13 @@ EP["ep2_il_a_change"] = [
 ]
 EP["ep3_celle_qui_s_est_eteinte"] = [
 ("M","Quand est-ce que tu as ri pour la dernière fois… vraiment ?",0),
-("E","Je ne me souviens plus.",1.2),
+("E","Je ne me souviens plus.",0.5),
 ("M","Avant, tu étais comment ?",0),
-("E","Je parlais beaucoup. Je racontais tout. Je chantais en cuisinant.",0),
+("E","Je parlais beaucoup. Je chantais en cuisinant.",0),
 ("M","Et maintenant ?",0),
 ("E","Maintenant, je fais attention.",0),
 ("M","À quoi ?",0),
-("E","À son humeur. Au ton de sa voix. À la façon dont il ferme la porte.",0),
+("E","À son humeur. À la façon dont il ferme la porte.",0),
 ("M","Le matin, tu penses d'abord à quoi ? À comment tu vas… ou à comment il va ?",0.8),
 ("E","À comment il va.",1.2),
 ("M","Et tes amies ?",0),
@@ -396,13 +396,13 @@ async def episode(name, lines):
     nxt = META[order[order.index(name) + 1]]["title"] if m["num"] < len(order) else None
     if nxt:
         outro = dict(action=m["action"], label="PROCHAIN ÉPISODE", next=f"« {nxt} »", sub="Abonne-toi pour ne pas le manquer")
-        say_cta = f"{m['action']}. Prochain épisode : {nxt}. Abonne-toi pour ne pas le manquer."
+        say_cta = "Abonne-toi pour la suite."
     else:
         outro = dict(action=m["action"], label="SAISON 2", next="Bientôt", sub="Abonne-toi pour ne pas la manquer")
-        say_cta = f"C'était la saison 1 de Lui ou elle. {m['action']}. Et abonne-toi pour ne pas manquer la saison 2."
+        say_cta = "Abonne-toi pour la saison 2."
     spoken = [("M", " ".join(m["end"]).replace("(e)", "")), (m["love"], "Tu es aimé."), ("M", say_cta)]
     end_from = round((t + 0.5) * FPS)
-    t = end_from / FPS + 0.8
+    t = end_from / FPS + 0.5
     items = []
     for i, (sp, text) in enumerate(spoken, 1):
         f = os.path.join(d, f"fin{i}.mp3")
@@ -416,9 +416,9 @@ async def episode(name, lines):
                 await say(sp, text, f)
         n = len(envelope(pcm(f)))
         items.append({"file": f"luiouelle/{name}/fin{i}.mp3", "from": round(t * FPS), "dur": n})
-        t += n / FPS + 0.5
+        t += n / FPS + 0.3
     return dict(id=name, num=m["num"], title=m["title"], cover=m["cover"], cast=m["cast"], endLines=m["end"],
-                endFrom=end_from, endItems=items, outro=outro, durationInFrames=round((t + 1.2) * FPS), lines=out)
+                endFrom=end_from, endItems=items, outro=outro, durationInFrames=round((t + 1.0) * FPS), lines=out)
 
 
 async def main():
