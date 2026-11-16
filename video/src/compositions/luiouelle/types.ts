@@ -16,6 +16,8 @@ export type Line = {
 export type Episode = {
   id: string;
   num: number;
+  /** Suffixe d'une variante d'accroche (Reel d'essai), sinon null. */
+  variant: string | null;
   title: string;
   cover: string[];
   cast: string;

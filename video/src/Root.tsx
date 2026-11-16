@@ -41,7 +41,7 @@ export const RemotionRoot: React.FC = () => {
       {episodes.map((episode) => (
         <React.Fragment key={episode.id}>
           <Composition
-            id={`LuiOuElle-Ep${episode.num}`}
+            id={`LuiOuElle-Ep${episode.num}${episode.variant ? `-${episode.variant}` : ""}`}
             component={LuiOuElle}
             durationInFrames={episode.durationInFrames}
             fps={FPS}
@@ -50,7 +50,7 @@ export const RemotionRoot: React.FC = () => {
             defaultProps={{ episode }}
           />
           <Still
-            id={`LuiOuElleCover-Ep${episode.num}`}
+            id={`LuiOuElleCover-Ep${episode.num}${episode.variant ? `-${episode.variant}` : ""}`}
             component={LuiOuElleCover}
             width={1080}
             height={1920}

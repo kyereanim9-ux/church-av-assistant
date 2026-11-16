@@ -288,6 +288,12 @@ HOOK = {
     "ep5_je_t_entends": ("E", "Trois phrases peuvent sauver ton couple. Tu en dis zéro."),
 }
 
+# Variantes d'accroche à tester en « Reel d'essai » : (épisode, suffixe, (qui, texte), couverture).
+VARIANTS = [
+    ("ep1_elle_a_change", "essai", ("L", "Quand elle ne te dit plus « ça m'a fait mal »… ce n'est pas la paix. C'est qu'elle a abandonné."),
+     ["Elle ne dit plus", "« ça m'a fait mal »"]),
+]
+
 
 def sh(*a):
     subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *a], check=True)
@@ -352,19 +358,21 @@ def pad():
     os.remove(wav + ".raw")
 
 
-async def episode(name, lines):
+async def episode(name, lines, variant=None):
     m = META[name]
     d = os.path.join(PUB, name)
     os.makedirs(d, exist_ok=True)
-    t = 0.15 if name in HOOK else INTRO
+    hook = variant[2] if variant else HOOK.get(name)
+    t = 0.15 if hook else INTRO
     out = []
-    if name in HOOK:
-        show, text = HOOK[name]
-        f = os.path.join(d, "hook.mp3")
+    if hook:
+        show, text = hook
+        hook_name = f"hook-{variant[1]}.mp3" if variant else "hook.mp3"
+        f = os.path.join(d, hook_name)
         if not os.path.exists(f):
             await say("M", text, f)
         env = envelope(pcm(f))
-        out.append(dict(sp="M", text=text, file=f"luiouelle/{name}/hook.mp3", **{"from": round(t * FPS)},
+        out.append(dict(sp="M", text=text, file=f"luiouelle/{name}/{hook_name}", **{"from": round(t * FPS)},
                         dur=len(env), env=env, hook=True, show=show))
         t += len(env) / FPS + 0.45
     for i, (sp, text, pre) in enumerate(lines, 1):
@@ -417,7 +425,8 @@ async def episode(name, lines):
         n = len(envelope(pcm(f)))
         items.append({"file": f"luiouelle/{name}/fin{i}.mp3", "from": round(t * FPS), "dur": n})
         t += n / FPS + 0.5
-    return dict(id=name, num=m["num"], title=m["title"], cover=m["cover"], cast=m["cast"], endLines=m["end"],
+    ep_id, cover = (f"{name}__{variant[1]}", variant[3]) if variant else (name, m["cover"])
+    return dict(id=ep_id, num=m["num"], variant=variant[1] if variant else None, title=m["title"], cover=cover, cast=m["cast"], endLines=m["end"],
                 endFrom=end_from, endItems=items, outro=outro, durationInFrames=round((t + 1.2) * FPS), lines=out)
 
 
@@ -425,6 +434,7 @@ async def main():
     os.makedirs(PUB, exist_ok=True)
     pad()
     eps = [await episode(n, EP[n]) for n in EP]
+    eps += [await episode(v[0], EP[v[0]], v) for v in VARIANTS]
     with open(OUT, "w") as fh:
         fh.write("// Fichier généré par tools/lui_ou_elle.py — ne pas modifier à la main.\n")
         fh.write('import type { Episode } from "./types";\n\n')
