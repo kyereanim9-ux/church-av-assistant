@@ -259,19 +259,19 @@ EP["ep6_et_si_c_etait_les_deux"] = [
 
 # Hors-série : monologue de Lui, à la première personne.
 EP["hs1_mon_silence"] = [
-("L","On croit que je me tais parce que je m'en fiche. C'est faux.",0),
-("L","Je me tais parce que la dernière fois que j'ai parlé, ça a fini en dispute.",0.6),
-("L","Et la fois d'avant aussi.",0.3),
+("L","On croit que je reste silencieux parce que je m'en fiche. C'est faux.",0),
+("L","Je reste silencieux parce que la dernière fois que j'ai parlé, ça a fini en dispute.",0.8),
+("L","Et la fois d'avant aussi.",0.5),
 ("L","Alors j'ai appris à dire « ça va ».",0.6),
-("L","« Ça va », quand ça ne va pas.",0.2),
-("L","« Ça va », quand j'ai mal.",0.2),
-("L","« Ça va », pour que la soirée reste calme.",0.2),
+("L","« Ça va », quand ça ne va pas.",0.4),
+("L","« Ça va », quand j'ai mal.",0.4),
+("L","« Ça va », pour que la soirée reste calme.",0.4),
 ("L","Tu me demandes ce que j'ai. Je te réponds « rien ».",0.8),
 ("L","Mais ce « rien »… c'est tout ce que je n'arrive plus à te dire.",0.4),
 ("L","Je ne suis pas parti. Je suis là, à côté de toi.",0.8),
-("L","J'ai juste arrêté de croire que ma voix comptait.",0.3),
+("L","J'ai juste arrêté de croire que ma voix comptait.",0.5),
 ("L","Ecclésiaste, chapitre 3, verset 7 : « Un temps pour se taire, et un temps pour parler. »",1.5),
-("L","Mon temps de me taire est fini.",1.0),
+("L","Mon temps de silence est fini.",1.0),
 ("L","Alors ce soir, je vais te dire une seule phrase vraie :",0.5),
 ("L","J'ai besoin que tu m'écoutes.",0.6),
 ]
@@ -295,11 +295,11 @@ META = {
     "ep6_et_si_c_etait_les_deux": dict(num=6, love="LE", action="Dis-moi en commentaire quel sujet tu veux voir", title="Et si c'était les deux ?", verse="Colossiens 3:13",
         cover=["Qui a commencé ?"], cast="MLE",
         end=["Ce n'est pas toi contre lui ou elle.", "C'est vous deux contre le problème."]),
-    "hs1_mon_silence": dict(num=7, love="L", action="Envoie-la à quelqu'un qui dit toujours « ça va »", title="Mon silence", verse="Ecclésiaste 3:7",
-        cover=["« Ça va. »", "Non. Ça ne va pas."], cast="L", tag="LUI OU ELLE ? · HORS-SÉRIE", end_sp="L",
+    "hs1_mon_silence": dict(num=7, love="L", action="Envoie cette vidéo à quelqu'un qui dit toujours « ça va »", title="Mon silence", verse="Ecclésiaste 3:7",
+        cover=["« Ça va. »", "Non. Ça ne va pas."], cast="L", tag="LUI OU ELLE ? · HORS-SÉRIE", end_sp="L", rate="-12%",
         end=["Ton silence n'est pas un « rien ».", "Ta voix compte."],
         outro=dict(label="LUI OU ELLE ?", next="La série complète", sub="sur mon profil"),
-        say_cta="Envoie-la à quelqu'un qui dit toujours « ça va »."),
+        say_cta="Envoie cette vidéo à quelqu'un qui dit toujours « ça va »."),
 }
 
 # Accroche à froid : la phrase la plus forte de l'épisode, dite par le mentor
@@ -333,8 +333,9 @@ _SR = "silenceremove=start_periods=1:start_threshold=-55dB:start_silence=0.08"
 TRIM = f"{_SR},areverse,{_SR},areverse"
 
 
-async def say(sp, text, out):
+async def say(sp, text, out, rate=None):
     v, r, p = V[sp]
+    r = rate or r
     for attempt in range(4):
         try:
             await edge_tts.Communicate(text, v, rate=r, pitch=p).save(out + ".raw.mp3")
@@ -409,7 +410,7 @@ async def episode(name, lines, variant=None):
                 sh("-i", f + ".a.mp3", "-i", f + ".b.mp3", "-filter_complex", "amix=inputs=2:normalize=0", f)
                 os.remove(f + ".a.mp3"); os.remove(f + ".b.mp3")
             else:
-                await say(sp, text, f)
+                await say(sp, text, f, m.get("rate"))
         a = pcm(f)
         env = envelope(a)
         t += pre
@@ -449,7 +450,7 @@ async def episode(name, lines, variant=None):
                 sh("-i", f + ".a.mp3", "-i", f + ".b.mp3", "-filter_complex", "amix=inputs=2:normalize=0", f)
                 os.remove(f + ".a.mp3"); os.remove(f + ".b.mp3")
             else:
-                await say(sp, text, f)
+                await say(sp, text, f, m.get("rate"))
         n = len(envelope(pcm(f)))
         items.append({"file": f"luiouelle/{name}/fin{i}.mp3", "from": round(t * FPS), "dur": n})
         t += n / FPS + 0.5
