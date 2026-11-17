@@ -111,6 +111,10 @@ const Scene: React.FC<{ episode: Episode; frame: number }> = ({
   );
 };
 
+/** Espaces insécables du français : jamais de « ? » ou de « » » seul en début de ligne. */
+const nbsp = (t: string) =>
+  t.replace(/ ([?!:;»])/g, "\u00a0$1").replace(/« /g, "«\u00a0");
+
 const chunk = (text: string) => {
   const words = text.split(/\s+/).filter(Boolean);
   const out: string[][] = [];
@@ -146,7 +150,15 @@ const chunk = (text: string) => {
       out[k + 1].unshift("«");
     }
   }
-  return out.filter((c) => c.length > 0);
+  // Ponctuation fermante seule en début de bloc : on la recolle au bloc précédent.
+  const merged: string[][] = [];
+  for (const c of out.filter((x) => x.length > 0)) {
+    while (merged.length > 0 && c.length > 0 && /^[»?!:;]/.test(c[0])) {
+      merged[merged.length - 1].push(c.shift() as string);
+    }
+    if (c.length > 0) merged.push(c);
+  }
+  return merged;
 };
 
 const Caption: React.FC<{ line: Line; frame: number }> = ({ line, frame }) => {
@@ -537,7 +549,8 @@ export const LuiOuElleCover: React.FC<LuiOuElleProps> = ({ episode }) => {
           <div
             key={i}
             style={{
-              fontSize: 104,
+              fontSize:
+                Math.max(...episode.cover.map((c) => c.length)) > 16 ? 82 : 104,
               fontWeight: 900,
               lineHeight: 1.08,
               marginTop: i === 0 ? 30 : 6,
@@ -546,7 +559,7 @@ export const LuiOuElleCover: React.FC<LuiOuElleProps> = ({ episode }) => {
               textShadow: "0 6px 30px rgba(0,0,0,.9)",
             }}
           >
-            {l}
+            {nbsp(l)}
           </div>
         ))}
       </div>

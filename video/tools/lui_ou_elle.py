@@ -379,7 +379,7 @@ META = {
         outro=dict(label="PROCHAIN ÉPISODE", next="« Fais ce que tu veux »", sub="Abonne-toi pour ne pas le manquer"),
         say_cta="Envoie cette vidéo à quelqu'un qui dit souvent « laisse tomber »."),
     "cq2_fais_ce_que_tu_veux": dict(num=102, love="L", action="Envoie cette vidéo à quelqu'un qui dit souvent « fais ce que tu veux »", title='Fais ce que tu veux', verse='Amos 3:3',
-        cover=['« Fais ce que tu veux. »', 'Ça ne veut jamais dire ça.'], cast="L", tag="CE QUE JE NE DIS PAS · ÉP. 2", end_sp="L", rate="-12%",
+        cover=['« Fais ce que tu veux. »', 'Pas vraiment.'], cast="L", tag="CE QUE JE NE DIS PAS · ÉP. 2", end_sp="L", rate="-12%",
         end=["« Fais ce que tu veux », c'est souvent :", "« Je n'ose plus te dire ce que je veux. »"],
         outro=dict(label="PROCHAIN ÉPISODE", next="« Je suis juste fatiguée »", sub="Abonne-toi pour ne pas le manquer"),
         say_cta="Envoie cette vidéo à quelqu'un qui dit souvent « fais ce que tu veux »."),
