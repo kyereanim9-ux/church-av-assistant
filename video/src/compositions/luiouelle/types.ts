@@ -18,6 +18,8 @@ export type Episode = {
   num: number;
   /** Suffixe d'une variante d'accroche (Reel d'essai), sinon null. */
   variant: string | null;
+  /** Bandeau en haut de l'image ; par défaut « LUI OU ELLE ? · ÉP. n ». */
+  tag: string | null;
   title: string;
   cover: string[];
   cast: string;

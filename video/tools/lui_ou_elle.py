@@ -257,6 +257,25 @@ EP["ep6_et_si_c_etait_les_deux"] = [
 ]
 
 
+# Hors-série : monologue de Lui, à la première personne.
+EP["hs1_mon_silence"] = [
+("L","On croit que je me tais parce que je m'en fiche. C'est faux.",0),
+("L","Je me tais parce que la dernière fois que j'ai parlé, ça a fini en dispute.",0.6),
+("L","Et la fois d'avant aussi.",0.3),
+("L","Alors j'ai appris à dire « ça va ».",0.6),
+("L","« Ça va », quand ça ne va pas.",0.2),
+("L","« Ça va », quand j'ai mal.",0.2),
+("L","« Ça va », pour que la soirée reste calme.",0.2),
+("L","Tu me demandes ce que j'ai. Je te réponds « rien ».",0.8),
+("L","Mais ce « rien »… c'est tout ce que je n'arrive plus à te dire.",0.4),
+("L","Je ne suis pas parti. Je suis là, à côté de toi.",0.8),
+("L","J'ai juste arrêté de croire que ma voix comptait.",0.3),
+("L","Ecclésiaste, chapitre 3, verset 7 : « Un temps pour se taire, et un temps pour parler. »",1.5),
+("L","Mon temps de me taire est fini.",1.0),
+("L","Alors ce soir, je vais te dire une seule phrase vraie :",0.5),
+("L","J'ai besoin que tu m'écoutes.",0.6),
+]
+
 META = {
     "ep1_elle_a_change": dict(num=1, love="L", action="Réponds en commentaire", title="Elle a changé", verse="1 Jean 4:18",
         cover=["Elle a changé…", "ou tu l'as éteinte ?"], cast="ML",
@@ -276,6 +295,11 @@ META = {
     "ep6_et_si_c_etait_les_deux": dict(num=6, love="LE", action="Dis-moi en commentaire quel sujet tu veux voir", title="Et si c'était les deux ?", verse="Colossiens 3:13",
         cover=["Qui a commencé ?"], cast="MLE",
         end=["Ce n'est pas toi contre lui ou elle.", "C'est vous deux contre le problème."]),
+    "hs1_mon_silence": dict(num=7, love="L", action="Envoie-la à quelqu'un qui dit toujours « ça va »", title="Mon silence", verse="Ecclésiaste 3:7",
+        cover=["« Ça va. »", "Non. Ça ne va pas."], cast="L", tag="LUI OU ELLE ? · HORS-SÉRIE", end_sp="L",
+        end=["Ton silence n'est pas un « rien ».", "Ta voix compte."],
+        outro=dict(label="LUI OU ELLE ?", next="La série complète", sub="sur mon profil"),
+        say_cta="Envoie-la à quelqu'un qui dit toujours « ça va »."),
 }
 
 # Accroche à froid : la phrase la plus forte de l'épisode, dite par le mentor
@@ -400,15 +424,19 @@ async def episode(name, lines, variant=None):
         t += len(env) / FPS + GAP
     # Carte de fin : le mentor dit la phrase de fin, le personnage dit « Tu es aimé(e) »,
     # puis le mentor dit l'appel final.
-    order = list(META)
-    nxt = META[order[order.index(name) + 1]]["title"] if m["num"] < len(order) else None
-    if nxt:
+    order = [k for k in META if not k.startswith("hs")]
+    nxt = META[order[order.index(name) + 1]]["title"] if name in order and m["num"] < len(order) else None
+    if "outro" in m:
+        outro = dict(action=m["action"], **m["outro"])
+        say_cta = m["say_cta"]
+    elif nxt:
         outro = dict(action=m["action"], label="PROCHAIN ÉPISODE", next=f"« {nxt} »", sub="Abonne-toi pour ne pas le manquer")
         say_cta = f"{m['action']}. Prochain épisode : {nxt}. Abonne-toi pour ne pas le manquer."
     else:
         outro = dict(action=m["action"], label="SAISON 2", next="Bientôt", sub="Abonne-toi pour ne pas la manquer")
         say_cta = f"C'était la saison 1 de Lui ou elle. {m['action']}. Et abonne-toi pour ne pas manquer la saison 2."
-    spoken = [("M", " ".join(m["end"]).replace("(e)", "")), (m["love"], "Tu es aimé."), ("M", say_cta)]
+    end_sp = m.get("end_sp", "M")
+    spoken = [(end_sp, " ".join(m["end"]).replace("(e)", "")), (m["love"], "Tu es aimé."), (end_sp, say_cta)]
     end_from = round((t + 0.5) * FPS)
     t = end_from / FPS + 0.8
     items = []
@@ -426,7 +454,7 @@ async def episode(name, lines, variant=None):
         items.append({"file": f"luiouelle/{name}/fin{i}.mp3", "from": round(t * FPS), "dur": n})
         t += n / FPS + 0.5
     ep_id, cover = (f"{name}__{variant[1]}", variant[3]) if variant else (name, m["cover"])
-    return dict(id=ep_id, num=m["num"], variant=variant[1] if variant else None, title=m["title"], cover=cover, cast=m["cast"], endLines=m["end"],
+    return dict(id=ep_id, num=m["num"], variant=variant[1] if variant else None, tag=m.get("tag"), title=m["title"], cover=cover, cast=m["cast"], endLines=m["end"],
                 endFrom=end_from, endItems=items, outro=outro, durationInFrames=round((t + 1.2) * FPS), lines=out)
 
 

@@ -47,13 +47,17 @@ const Scene: React.FC<{ episode: Episode; frame: number }> = ({
   const { lines } = episode;
   const i = activeIndex(lines, frame);
   const line = lines[i];
+  // Monologue (un seul personnage) : chaque réplique est un nouveau plan,
+  // alternant plan large et plan serré, pour relancer l'attention.
+  const solo = episode.cast.length === 1;
   // Début du plan : première réplique consécutive du même locuteur.
   let s = i;
-  while (s > 0 && shotKey(lines[s - 1]) === shotKey(line)) s--;
+  while (!solo && s > 0 && shotKey(lines[s - 1]) === shotKey(line)) s--;
   const shotStart = s === 0 ? 0 : lines[s - 1].from + lines[s - 1].dur + 4;
+  const base = solo && i % 2 === 1 ? 1.18 : 1;
   const zoom = line.hook
     ? interpolate(frame, [0, line.from + line.dur], [1.02, 1.16], clamp)
-    : interpolate(frame - shotStart, [0, 300], [1, 1.07], clamp);
+    : interpolate(frame - shotStart, [0, 300], [base, base + 0.07], clamp);
   const open = line.hook ? 0 : mouth(line, frame);
   const waiting = frame < line.from ? 1 : 0;
   const down =
@@ -373,7 +377,7 @@ const Tag: React.FC<{ episode: Episode }> = ({ episode }) => (
     }}
   >
     <div style={{ fontSize: 34, fontWeight: 800, letterSpacing: 6 }}>
-      LUI OU ELLE ? · ÉP. {episode.num}
+      {episode.tag ?? `LUI OU ELLE ? · ÉP. ${episode.num}`}
     </div>
     <div style={{ fontSize: 26, fontWeight: 500, opacity: 0.75, marginTop: 8 }}>
       Lumière pour Ton Cœur
@@ -527,7 +531,7 @@ export const LuiOuElleCover: React.FC<LuiOuElleProps> = ({ episode }) => {
             color: "#f6d48a",
           }}
         >
-          LUI OU ELLE ? · ÉP. {episode.num}
+          {episode.tag ?? `LUI OU ELLE ? · ÉP. ${episode.num}`}
         </div>
         {episode.cover.map((l, i) => (
           <div
