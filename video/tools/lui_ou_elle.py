@@ -276,6 +276,79 @@ EP["hs1_mon_silence"] = [
 ("L","J'ai besoin que tu m'écoutes.",0.6),
 ]
 
+# Série « Ce que je ne dis pas » : une phrase banale par épisode, et ce qu'elle cache.
+# Monologue d'un seul personnage, voix ralentie.
+EP["cq1_laisse_tomber"] = [
+("E","Quand je dis « laisse tomber »… je ne veux pas que tu laisses tomber.",0),
+("E","Je veux que tu insistes.",0.6),
+("E","Pas pour gagner la dispute. Pour me montrer que ça compte.",0.4),
+("E","« Laisse tomber », ça veut dire : j'ai essayé de t'expliquer, et je n'y crois plus.",0.8),
+("E","Ça veut dire : j'ai peur de demander trop.",0.4),
+("E","Alors je ferme la porte. Doucement. Pour ne pas faire de bruit.",0.8),
+("E","Et toi, tu entends : « c'est réglé ».",0.4),
+("E","Mais rien n'est réglé. C'est juste rangé.",0.6),
+("E","Proverbes, chapitre 20, verset 5 : « Les desseins dans le cœur de l'homme sont des eaux profondes, mais l'homme intelligent sait y puiser. »",1.5),
+("E","Celui qui aime sait aller chercher ce qui est caché tout au fond.",0.6),
+("E","Alors la prochaine fois que je te dis « laisse tomber »… ne laisse pas tomber.",1.0),
+("E","Assieds-toi, et demande-moi : « Qu'est-ce que tu n'arrives pas à me dire ? »",0.6),
+]
+EP["cq2_fais_ce_que_tu_veux"] = [
+("L","« Fais ce que tu veux. » Ça ne veut jamais dire : fais ce que tu veux.",0),
+("L","Ça veut dire : tu as déjà décidé sans moi.",0.6),
+("L","Ça veut dire : mon avis ne change rien, alors à quoi bon le donner ?",0.4),
+("L","La première fois, j'ai donné mon avis.",0.8),
+("L","La deuxième fois aussi.",0.4),
+("L","La troisième fois, j'ai dit : « Fais ce que tu veux. »",0.4),
+("L","Et tu as cru que j'étais d'accord.",0.6),
+("L","Je n'étais pas d'accord. J'étais seulement fatigué de ne pas compter.",0.5),
+("L","Amos, chapitre 3, verset 3 : « Deux hommes marchent-ils ensemble, sans en être convenus ? »",1.5),
+("L","On ne marche pas ensemble si un seul choisit la route.",0.8),
+("L","Alors la prochaine fois que je te dis « fais ce que tu veux »…",1.0),
+("L","demande-moi plutôt : « Et toi, qu'est-ce que tu voudrais ? »",0.4),
+]
+EP["cq3_je_suis_juste_fatiguee"] = [
+("E","Je ne suis pas fatiguée de ma journée.",0),
+("E","Je suis fatiguée de faire semblant.",0.6),
+("E","Semblant que tout va bien quand tu rentres.",0.6),
+("E","Semblant de ne pas voir que je porte tout, toute seule.",0.4),
+("E","Semblant de ne pas avoir besoin d'aide, parce que la dernière fois que j'en ai demandé, tu as soupiré.",0.4),
+("E","Alors quand tu me demandes ce qui ne va pas, je dis : « Je suis juste fatiguée. »",0.8),
+("E","C'est plus simple. Ça ne fait pas de dispute.",0.4),
+("E","Mais une fatigue que personne ne partage ne part pas avec une nuit de sommeil.",0.6),
+("E","Matthieu, chapitre 11, verset 28 : « Venez à moi, vous tous qui êtes fatigués et chargés, et je vous donnerai du repos. »",1.5),
+("E","Le repos commence quand quelqu'un accepte de porter avec toi.",0.8),
+("E","Alors ce soir, ne me dis pas « va dormir ».",1.0),
+("E","Dis-moi : « Qu'est-ce que je peux prendre pour toi ? »",0.4),
+]
+EP["cq4_c_est_rien"] = [
+("L","Le jour où je te dis « c'est rien »… c'est que c'est beaucoup.",0),
+("L","« C'est rien », quand ma mère ne va pas bien.",0.8),
+("L","« C'est rien », quand j'ai peur pour l'argent.",0.4),
+("L","« C'est rien », quand je me sens seul, même à côté de toi.",0.4),
+("L","On m'a appris qu'un homme règle ses problèmes tout seul.",0.8),
+("L","Alors je les range. Un par un. Sans bruit.",0.4),
+("L","Mais ce que je range ne disparaît pas. Ça s'empile.",0.6),
+("L","Et un jour, je m'énerve pour une assiette mal rangée… et tu ne comprends pas pourquoi.",0.6),
+("L","Ce n'était pas l'assiette. C'était tout ce que j'avais appelé « rien ».",0.6),
+("L","Galates, chapitre 6, verset 2 : « Portez les fardeaux les uns des autres, et vous accomplirez ainsi la loi de Christ. »",1.5),
+("L","Alors la prochaine fois que je te dis « c'est rien »…",1.0),
+("L","ne me crois pas tout de suite. Reste à côté de moi. Je finirai par parler.",0.4),
+]
+EP["cq5_comme_d_habitude"] = [
+("E","Tu m'as demandé comment s'était passée ma journée. J'ai répondu : « Comme d'habitude. »",0),
+("E","Et tu n'as pas posé d'autre question.",0.6),
+("E","Comme d'habitude.",0.8),
+("E","Les mêmes repas. Les mêmes phrases. Le même « bonne nuit », sans se regarder.",0.6),
+("E","Il n'y a pas eu de dispute. On s'est juste… habitués.",0.6),
+("E","Un jour, j'ai changé de coiffure. Tu ne l'as pas vu.",0.8),
+("E","J'ai arrêté de chanter dans la cuisine. Tu ne l'as pas entendu.",0.4),
+("E","« Comme d'habitude », ça veut dire : je ne sais plus si tu me vois encore.",0.8),
+("E","Lamentations, chapitre 3, versets 22 et 23 : « Les bontés de l'Éternel ne sont pas épuisées, ses compassions ne sont pas à leur terme ; elles se renouvellent chaque matin. »",1.5),
+("E","Si son amour se renouvelle chaque matin… le nôtre aussi peut se renouveler.",0.8),
+("E","Alors demain matin, ne me demande pas comment ça va.",1.0),
+("E","Regarde-moi, et dis-moi une chose que tu aimes chez moi. Juste une.",0.4),
+]
+
 META = {
     "ep1_elle_a_change": dict(num=1, love="L", action="Réponds en commentaire", title="Elle a changé", verse="1 Jean 4:18",
         cover=["Elle a changé…", "ou tu l'as éteinte ?"], cast="ML",
@@ -300,6 +373,31 @@ META = {
         end=["Ton silence n'est pas un « rien ».", "Ta voix compte."],
         outro=dict(label="LUI OU ELLE ?", next="La série complète", sub="sur mon profil"),
         say_cta="Envoie cette vidéo à quelqu'un qui dit toujours « ça va »."),
+    "cq1_laisse_tomber": dict(num=101, love="E", action="Envoie cette vidéo à quelqu'un qui dit souvent « laisse tomber »", title='Laisse tomber', verse='Proverbes 20:5',
+        cover=['« Laisse tomber. »', 'Non. Ne laisse pas tomber.'], cast="E", tag="CE QUE JE NE DIS PAS · ÉP. 1", end_sp="E", rate="-12%",
+        end=["« Laisse tomber », c'est souvent :", "« J'ai peur de demander trop. »"],
+        outro=dict(label="PROCHAIN ÉPISODE", next="« Fais ce que tu veux »", sub="Abonne-toi pour ne pas le manquer"),
+        say_cta="Envoie cette vidéo à quelqu'un qui dit souvent « laisse tomber »."),
+    "cq2_fais_ce_que_tu_veux": dict(num=102, love="L", action="Envoie cette vidéo à quelqu'un qui dit souvent « fais ce que tu veux »", title='Fais ce que tu veux', verse='Amos 3:3',
+        cover=['« Fais ce que tu veux. »', 'Ça ne veut jamais dire ça.'], cast="L", tag="CE QUE JE NE DIS PAS · ÉP. 2", end_sp="L", rate="-12%",
+        end=["« Fais ce que tu veux », c'est souvent :", "« Je n'ose plus te dire ce que je veux. »"],
+        outro=dict(label="PROCHAIN ÉPISODE", next="« Je suis juste fatiguée »", sub="Abonne-toi pour ne pas le manquer"),
+        say_cta="Envoie cette vidéo à quelqu'un qui dit souvent « fais ce que tu veux »."),
+    "cq3_je_suis_juste_fatiguee": dict(num=103, love="E", action="Envoie cette vidéo à quelqu'un qui porte tout sans rien dire", title='Je suis juste fatiguée', verse='Matthieu 11:28',
+        cover=['« Je suis juste fatiguée. »', 'Pas de ma journée.'], cast="E", tag="CE QUE JE NE DIS PAS · ÉP. 3", end_sp="E", rate="-12%",
+        end=["Ta fatigue n'est pas une faiblesse.", "Tu n'as pas à tout porter seul(e)."],
+        outro=dict(label="PROCHAIN ÉPISODE", next="« C'est rien »", sub="Abonne-toi pour ne pas le manquer"),
+        say_cta="Envoie cette vidéo à quelqu'un qui porte tout sans rien dire."),
+    "cq4_c_est_rien": dict(num=104, love="L", action="Envoie cette vidéo à quelqu'un qui dit toujours « c'est rien »", title="C'est rien", verse='Galates 6:2',
+        cover=["« C'est rien. »", "C'est beaucoup."], cast="L", tag="CE QUE JE NE DIS PAS · ÉP. 4", end_sp="L", rate="-12%",
+        end=['Ce qui pèse sur toi', "n'est jamais « rien »."],
+        outro=dict(label="PROCHAIN ÉPISODE", next="« Comme d'habitude »", sub="Abonne-toi pour ne pas le manquer"),
+        say_cta="Envoie cette vidéo à quelqu'un qui dit toujours « c'est rien »."),
+    "cq5_comme_d_habitude": dict(num=105, love="E", action='Envoie cette vidéo à la personne que tu veux regarder autrement demain', title="Comme d'habitude", verse='Lamentations 3:22-23',
+        cover=["« Comme d'habitude. »", 'Tu me vois encore ?'], cast="E", tag="CE QUE JE NE DIS PAS · ÉP. 5", end_sp="E", rate="-12%",
+        end=["L'amour ne meurt pas d'une dispute.", "Il s'éteint dans l'habitude."],
+        outro=dict(label="CE QUE JE NE DIS PAS", next="Fin de la série", sub="Quel sujet pour la prochaine ?"),
+        say_cta='Envoie cette vidéo à la personne que tu veux regarder autrement demain.'),
 }
 
 # Accroche à froid : la phrase la plus forte de l'épisode, dite par le mentor
@@ -425,7 +523,7 @@ async def episode(name, lines, variant=None):
         t += len(env) / FPS + GAP
     # Carte de fin : le mentor dit la phrase de fin, le personnage dit « Tu es aimé(e) »,
     # puis le mentor dit l'appel final.
-    order = [k for k in META if not k.startswith("hs")]
+    order = [k for k in META if k.startswith("ep")]
     nxt = META[order[order.index(name) + 1]]["title"] if name in order and m["num"] < len(order) else None
     if "outro" in m:
         outro = dict(action=m["action"], **m["outro"])
