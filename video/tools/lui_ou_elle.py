@@ -8,7 +8,7 @@ Sorties : public/luiouelle/<ep>/NN.mp3, public/luiouelle/pad.mp3,
 src/compositions/luiouelle/data.ts. Les répliques déjà présentes ne sont pas
 régénérées. Derrière un proxy TLS, définir CA_BUNDLE=/chemin/ca.crt.
 """
-import asyncio, json, os, subprocess, sys
+import asyncio, json, os, re, subprocess, sys
 import numpy as np
 
 if os.environ.get("CA_BUNDLE"):
@@ -516,7 +516,9 @@ async def episode(name, lines, variant=None):
         if sp == "LE":
             a_, b_ = text.split("|")
             line["text"] = a_ if a_ == b_ else f"{a_} / {b_}"
-        if " : «" in text:
+        # Un verset commence par sa référence (« Livre, chapitre X, verset Y : « … »),
+        # pas n'importe quelle phrase qui cite quelqu'un après deux-points.
+        if re.match(r"^[^«]*\bversets?\b[^«]*\s:\s«", text):
             pre_txt, quote = text.split(" : ", 1)
             line["verse"] = dict(ref=m["verse"], quote=quote, prefixFrac=round(len(pre_txt) / len(text) + 0.03, 3))
         out.append(line)
