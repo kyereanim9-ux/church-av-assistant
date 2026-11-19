@@ -385,7 +385,7 @@ def music(total, sections):
 # ------------------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--voice", default="edge:fr-FR-RemyMultilingualNeural",
+    ap.add_argument("--voice", default="edge:fr-FR-HenriNeural",
                     help="edge:<Voice> (natural, needs network) or a Piper .onnx model (offline)")
     ap.add_argument("--whisper", default="small")
     args = ap.parse_args()
