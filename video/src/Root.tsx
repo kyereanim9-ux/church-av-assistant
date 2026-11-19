@@ -8,12 +8,16 @@ import {
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
 import { LuiOuElle, LuiOuElleCover } from "./compositions/luiouelle/LuiOuElle";
 import { episodes } from "./compositions/luiouelle/data";
+import { Coeur, CoeurCover } from "./compositions/coeur/Coeur";
+import { durationInFrames as coeurFrames } from "./compositions/coeur/data";
 
 const FPS = 30;
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition id="Coeur" component={Coeur} durationInFrames={coeurFrames} fps={FPS} width={1080} height={1920} />
+      <Still id="CoeurCover" component={CoeurCover} width={1080} height={1920} />
       <Composition
         id="Announcement"
         component={Announcement}
