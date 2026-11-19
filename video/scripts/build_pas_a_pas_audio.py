@@ -1,14 +1,15 @@
 """Build the soundtrack and synced timeline for the PasAPas composition.
 
 Reads scripts/pas-a-pas.script.json (scenes + French voice lines), then:
-  1. synthesises each voice line with Piper (local French TTS),
+  1. synthesises each voice line (Microsoft neural voice via edge-tts, or Piper offline),
   2. aligns the on-screen words to the spoken words with faster-whisper,
   3. re-times the scenes around the voice,
   4. synthesises music (plucked guitar, bass, drums, glockenspiel) and SFX,
   5. writes public/pas-a-pas/mix.wav and src/compositions/pasAPas.timeline.json.
 
 Usage (from video/):
-  python3 scripts/build_pas_a_pas_audio.py --voice /path/fr_FR-tom-medium.onnx
+  python3 scripts/build_pas_a_pas_audio.py                       # natural neural voice
+  python3 scripts/build_pas_a_pas_audio.py --voice fr_FR-tom-medium.onnx  # offline Piper
 """
 
 import argparse
@@ -56,18 +57,57 @@ def resample16k(a):
 
 
 # ------------------------------------------------------------------------ voice
+def edge_tts_words(text, voice, mp3):
+    """Neural voice via edge-tts; returns [(word, start_seconds), ...] from WordBoundary events."""
+    import asyncio
+
+    if os.path.exists("/root/.ccr/ca-bundle.crt"):
+        os.environ.setdefault("SSL_CERT_FILE", "/root/.ccr/ca-bundle.crt")
+    import edge_tts
+
+    words = []
+
+    async def run():
+        c = edge_tts.Communicate(
+            text, voice, rate="-6%", boundary="WordBoundary", proxy=os.environ.get("HTTPS_PROXY")
+        )
+        with open(mp3, "wb") as f:
+            async for ch in c.stream():
+                if ch["type"] == "audio":
+                    f.write(ch["data"])
+                elif ch["type"] == "WordBoundary":
+                    words.append((ch["text"], ch["offset"] / 1e7))
+
+    asyncio.run(run())
+    return words
+
+
 def tts(text, model, tmp):
+    """model is a Piper .onnx path, or "edge:<VoiceName>" for a Microsoft neural voice.
+
+    Returns (audio, words) where words is [(word, start)] or None if unknown."""
     out = os.path.join(tmp, "seg.wav")
-    subprocess.run(
-        ["python3", "-m", "piper", "-m", model, "-f", out, "--length-scale", "1.08"],
-        input=text.encode(),
-        check=True,
-        capture_output=True,
-    )
+    words = None
+    if model.startswith("edge:"):
+        mp3 = os.path.join(tmp, "seg.mp3")
+        words = edge_tts_words(text, model[5:], mp3)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", mp3, "-ar", str(SR), "-ac", "1", out], check=True)
+    else:
+        subprocess.run(
+            ["python3", "-m", "piper", "-m", model, "-f", out, "--length-scale", "1.08"],
+            input=text.encode(),
+            check=True,
+            capture_output=True,
+        )
     a = read_wav(out)
     # trim leading/trailing silence
     idx = np.where(np.abs(a) > 0.01)[0]
-    return a[max(0, idx[0] - 200) : idx[-1] + 2000] if len(idx) else a
+    if not len(idx):
+        return a, words
+    cut = max(0, idx[0] - 200)
+    if words is not None:
+        words = [(w, st - cut / SR) for w, st in words]
+    return a[cut : idx[-1] + 2000], words
 
 
 def norm(s):
@@ -76,12 +116,15 @@ def norm(s):
     return re.sub(r"[^a-z']", "", s).replace("'", "")
 
 
-def align(chunks, audio, whisper, text):
+def align(chunks, audio, whisper, text, known=None):
     """Return the start time (s) of each on-screen chunk inside audio."""
-    segs, _ = whisper.transcribe(
-        resample16k(audio), language="fr", word_timestamps=True, initial_prompt=text
-    )
-    spoken = [(norm(w.word), w.start) for s in segs for w in s.words]
+    if known is not None:
+        spoken = [(norm(w), st) for w, st in known]
+    else:
+        segs, _ = whisper.transcribe(
+            resample16k(audio), language="fr", word_timestamps=True, initial_prompt=text
+        )
+        spoken = [(norm(w.word), w.start) for s in segs for w in s.words]
     times, j, last = [], 0, 0.0
     for c in chunks:
         first = norm(c.split()[0])
@@ -342,7 +385,8 @@ def music(total, sections):
 # ------------------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--voice", required=True, help="Piper .onnx French voice model")
+    ap.add_argument("--voice", default="edge:fr-FR-RemyMultilingualNeural",
+                    help="edge:<Voice> (natural, needs network) or a Piper .onnx model (offline)")
     ap.add_argument("--whisper", default="small")
     args = ap.parse_args()
 
@@ -359,16 +403,22 @@ def main():
         for sc in script["scenes"]:
             parts = sc["voice"].split("|")
             clip = np.zeros(0, np.float32)
+            known = []
             for i, p in enumerate(parts):
                 if i:
                     clip = np.concatenate([clip, np.zeros(int(GAP * SR), np.float32)])
-                clip = np.concatenate([clip, tts(p, args.voice, tmp)])
+                seg, words = tts(p, args.voice, tmp)
+                if words is None:
+                    known = None
+                elif known is not None:
+                    known += [(w, st + len(clip) / SR) for w, st in words]
+                clip = np.concatenate([clip, seg])
             text = sc["voice"].replace("|", " ")
-            times = align([w["text"] for w in sc["words"]], clip, whisper, text)
+            times = align([w["text"] for w in sc["words"]], clip, whisper, text, known)
             dur = max(3.4, LEAD + len(clip) / SR + TAIL)
             new = {k: v for k, v in sc.items() if k != "voice"}
             new["start"], new["end"] = round(t, 3), round(t + dur, 3)
-            new["words"] = [dict(w, at=round(LEAD + tt - 0.04, 3)) for w, tt in zip(sc["words"], times)]
+            new["words"] = [dict(w, at=round(float(LEAD + tt - 0.04), 3)) for w, tt in zip(sc["words"], times)]
             if sc.get("fall"):
                 new["fallAt"] = round(new["words"][0]["at"] + 0.75, 3)
                 new["riseAt"] = round(new["words"][1]["at"] - 0.2, 3)
