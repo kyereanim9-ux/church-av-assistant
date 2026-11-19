@@ -1,10 +1,13 @@
 import {
   AbsoluteFill,
+  Audio,
   interpolate,
+  staticFile,
   spring,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+import timeline from "./pasAPas.timeline.json";
 
 /* ------------------------------------------------------------------ */
 /* Types & props                                                       */
@@ -41,11 +44,16 @@ export type Scene = {
   /** character centre x (px, 1920 wide frame) */
   cx: number;
   fall?: boolean;
+  /** seconds into the scene: start of the stumble / getting back up */
+  fallAt?: number;
+  riseAt?: number;
   words: Word[];
 };
 
 export type PasAPasProps = {
   title: string;
+  /** File in video/public, or "" for a silent render. */
+  audioFile: string;
   durationSeconds: number;
   scenes: Scene[];
 };
@@ -75,88 +83,7 @@ const FONTS: Record<Font, React.CSSProperties> = {
 /* Default timeline (French, original lyrics)                          */
 /* ------------------------------------------------------------------ */
 
-export const pasAPasDefaults: PasAPasProps = {
-  title: "Pas à pas",
-  durationSeconds: 38,
-  scenes: [
-    {
-      start: 0, end: 4.2, pose: "cheer", eyes: "happy", mouth: "grin", prop: "none", cx: 960,
-      words: [
-        { text: "Seigneur,", at: 0.1, x: 420, y: 250, size: 110, color: C.navy, font: "serif", style: "slide" },
-        { text: "j'essaie", at: 0.8, x: 1480, y: 230, size: 120, color: C.terracotta, style: "pop" },
-        { text: "je fais", at: 1.7, x: 380, y: 560, size: 90, color: C.ink, style: "type", font: "mono" },
-        { text: "de mon", at: 2.3, x: 1500, y: 560, size: 90, color: C.ink, style: "drop" },
-        { text: "MIEUX !", at: 2.9, x: 1480, y: 790, size: 170, color: C.gold, style: "stretch" },
-      ],
-    },
-    {
-      start: 4.2, end: 8.4, pose: "worried", eyes: "worried", mouth: "frown", prop: "cloud", cx: 1050,
-      words: [
-        { text: "J'ai des", at: 0.1, x: 420, y: 330, size: 100, color: C.ink, style: "pop" },
-        { text: "soucis", at: 0.8, x: 420, y: 480, size: 170, color: C.sky, font: "serif", style: "drop" },
-        { text: "plein la", at: 1.9, x: 1580, y: 520, size: 90, color: C.navy, style: "slide" },
-        { text: "tête…", at: 2.6, x: 1580, y: 660, size: 140, color: C.plum, style: "pop", rotate: -6 },
-      ],
-    },
-    {
-      start: 8.4, end: 12.4, pose: "heart", eyes: "closed", mouth: "smile", prop: "sun", cx: 960,
-      words: [
-        { text: "Mais", at: 0.1, x: 420, y: 330, size: 110, color: C.ink, font: "serif", style: "pop" },
-        { text: "je te fais", at: 0.7, x: 1500, y: 330, size: 100, color: C.navy, style: "slide" },
-        { text: "CONFIANCE", at: 1.6, x: 960, y: 150, size: 200, color: C.gold, style: "stretch" },
-      ],
-    },
-    {
-      start: 12.4, end: 16.4, pose: "hold", eyes: "open", mouth: "grin", prop: "plan", cx: 760,
-      words: [
-        { text: "Ton plan", at: 0.1, x: 1500, y: 250, size: 130, color: C.sage, style: "pop" },
-        { text: "vaut mieux", at: 1.0, x: 1500, y: 420, size: 110, color: C.ink, font: "serif", style: "slide" },
-        { text: "que le mien", at: 2.0, x: 1500, y: 580, size: 100, color: C.terracotta, style: "type", font: "mono" },
-      ],
-    },
-    {
-      start: 16.4, end: 20.4, pose: "shrug", eyes: "open", mouth: "o", prop: "question", cx: 960,
-      words: [
-        { text: "même quand", at: 0.1, x: 380, y: 300, size: 90, color: C.ink, style: "type", font: "mono" },
-        { text: "je ne", at: 0.9, x: 380, y: 440, size: 110, color: C.navy, font: "serif", style: "pop" },
-        { text: "comprends", at: 1.5, x: 1540, y: 380, size: 130, color: C.plum, style: "slide" },
-        { text: "pas", at: 2.4, x: 1540, y: 560, size: 160, color: C.rose, style: "drop", rotate: 8 },
-      ],
-    },
-    {
-      start: 20.4, end: 24.6, pose: "cheer", eyes: "worried", mouth: "open", prop: "rock", cx: 900, fall: true,
-      words: [
-        { text: "Je tombe…", at: 0.2, x: 960, y: 170, size: 120, color: C.ink, font: "serif", style: "drop", rotate: 10 },
-        { text: "je me", at: 1.8, x: 420, y: 480, size: 100, color: C.navy, style: "pop" },
-        { text: "RELÈVE", at: 2.4, x: 1460, y: 480, size: 180, color: C.terracotta, style: "stretch" },
-      ],
-    },
-    {
-      start: 24.6, end: 28.6, pose: "hold", eyes: "wink", mouth: "grin", prop: "coffee", cx: 1000,
-      words: [
-        { text: "Un café,", at: 0.1, x: 400, y: 280, size: 110, color: "#8a5a3b", font: "serif", style: "pop" },
-        { text: "une prière,", at: 1.0, x: 420, y: 450, size: 110, color: C.sky, font: "serif", style: "slide" },
-        { text: "et c'est parti !", at: 2.0, x: 470, y: 640, size: 110, color: C.gold, style: "stretch" },
-      ],
-    },
-    {
-      start: 28.6, end: 32.8, pose: "hold", eyes: "happy", mouth: "smile", prop: "lantern", cx: 900,
-      words: [
-        { text: "Tu me donnes", at: 0.1, x: 1500, y: 280, size: 100, color: C.ink, style: "slide" },
-        { text: "du", at: 1.1, x: 1500, y: 420, size: 90, color: C.navy, font: "serif", style: "pop" },
-        { text: "courage", at: 1.6, x: 1530, y: 580, size: 170, color: C.terracotta, font: "serif", style: "drop" },
-      ],
-    },
-    {
-      start: 32.8, end: 38, pose: "walk", eyes: "happy", mouth: "smile", prop: "lantern", cx: 960,
-      words: [
-        { text: "pas à pas…", at: 0.1, x: 960, y: 170, size: 150, color: C.navy, font: "serif", style: "type" },
-        { text: "main dans", at: 1.6, x: 420, y: 520, size: 110, color: C.ink, style: "pop" },
-        { text: "ta main", at: 2.3, x: 1500, y: 520, size: 140, color: C.gold, style: "vertical" },
-      ],
-    },
-  ],
-};
+export const pasAPasDefaults = timeline as PasAPasProps;
 
 /* ------------------------------------------------------------------ */
 /* Helpers                                                             */
@@ -383,12 +310,14 @@ const Character: React.FC<{ scene: Scene; localT: number }> = ({ scene, localT }
     la += Math.sin(frame / 4) * 8;
     ra -= Math.sin(frame / 4) * 8;
   }
-  // stumble: fall over by 1.2 s, back up by 2.6 s
+  // stumble over the rock, then get back up
   let tilt = 0;
   if (scene.fall) {
+    const f0 = scene.fallAt ?? 0.5;
+    const r0 = scene.riseAt ?? 1.9;
     tilt =
-      interpolate(localT, [0.5, 1.1], [0, 78], clamp) -
-      interpolate(localT, [1.9, 2.5], [0, 78], clamp);
+      interpolate(localT, [f0, f0 + 0.6], [0, 78], { ...clamp, easing: (x) => x * x }) -
+      interpolate(localT, [r0, r0 + 0.5], [0, 78], clamp);
   }
   const blink = Math.floor(frame / 3) % 40 === 0;
   const walkX = scene.pose === "walk" ? (localT - 2.5) * 40 : 0;
@@ -536,10 +465,43 @@ const WorldProp: React.FC<{ scene: Scene; localT: number }> = ({ scene, localT }
 };
 
 /* ------------------------------------------------------------------ */
+/* Sparkle burst around big words                                     */
+const Burst: React.FC<{ x: number; y: number; t: number }> = ({ x, y, t }) => {
+  if (t < 0 || t > 1.2) return null;
+  const colors = [C.gold, C.terracotta, C.sky, C.rose, C.sage];
+  return (
+    <>
+      {Array.from({ length: 14 }, (_, i) => {
+        const a = (i / 14) * Math.PI * 2 + i;
+        const dist = 120 + (i % 3) * 70;
+        const p = 1 - Math.pow(1 - Math.min(1, t / 0.7), 3);
+        const op = interpolate(t, [0, 0.1, 0.8, 1.2], [0, 1, 1, 0], clamp);
+        return (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              left: x + Math.cos(a) * dist * 1.8 * p,
+              top: y + Math.sin(a) * dist * p,
+              fontSize: 28 + (i % 4) * 10,
+              color: colors[i % colors.length],
+              opacity: op,
+              transform: `translate(-50%, -50%) rotate(${t * 300 + i * 40}deg)`,
+            }}
+          >
+            {i % 2 ? "✦" : "●"}
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+/* ------------------------------------------------------------------ */
 /* Composition                                                         */
 /* ------------------------------------------------------------------ */
 
-export const PasAPas: React.FC<PasAPasProps> = ({ title, durationSeconds, scenes }) => {
+export const PasAPas: React.FC<PasAPasProps> = ({ title, audioFile, durationSeconds, scenes }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
@@ -550,6 +512,17 @@ export const PasAPas: React.FC<PasAPasProps> = ({ title, durationSeconds, scenes
 
   // Quick white flash + slight zoom on each scene change
   const cut = interpolate(localT, [0, 0.18], [1, 0], clamp);
+  const zoom = interpolate(localT, [0, 0.35], [1.04, 1], clamp);
+
+  // camera shake when the character hits the ground
+  let shake = 0;
+  if (scene.fall) {
+    const hit = (scene.fallAt ?? 0.5) + 0.6;
+    const k = Math.max(0, 1 - (localT - hit) / 0.45);
+    shake = localT >= hit ? Math.sin(localT * 90) * 14 * k : 0;
+  }
+  const lastEnd = scenes[scenes.length - 1].end;
+  const outro = spring({ frame: (t - lastEnd + 0.4) * fps, fps, config: { damping: 12 } });
 
   return (
     <AbsoluteFill
@@ -559,6 +532,8 @@ export const PasAPas: React.FC<PasAPasProps> = ({ title, durationSeconds, scenes
         overflow: "hidden",
       }}
     >
+      {audioFile ? <Audio src={staticFile(audioFile)} /> : null}
+      <AbsoluteFill style={{ transform: `translate(${shake}px, ${shake * 0.6}px) scale(${zoom})` }}>
       {/* floor line */}
       <div style={{ position: "absolute", left: 0, right: 0, top: 985, height: 2, background: "rgba(29,36,51,0.06)" }} />
       <WorldProp scene={scene} localT={localT} />
@@ -566,6 +541,29 @@ export const PasAPas: React.FC<PasAPasProps> = ({ title, durationSeconds, scenes
       {scene.words.map((w, i) => (
         <KineticWord key={`${scene.start}-${i}`} w={w} t={localT} sceneEnd={scene.end - scene.start} />
       ))}
+      {scene.words
+        .filter((w) => w.style === "stretch")
+        .map((w, i) => (
+          <Burst key={`b${scene.start}-${i}`} x={w.x} y={w.y} t={localT - w.at} />
+        ))}
+      </AbsoluteFill>
+      {t > lastEnd - 0.4 ? (
+        <div
+          style={{
+            position: "absolute",
+            top: 150,
+            width: "100%",
+            textAlign: "center",
+            ...FONTS.serif,
+            fontSize: 170,
+            color: C.navy,
+            transform: `scale(${outro})`,
+          }}
+        >
+          {title} <span style={{ color: C.gold }}>✦</span>
+        </div>
+      ) : null}
+      {t > lastEnd - 0.4 ? <Burst x={960} y={240} t={t - lastEnd + 0.2} /> : null}
       {/* signature */}
       <div
         style={{

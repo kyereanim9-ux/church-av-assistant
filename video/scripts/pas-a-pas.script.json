@@ -1,0 +1,392 @@
+{
+ "title": "Pas à pas",
+ "scenes": [
+  {
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "none",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Seigneur,",
+     "at": 0.1,
+     "x": 420,
+     "y": 250,
+     "size": 110,
+     "color": "#24366b",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "j'essaie",
+     "at": 0.8,
+     "x": 1480,
+     "y": 230,
+     "size": 120,
+     "color": "#c8553d",
+     "style": "pop"
+    },
+    {
+     "text": "je fais",
+     "at": 1.7,
+     "x": 380,
+     "y": 560,
+     "size": 90,
+     "color": "#1d2433",
+     "style": "type",
+     "font": "mono"
+    },
+    {
+     "text": "de mon",
+     "at": 2.3,
+     "x": 1500,
+     "y": 560,
+     "size": 90,
+     "color": "#1d2433",
+     "style": "drop"
+    },
+    {
+     "text": "MIEUX !",
+     "at": 2.9,
+     "x": 1480,
+     "y": 790,
+     "size": 170,
+     "color": "#d9a441",
+     "style": "stretch"
+    }
+   ],
+   "voice": "Seigneur… j'essaie ! Je fais de mon mieux !"
+  },
+  {
+   "pose": "worried",
+   "eyes": "worried",
+   "mouth": "frown",
+   "prop": "cloud",
+   "cx": 1050,
+   "words": [
+    {
+     "text": "J'ai des",
+     "at": 0.1,
+     "x": 420,
+     "y": 330,
+     "size": 100,
+     "color": "#1d2433",
+     "style": "pop"
+    },
+    {
+     "text": "soucis",
+     "at": 0.8,
+     "x": 420,
+     "y": 480,
+     "size": 170,
+     "color": "#4f8fd6",
+     "font": "serif",
+     "style": "drop"
+    },
+    {
+     "text": "plein la",
+     "at": 1.9,
+     "x": 1580,
+     "y": 520,
+     "size": 90,
+     "color": "#24366b",
+     "style": "slide"
+    },
+    {
+     "text": "tête…",
+     "at": 2.6,
+     "x": 1580,
+     "y": 660,
+     "size": 140,
+     "color": "#7a4f9a",
+     "style": "pop",
+     "rotate": -6
+    }
+   ],
+   "voice": "J'ai des soucis… plein la tête…"
+  },
+  {
+   "pose": "heart",
+   "eyes": "closed",
+   "mouth": "smile",
+   "prop": "sun",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Mais",
+     "at": 0.1,
+     "x": 420,
+     "y": 330,
+     "size": 110,
+     "color": "#1d2433",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "je te fais",
+     "at": 0.7,
+     "x": 1500,
+     "y": 330,
+     "size": 100,
+     "color": "#24366b",
+     "style": "slide"
+    },
+    {
+     "text": "CONFIANCE",
+     "at": 1.6,
+     "x": 960,
+     "y": 150,
+     "size": 200,
+     "color": "#d9a441",
+     "style": "stretch"
+    }
+   ],
+   "voice": "Mais… je te fais confiance."
+  },
+  {
+   "pose": "hold",
+   "eyes": "open",
+   "mouth": "grin",
+   "prop": "plan",
+   "cx": 760,
+   "words": [
+    {
+     "text": "Ton plan",
+     "at": 0.1,
+     "x": 1500,
+     "y": 250,
+     "size": 130,
+     "color": "#6f9a7c",
+     "style": "pop"
+    },
+    {
+     "text": "vaut mieux",
+     "at": 1,
+     "x": 1500,
+     "y": 420,
+     "size": 110,
+     "color": "#1d2433",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "que le mien",
+     "at": 2,
+     "x": 1500,
+     "y": 580,
+     "size": 100,
+     "color": "#c8553d",
+     "style": "type",
+     "font": "mono"
+    }
+   ],
+   "voice": "Ton plan… vaut mieux que le mien."
+  },
+  {
+   "pose": "shrug",
+   "eyes": "open",
+   "mouth": "o",
+   "prop": "question",
+   "cx": 960,
+   "words": [
+    {
+     "text": "même quand",
+     "at": 0.1,
+     "x": 380,
+     "y": 300,
+     "size": 90,
+     "color": "#1d2433",
+     "style": "type",
+     "font": "mono"
+    },
+    {
+     "text": "je ne",
+     "at": 0.9,
+     "x": 380,
+     "y": 440,
+     "size": 110,
+     "color": "#24366b",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "comprends",
+     "at": 1.5,
+     "x": 1540,
+     "y": 380,
+     "size": 130,
+     "color": "#7a4f9a",
+     "style": "slide"
+    },
+    {
+     "text": "pas",
+     "at": 2.4,
+     "x": 1540,
+     "y": 560,
+     "size": 160,
+     "color": "#e08aa0",
+     "style": "drop",
+     "rotate": 8
+    }
+   ],
+   "voice": "Même quand… je ne comprends pas."
+  },
+  {
+   "pose": "cheer",
+   "eyes": "worried",
+   "mouth": "open",
+   "prop": "rock",
+   "cx": 900,
+   "fall": true,
+   "words": [
+    {
+     "text": "Je tombe…",
+     "at": 0.2,
+     "x": 960,
+     "y": 170,
+     "size": 120,
+     "color": "#1d2433",
+     "font": "serif",
+     "style": "drop",
+     "rotate": 10
+    },
+    {
+     "text": "je me",
+     "at": 1.8,
+     "x": 420,
+     "y": 480,
+     "size": 100,
+     "color": "#24366b",
+     "style": "pop"
+    },
+    {
+     "text": "RELÈVE",
+     "at": 2.4,
+     "x": 1460,
+     "y": 480,
+     "size": 180,
+     "color": "#c8553d",
+     "style": "stretch"
+    }
+   ],
+   "voice": "Je tombe…|Je me relève !"
+  },
+  {
+   "pose": "hold",
+   "eyes": "wink",
+   "mouth": "grin",
+   "prop": "coffee",
+   "cx": 1000,
+   "words": [
+    {
+     "text": "Un café,",
+     "at": 0.1,
+     "x": 400,
+     "y": 280,
+     "size": 110,
+     "color": "#8a5a3b",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "une prière,",
+     "at": 1,
+     "x": 420,
+     "y": 450,
+     "size": 110,
+     "color": "#4f8fd6",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "et c'est parti !",
+     "at": 2,
+     "x": 470,
+     "y": 640,
+     "size": 110,
+     "color": "#d9a441",
+     "style": "stretch"
+    }
+   ],
+   "voice": "Un café… une prière… et c'est parti !"
+  },
+  {
+   "pose": "hold",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 900,
+   "words": [
+    {
+     "text": "Tu me donnes",
+     "at": 0.1,
+     "x": 1500,
+     "y": 280,
+     "size": 100,
+     "color": "#1d2433",
+     "style": "slide"
+    },
+    {
+     "text": "du",
+     "at": 1.1,
+     "x": 1500,
+     "y": 420,
+     "size": 90,
+     "color": "#24366b",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "courage",
+     "at": 1.6,
+     "x": 1530,
+     "y": 580,
+     "size": 170,
+     "color": "#c8553d",
+     "font": "serif",
+     "style": "drop"
+    }
+   ],
+   "voice": "Tu me donnes… du courage."
+  },
+  {
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 960,
+   "words": [
+    {
+     "text": "pas à pas…",
+     "at": 0.1,
+     "x": 960,
+     "y": 170,
+     "size": 150,
+     "color": "#24366b",
+     "font": "serif",
+     "style": "type"
+    },
+    {
+     "text": "ma main dans",
+     "at": 1.6,
+     "x": 420,
+     "y": 520,
+     "size": 110,
+     "color": "#1d2433",
+     "style": "pop"
+    },
+    {
+     "text": "ta main",
+     "at": 2.3,
+     "x": 1500,
+     "y": 520,
+     "size": 140,
+     "color": "#d9a441",
+     "style": "vertical"
+    }
+   ],
+   "voice": "Pas à pas… ma main… dans ta main."
+  }
+ ]
+}
