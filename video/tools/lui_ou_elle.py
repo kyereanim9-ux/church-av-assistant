@@ -357,6 +357,19 @@ EP["cq5_comme_d_habitude"] = [
 ("E","Et toi… fais-le aussi. Juste une.",0.6),
 ]
 
+EP["tz_ce_que_je_ne_dis_pas"] = [
+("E","« Laisse tomber. »",0),
+("L","« Fais ce que tu veux. »",0.2),
+("E","« Je suis juste fatiguée. »",0.2),
+("L","« C'est rien. »",0.2),
+("E","« Comme d'habitude. »",0.2),
+("L","On les dit tous les jours.",1.0),
+("E","Mais ce n'est jamais vraiment ce qu'on pense.",0.3),
+("L","Derrière chacune de ces phrases…",0.5),
+("E","il y a ce que je ne dis pas.",0.3),
+("L","Et si, cette fois, on osait le dire ?",0.8),
+]
+
 META = {
     "ep1_elle_a_change": dict(num=1, love="L", action="Réponds en commentaire", title="Elle a changé", verse="1 Jean 4:18",
         cover=["Elle a changé…", "ou tu l'as éteinte ?"], cast="ML",
@@ -406,6 +419,11 @@ META = {
         end=["L'amour ne meurt pas d'une dispute.", "Il s'éteint dans l'habitude."],
         outro=dict(label="CE QUE JE NE DIS PAS", next="Fin de la série", sub="Quel sujet pour la prochaine ?"),
         say_cta='Envoie cette vidéo à la personne que tu veux regarder autrement demain.'),
+    "tz_ce_que_je_ne_dis_pas": dict(num=100, love="E", action="Une nouvelle série en 5 épisodes", title="Ce que je ne dis pas", verse="",
+        cover=["Ce que tu dis…", "et ce que tu caches"], cast="LE", tag="CE QUE JE NE DIS PAS · BIENTÔT", end_sp="L", rate="-6%",
+        end=["Tu dis « ça va ».", "Mais tu penses autre chose."],
+        outro=dict(label="CE QUE JE NE DIS PAS", next="Dès lundi", sub="Abonne-toi pour ne pas la manquer"),
+        say_cta="Ce que je ne dis pas. Une nouvelle série, en cinq épisodes. Abonne-toi pour ne pas la manquer."),
 }
 
 # Accroche à froid : la phrase la plus forte de l'épisode, dite par le mentor
