@@ -1,0 +1,1719 @@
+{
+ "title": "Pas à pas",
+ "audioFile": "pas-a-pas/chanson.mp3",
+ "durationSeconds": 146.0,
+ "bpm": 101.99,
+ "beatOffset": 0.493,
+ "scenes": [
+  {
+   "start": 0,
+   "end": 14.0,
+   "pose": "wave",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "notes",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Pas",
+     "at": 2.846,
+     "x": 430,
+     "y": 300,
+     "size": 180,
+     "color": "#24366b",
+     "font": "serif",
+     "style": "drop"
+    },
+    {
+     "text": "à",
+     "at": 3.434,
+     "x": 960,
+     "y": 150,
+     "size": 160,
+     "color": "#d9a441",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "pas",
+     "at": 4.023,
+     "x": 1490,
+     "y": 300,
+     "size": 180,
+     "color": "#24366b",
+     "font": "serif",
+     "style": "drop"
+    },
+    {
+     "text": "main dans",
+     "at": 7.553,
+     "x": 430,
+     "y": 620,
+     "size": 110,
+     "color": "#c8553d",
+     "style": "slide"
+    },
+    {
+     "text": "ta main ✦",
+     "at": 8.141,
+     "x": 1490,
+     "y": 620,
+     "size": 110,
+     "color": "#6f9a7c",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 14.0,
+   "end": 17.9,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "none",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Seigneur,",
+     "at": 0.25,
+     "x": 420,
+     "y": 376,
+     "size": 125,
+     "color": "#24366b",
+     "font": "sans",
+     "style": "pop"
+    },
+    {
+     "text": "j'essaie,",
+     "at": 0.87,
+     "x": 420,
+     "y": 529,
+     "size": 125,
+     "color": "#c8553d",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "je fais de mon",
+     "at": 1.93,
+     "x": 1500,
+     "y": 355,
+     "size": 90,
+     "color": "#6f9a7c",
+     "font": "sans",
+     "style": "drop"
+    },
+    {
+     "text": "MIEUX",
+     "at": 3.39,
+     "x": 960,
+     "y": 150,
+     "size": 190,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "(amen !)",
+     "at": 3.69,
+     "x": 1500,
+     "y": 459,
+     "size": 80,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 17.9,
+   "end": 23.2,
+   "pose": "worried",
+   "eyes": "worried",
+   "mouth": "frown",
+   "prop": "cloud",
+   "cx": 960,
+   "words": [
+    {
+     "text": "J'ai des",
+     "at": 0.93,
+     "x": 420,
+     "y": 376,
+     "size": 125,
+     "color": "#6f9a7c",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "soucis plein",
+     "at": 1.21,
+     "x": 420,
+     "y": 517,
+     "size": 105,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "la tête,",
+     "at": 1.69,
+     "x": 420,
+     "y": 657,
+     "size": 125,
+     "color": "#7a4f9a",
+     "font": "mono",
+     "style": "pop"
+    },
+    {
+     "text": "mais je lève",
+     "at": 2.85,
+     "x": 1500,
+     "y": 364,
+     "size": 105,
+     "color": "#1d2433",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "les yeux",
+     "at": 3.61,
+     "x": 1500,
+     "y": 504,
+     "size": 125,
+     "color": "#e08aa0",
+     "font": "sans",
+     "style": "slide"
+    }
+   ]
+  },
+  {
+   "start": 23.2,
+   "end": 27.0,
+   "pose": "heart",
+   "eyes": "closed",
+   "mouth": "smile",
+   "prop": "sun",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Je te fais",
+     "at": 0.25,
+     "x": 540,
+     "y": 241,
+     "size": 125,
+     "color": "#7a4f9a",
+     "font": "sans",
+     "style": "drop"
+    },
+    {
+     "text": "confiance,",
+     "at": 0.97,
+     "x": 540,
+     "y": 394,
+     "size": 125,
+     "color": "#1d2433",
+     "font": "mono",
+     "style": "pop"
+    },
+    {
+     "text": "ton plan vaut",
+     "at": 2.07,
+     "x": 540,
+     "y": 540,
+     "size": 115,
+     "color": "#e08aa0",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "mieux que le",
+     "at": 2.71,
+     "x": 540,
+     "y": 686,
+     "size": 125,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "mien",
+     "at": 3.61,
+     "x": 540,
+     "y": 839,
+     "size": 125,
+     "color": "#c8553d",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 27.0,
+   "end": 33.2,
+   "pose": "shrug",
+   "eyes": "open",
+   "mouth": "o",
+   "prop": "question",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Même quand je",
+     "at": 0.15,
+     "x": 420,
+     "y": 359,
+     "size": 97,
+     "color": "#e08aa0",
+     "font": "mono",
+     "style": "pop"
+    },
+    {
+     "text": "ne comprends",
+     "at": 1.53,
+     "x": 420,
+     "y": 482,
+     "size": 105,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "pas,",
+     "at": 2.17,
+     "x": 420,
+     "y": 623,
+     "size": 125,
+     "color": "#c8553d",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "je sais que tu",
+     "at": 2.91,
+     "x": 1500,
+     "y": 355,
+     "size": 90,
+     "color": "#6f9a7c",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "me tiens",
+     "at": 4.21,
+     "x": 1500,
+     "y": 486,
+     "size": 125,
+     "color": "#4f8fd6",
+     "font": "sans",
+     "style": "slide"
+    }
+   ]
+  },
+  {
+   "start": 33.2,
+   "end": 35.8,
+   "pose": "cheer",
+   "eyes": "worried",
+   "mouth": "open",
+   "prop": "rock",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Quand je tombe ?",
+     "at": 0.21,
+     "x": 540,
+     "y": 430,
+     "size": 93,
+     "color": "#c8553d",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "Tu me relèves !",
+     "at": 1.09,
+     "x": 540,
+     "y": 548,
+     "size": 100,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "(Oui, Seigneur !)",
+     "at": 2.25,
+     "x": 540,
+     "y": 658,
+     "size": 80,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ],
+   "fall": true,
+   "fallAt": 0.72,
+   "riseAt": 1.62
+  },
+  {
+   "start": 35.8,
+   "end": 38.3,
+   "pose": "wave",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "sun",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Quand j'avance ?",
+     "at": 0.27,
+     "x": 1380,
+     "y": 434,
+     "size": 93,
+     "color": "#4f8fd6",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "Tu me soulèves !",
+     "at": 0.85,
+     "x": 1380,
+     "y": 548,
+     "size": 93,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "(Amen !)",
+     "at": 1.75,
+     "x": 1380,
+     "y": 653,
+     "size": 80,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 38.3,
+   "end": 42.1,
+   "pose": "hold",
+   "eyes": "wink",
+   "mouth": "grin",
+   "prop": "coffee",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Un café,",
+     "at": 0.29,
+     "x": 420,
+     "y": 376,
+     "size": 125,
+     "color": "#1d2433",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "une prière,",
+     "at": 0.89,
+     "x": 1500,
+     "y": 370,
+     "size": 115,
+     "color": "#e08aa0",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "et c'est parti !",
+     "at": 1.87,
+     "x": 960,
+     "y": 150,
+     "size": 151,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 42.1,
+   "end": 47.1,
+   "pose": "hold",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Tu me donnes",
+     "at": 0.27,
+     "x": 1380,
+     "y": 311,
+     "size": 125,
+     "color": "#24366b",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "du courage,",
+     "at": 0.97,
+     "x": 1380,
+     "y": 470,
+     "size": 136,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "tu remplis ma",
+     "at": 2.47,
+     "x": 1380,
+     "y": 623,
+     "size": 115,
+     "color": "#6f9a7c",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "vie !",
+     "at": 3.57,
+     "x": 1380,
+     "y": 769,
+     "size": 125,
+     "color": "#4f8fd6",
+     "font": "sans",
+     "style": "type"
+    }
+   ]
+  },
+  {
+   "start": 47.1,
+   "end": 49.7,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": 0.23,
+     "x": 540,
+     "y": 363,
+     "size": 125,
+     "color": "#6f9a7c",
+     "font": "mono",
+     "style": "drop"
+    },
+    {
+     "text": "main dans ta",
+     "at": 1.49,
+     "x": 540,
+     "y": 516,
+     "size": 125,
+     "color": "#4f8fd6",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "MAIN",
+     "at": 2.11,
+     "x": 540,
+     "y": 692,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 49.7,
+   "end": 52.0,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "notes",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Je danse sur",
+     "at": 0.13,
+     "x": 420,
+     "y": 364,
+     "size": 105,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "LE CHEMIN",
+     "at": 1.21,
+     "x": 960,
+     "y": 150,
+     "size": 190,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "(glory !)",
+     "at": 1.85,
+     "x": 1500,
+     "y": 349,
+     "size": 80,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 52.0,
+   "end": 54.2,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": 0.29,
+     "x": 540,
+     "y": 363,
+     "size": 125,
+     "color": "#e08aa0",
+     "font": "sans",
+     "style": "type"
+    },
+    {
+     "text": "jour après",
+     "at": 1.29,
+     "x": 540,
+     "y": 516,
+     "size": 125,
+     "color": "#24366b",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "JOUR",
+     "at": 1.77,
+     "x": 540,
+     "y": 692,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 54.2,
+   "end": 56.3,
+   "pose": "heart",
+   "eyes": "closed",
+   "mouth": "smile",
+   "prop": "sun",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Je marche dans",
+     "at": 0.29,
+     "x": 1380,
+     "y": 391,
+     "size": 107,
+     "color": "#c8553d",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "TON AMOUR",
+     "at": 1.37,
+     "x": 1380,
+     "y": 556,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "(hallelujah !)",
+     "at": 1.67,
+     "x": 1380,
+     "y": 706,
+     "size": 80,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 56.3,
+   "end": 59.0,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "none",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": 0.21,
+     "x": 420,
+     "y": 376,
+     "size": 125,
+     "color": "#4f8fd6",
+     "font": "sans",
+     "style": "pop"
+    },
+    {
+     "text": "je n'ai plus",
+     "at": 1.51,
+     "x": 1500,
+     "y": 364,
+     "size": 105,
+     "color": "#7a4f9a",
+     "font": "mono",
+     "style": "slide"
+    },
+    {
+     "text": "PEUR",
+     "at": 2.13,
+     "x": 960,
+     "y": 150,
+     "size": 190,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 59.0,
+   "end": 61.4,
+   "pose": "heart",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "notes",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Ta joie",
+     "at": 0.27,
+     "x": 1380,
+     "y": 363,
+     "size": 125,
+     "color": "#1d2433",
+     "font": "mono",
+     "style": "slide"
+    },
+    {
+     "text": "remplit mon",
+     "at": 0.83,
+     "x": 1380,
+     "y": 516,
+     "size": 125,
+     "color": "#e08aa0",
+     "font": "serif",
+     "style": "drop"
+    },
+    {
+     "text": "CŒUR",
+     "at": 1.583,
+     "x": 1380,
+     "y": 692,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 61.4,
+   "end": 63.7,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": 0.25,
+     "x": 540,
+     "y": 363,
+     "size": 125,
+     "color": "#24366b",
+     "font": "serif",
+     "style": "drop"
+    },
+    {
+     "text": "main dans ta",
+     "at": 1.31,
+     "x": 540,
+     "y": 516,
+     "size": 125,
+     "color": "#c8553d",
+     "font": "sans",
+     "style": "pop"
+    },
+    {
+     "text": "MAIN",
+     "at": 1.93,
+     "x": 540,
+     "y": 692,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 63.7,
+   "end": 66.0,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "none",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Avec toi tout",
+     "at": 0.25,
+     "x": 420,
+     "y": 359,
+     "size": 97,
+     "color": "#6f9a7c",
+     "font": "sans",
+     "style": "pop"
+    },
+    {
+     "text": "IRA BIEN !",
+     "at": 1.31,
+     "x": 960,
+     "y": 150,
+     "size": 190,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 66.0,
+   "end": 69.1,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": 0.25,
+     "x": 540,
+     "y": 363,
+     "size": 125,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "type"
+    },
+    {
+     "text": "main dans ta",
+     "at": 1.217,
+     "x": 540,
+     "y": 516,
+     "size": 125,
+     "color": "#1d2433",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "MAIN",
+     "at": 2.183,
+     "x": 540,
+     "y": 692,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 69.1,
+   "end": 73.3,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": 0.25,
+     "x": 1380,
+     "y": 363,
+     "size": 125,
+     "color": "#e08aa0",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "main dans ta",
+     "at": 1.55,
+     "x": 1380,
+     "y": 516,
+     "size": 125,
+     "color": "#24366b",
+     "font": "mono",
+     "style": "pop"
+    },
+    {
+     "text": "MAIN",
+     "at": 2.85,
+     "x": 1380,
+     "y": 692,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 73.3,
+   "end": 75.3,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "none",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Avec toi tout",
+     "at": 0.23,
+     "x": 420,
+     "y": 359,
+     "size": 97,
+     "color": "#c8553d",
+     "font": "mono",
+     "style": "pop"
+    },
+    {
+     "text": "IRA BIEN !",
+     "at": 1.09,
+     "x": 960,
+     "y": 150,
+     "size": 190,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 75.3,
+   "end": 78.4,
+   "pose": "shrug",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "none",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Le matin mon",
+     "at": 0.29,
+     "x": 1380,
+     "y": 234,
+     "size": 125,
+     "color": "#4f8fd6",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "lit est en",
+     "at": 1.05,
+     "x": 1380,
+     "y": 387,
+     "size": 125,
+     "color": "#7a4f9a",
+     "font": "sans",
+     "style": "drop"
+    },
+    {
+     "text": "désordre,",
+     "at": 1.67,
+     "x": 1380,
+     "y": 539,
+     "size": 125,
+     "color": "#1d2433",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "mais mon cœur",
+     "at": 1.99,
+     "x": 1380,
+     "y": 686,
+     "size": 115,
+     "color": "#e08aa0",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "est en paix",
+     "at": 2.53,
+     "x": 1380,
+     "y": 839,
+     "size": 136,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 78.4,
+   "end": 80.5,
+   "pose": "heart",
+   "eyes": "closed",
+   "mouth": "smile",
+   "prop": "sun",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Tu connais mes",
+     "at": 0.21,
+     "x": 540,
+     "y": 293,
+     "size": 107,
+     "color": "#1d2433",
+     "font": "sans",
+     "style": "drop"
+    },
+    {
+     "text": "faiblesses et",
+     "at": 0.725,
+     "x": 540,
+     "y": 428,
+     "size": 115,
+     "color": "#e08aa0",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "tu m'aimes à",
+     "at": 1.33,
+     "x": 540,
+     "y": 575,
+     "size": 125,
+     "color": "#24366b",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "JAMAIS",
+     "at": 1.95,
+     "x": 540,
+     "y": 752,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 80.5,
+   "end": 83.4,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "cloud",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Si la pluie",
+     "at": 0.11,
+     "x": 420,
+     "y": 370,
+     "size": 115,
+     "color": "#24366b",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "tombe,",
+     "at": 0.925,
+     "x": 420,
+     "y": 517,
+     "size": 125,
+     "color": "#c8553d",
+     "font": "sans",
+     "style": "type"
+    },
+    {
+     "text": "je chante sous",
+     "at": 1.31,
+     "x": 1500,
+     "y": 355,
+     "size": 90,
+     "color": "#6f9a7c",
+     "font": "mono",
+     "style": "slide"
+    },
+    {
+     "text": "LES NUAGES",
+     "at": 2.31,
+     "x": 1500,
+     "y": 487,
+     "size": 126,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 83.4,
+   "end": 85.5,
+   "pose": "hold",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Car ta lumière",
+     "at": 0.15,
+     "x": 540,
+     "y": 409,
+     "size": 107,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "brille au bout",
+     "at": 0.95,
+     "x": 540,
+     "y": 540,
+     "size": 107,
+     "color": "#4f8fd6",
+     "font": "mono",
+     "style": "slide"
+    },
+    {
+     "text": "de chaque page",
+     "at": 1.31,
+     "x": 540,
+     "y": 671,
+     "size": 107,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 85.5,
+   "end": 87.9,
+   "pose": "wave",
+   "eyes": "happy",
+   "mouth": "open",
+   "prop": "notes",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Mon âme",
+     "at": 0.05,
+     "x": 1380,
+     "y": 287,
+     "size": 125,
+     "color": "#7a4f9a",
+     "font": "mono",
+     "style": "slide"
+    },
+    {
+     "text": "chante,",
+     "at": 0.99,
+     "x": 1380,
+     "y": 439,
+     "size": 125,
+     "color": "#1d2433",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "mon esprit",
+     "at": 1.47,
+     "x": 1380,
+     "y": 592,
+     "size": 125,
+     "color": "#e08aa0",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "S'ENVOLE",
+     "at": 1.87,
+     "x": 1380,
+     "y": 769,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 87.9,
+   "end": 90.2,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "notes",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Dans ce rythme",
+     "at": 0.25,
+     "x": 420,
+     "y": 355,
+     "size": 90,
+     "color": "#e08aa0",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "joyeux,",
+     "at": 1.35,
+     "x": 1500,
+     "y": 376,
+     "size": 125,
+     "color": "#24366b",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "qui console",
+     "at": 1.65,
+     "x": 960,
+     "y": 150,
+     "size": 190,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 90.2,
+   "end": 92.5,
+   "pose": "wave",
+   "eyes": "happy",
+   "mouth": "open",
+   "prop": "notes",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Chaque pas est",
+     "at": 0.21,
+     "x": 1380,
+     "y": 381,
+     "size": 107,
+     "color": "#c8553d",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "une note,",
+     "at": 0.97,
+     "x": 1380,
+     "y": 522,
+     "size": 125,
+     "color": "#6f9a7c",
+     "font": "serif",
+     "style": "drop"
+    },
+    {
+     "text": "une mélodie",
+     "at": 1.55,
+     "x": 1380,
+     "y": 682,
+     "size": 136,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 92.5,
+   "end": 96.7,
+   "pose": "heart",
+   "eyes": "closed",
+   "mouth": "open",
+   "prop": "notes",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Ma vie est un",
+     "at": 0.21,
+     "x": 540,
+     "y": 394,
+     "size": 115,
+     "color": "#4f8fd6",
+     "font": "serif",
+     "style": "drop"
+    },
+    {
+     "text": "hymne,",
+     "at": 1.017,
+     "x": 540,
+     "y": 540,
+     "size": 125,
+     "color": "#7a4f9a",
+     "font": "sans",
+     "style": "pop"
+    },
+    {
+     "text": "une symphonie",
+     "at": 1.33,
+     "x": 540,
+     "y": 686,
+     "size": 115,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 96.7,
+   "end": 98.8,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": 0.27,
+     "x": 420,
+     "y": 376,
+     "size": 125,
+     "color": "#1d2433",
+     "font": "sans",
+     "style": "pop"
+    },
+    {
+     "text": "main dans ta",
+     "at": 1.19,
+     "x": 1500,
+     "y": 364,
+     "size": 105,
+     "color": "#e08aa0",
+     "font": "mono",
+     "style": "slide"
+    },
+    {
+     "text": "MAIN",
+     "at": 1.93,
+     "x": 960,
+     "y": 150,
+     "size": 190,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 98.8,
+   "end": 101.4,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "notes",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Je danse sur",
+     "at": 0.19,
+     "x": 540,
+     "y": 391,
+     "size": 125,
+     "color": "#24366b",
+     "font": "mono",
+     "style": "slide"
+    },
+    {
+     "text": "LE CHEMIN",
+     "at": 1.49,
+     "x": 540,
+     "y": 567,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "(glory !)",
+     "at": 1.79,
+     "x": 540,
+     "y": 717,
+     "size": 80,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 101.4,
+   "end": 103.6,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": -0.03,
+     "x": 1380,
+     "y": 363,
+     "size": 125,
+     "color": "#6f9a7c",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "jour après",
+     "at": 1.31,
+     "x": 1380,
+     "y": 516,
+     "size": 125,
+     "color": "#4f8fd6",
+     "font": "sans",
+     "style": "pop"
+    },
+    {
+     "text": "JOUR",
+     "at": 1.79,
+     "x": 1380,
+     "y": 692,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 103.6,
+   "end": 105.8,
+   "pose": "heart",
+   "eyes": "closed",
+   "mouth": "smile",
+   "prop": "sun",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Je marche dans",
+     "at": 0.29,
+     "x": 420,
+     "y": 355,
+     "size": 90,
+     "color": "#7a4f9a",
+     "font": "sans",
+     "style": "pop"
+    },
+    {
+     "text": "TON AMOUR",
+     "at": 1.39,
+     "x": 420,
+     "y": 495,
+     "size": 140,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "(hallelujah !)",
+     "at": 1.75,
+     "x": 1500,
+     "y": 349,
+     "size": 80,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 105.8,
+   "end": 108.5,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "none",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": 0.41,
+     "x": 1380,
+     "y": 363,
+     "size": 125,
+     "color": "#e08aa0",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "je n'ai plus",
+     "at": 1.41,
+     "x": 1380,
+     "y": 516,
+     "size": 125,
+     "color": "#24366b",
+     "font": "sans",
+     "style": "drop"
+    },
+    {
+     "text": "PEUR",
+     "at": 2.03,
+     "x": 1380,
+     "y": 692,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 108.5,
+   "end": 110.8,
+   "pose": "heart",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "notes",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Ta joie",
+     "at": 0.39,
+     "x": 540,
+     "y": 363,
+     "size": 125,
+     "color": "#c8553d",
+     "font": "sans",
+     "style": "drop"
+    },
+    {
+     "text": "remplit mon",
+     "at": 0.73,
+     "x": 540,
+     "y": 516,
+     "size": 125,
+     "color": "#6f9a7c",
+     "font": "mono",
+     "style": "pop"
+    },
+    {
+     "text": "CŒUR",
+     "at": 1.517,
+     "x": 540,
+     "y": 692,
+     "size": 165,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 110.8,
+   "end": 113.0,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Pas à pas,",
+     "at": 0.79,
+     "x": 420,
+     "y": 376,
+     "size": 125,
+     "color": "#4f8fd6",
+     "font": "mono",
+     "style": "pop"
+    },
+    {
+     "text": "main dans ta",
+     "at": 1.33,
+     "x": 1500,
+     "y": 364,
+     "size": 105,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "MAIN",
+     "at": 1.93,
+     "x": 960,
+     "y": 150,
+     "size": 190,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 113.0,
+   "end": 115.5,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "none",
+   "cx": 1280,
+   "words": [
+    {
+     "text": "Avec toi tout",
+     "at": 0.19,
+     "x": 540,
+     "y": 448,
+     "size": 115,
+     "color": "#1d2433",
+     "font": "serif",
+     "style": "slide"
+    },
+    {
+     "text": "IRA BIEN !",
+     "at": 1.49,
+     "x": 540,
+     "y": 610,
+     "size": 150,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  },
+  {
+   "start": 115.5,
+   "end": 124.2,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 640,
+   "words": [
+    {
+     "text": "PAS À PAS…",
+     "at": 0.53,
+     "x": 1380,
+     "y": 491,
+     "size": 150,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "(pas à pas)",
+     "at": 5.25,
+     "x": 1380,
+     "y": 632,
+     "size": 80,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 124.2,
+   "end": 132.0,
+   "pose": "walk",
+   "eyes": "happy",
+   "mouth": "smile",
+   "prop": "lantern",
+   "cx": 960,
+   "words": [
+    {
+     "text": "Main dans ta",
+     "at": 0.25,
+     "x": 420,
+     "y": 364,
+     "size": 105,
+     "color": "#6f9a7c",
+     "font": "serif",
+     "style": "pop"
+    },
+    {
+     "text": "MAIN…",
+     "at": 3.3,
+     "x": 960,
+     "y": 150,
+     "size": 190,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    },
+    {
+     "text": "(main dans ta main)",
+     "at": 5.75,
+     "x": 1500,
+     "y": 349,
+     "size": 80,
+     "color": "#7a4f9a",
+     "font": "serif",
+     "style": "pop"
+    }
+   ]
+  },
+  {
+   "start": 132.0,
+   "end": 136.4,
+   "pose": "cheer",
+   "eyes": "happy",
+   "mouth": "grin",
+   "prop": "none",
+   "cx": 640,
+   "words": [
+    {
+     "text": "Avec toi…",
+     "at": 0.25,
+     "x": 1380,
+     "y": 486,
+     "size": 125,
+     "color": "#7a4f9a",
+     "font": "sans",
+     "style": "slide"
+    },
+    {
+     "text": "tout ira bien ! ✨",
+     "at": 1.13,
+     "x": 1380,
+     "y": 616,
+     "size": 88,
+     "color": "#d9a441",
+     "font": "sans",
+     "style": "stretch"
+    }
+   ]
+  }
+ ]
+}

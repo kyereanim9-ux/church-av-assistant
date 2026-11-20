@@ -5,7 +5,8 @@ import {
   announcementDefaults,
 } from "./compositions/Announcement";
 import { FoundMe, foundMeDefaults } from "./compositions/FoundMe";
-import { PasAPas, pasAPasDefaults } from "./compositions/PasAPas";
+import { PasAPas, pasAPasDefaults, PasAPasProps } from "./compositions/PasAPas";
+import songTimeline from "./compositions/pasAPasSong.timeline.json";
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
 
 const FPS = 30;
@@ -42,6 +43,18 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         defaultProps={pasAPasDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: Math.round(props.durationSeconds * FPS),
+        })}
+      />
+      <Composition
+        id="PasAPasChanson"
+        component={PasAPas}
+        durationInFrames={146 * FPS}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={songTimeline as PasAPasProps}
         calculateMetadata={({ props }) => ({
           durationInFrames: Math.round(props.durationSeconds * FPS),
         })}

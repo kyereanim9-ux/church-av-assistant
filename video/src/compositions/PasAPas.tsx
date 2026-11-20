@@ -32,7 +32,7 @@ export type Word = {
 type Pose = "cheer" | "worried" | "heart" | "hold" | "shrug" | "walk" | "wave";
 type Eyes = "open" | "happy" | "closed" | "worried" | "wink";
 type Mouth = "smile" | "open" | "frown" | "o" | "grin";
-type Prop = "none" | "cloud" | "sun" | "plan" | "question" | "rock" | "coffee" | "lantern";
+type Prop = "none" | "cloud" | "sun" | "plan" | "question" | "rock" | "coffee" | "lantern" | "notes";
 
 export type Scene = {
   start: number;
@@ -44,6 +44,8 @@ export type Scene = {
   /** character centre x (px, 1920 wide frame) */
   cx: number;
   fall?: boolean;
+  /** continues the previous scene: no entrance animation */
+  cont?: boolean;
   /** seconds into the scene: start of the stumble / getting back up */
   fallAt?: number;
   riseAt?: number;
@@ -56,6 +58,10 @@ export type PasAPasProps = {
   audioFile: string;
   durationSeconds: number;
   scenes: Scene[];
+  /** Optional song tempo: the character bounces on the beat. */
+  bpm?: number;
+  /** Time (s) of a downbeat, to phase the bounce. */
+  beatOffset?: number;
 };
 
 /* ------------------------------------------------------------------ */
@@ -292,12 +298,16 @@ const HeldProp: React.FC<{ prop: Prop; frame: number }> = ({ prop, frame }) => {
   return null;
 };
 
-const Character: React.FC<{ scene: Scene; localT: number }> = ({ scene, localT }) => {
+const Character: React.FC<{ scene: Scene; localT: number; beatBob?: number }> = ({
+  scene,
+  localT,
+  beatBob,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const enter = spring({ frame: localT * fps, fps, config: { damping: 14, mass: 0.7 } });
+  const enter = scene.cont ? 1 : spring({ frame: localT * fps, fps, config: { damping: 14, mass: 0.7 } });
   let [la, ra] = POSES[scene.pose];
-  const bob = Math.sin(frame / 7) * 6;
+  const bob = beatBob ?? Math.sin(frame / 7) * 6;
   let legL = 0;
   let legR = 0;
   if (scene.pose === "walk") {
@@ -408,7 +418,7 @@ const WorldProp: React.FC<{ scene: Scene; localT: number }> = ({ scene, localT }
   if (scene.prop === "sun") {
     const r = frame / 2;
     return (
-      <div style={{ position: "absolute", left: x - 720, top: 330, transform: `scale(${inS})`, opacity: 0.9 }}>
+      <div style={{ position: "absolute", left: x - 220, top: -60, transform: `scale(${inS})`, opacity: 0.9 }}>
         <svg width={440} height={440} viewBox="-220 -220 440 440">
           <g transform={`rotate(${r})`}>
             {Array.from({ length: 12 }, (_, i) => (
@@ -418,6 +428,32 @@ const WorldProp: React.FC<{ scene: Scene; localT: number }> = ({ scene, localT }
           <circle r={120} fill={C.gold} opacity={0.18} />
         </svg>
       </div>
+    );
+  }
+  if (scene.prop === "notes") {
+    return (
+      <>
+        {Array.from({ length: 7 }, (_, i) => {
+          const life = ((localT * 0.6 + i / 7) % 1 + 1) % 1;
+          const side = i % 2 ? 1 : -1;
+          return (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: x + side * (170 + (i % 3) * 60) + Math.sin(localT * 3 + i) * 30,
+                top: 760 - life * 620,
+                fontSize: 70 + (i % 3) * 20,
+                color: [C.gold, C.terracotta, C.sky, C.plum, C.sage][i % 5],
+                opacity: inS * Math.sin(life * Math.PI),
+                transform: `rotate(${Math.sin(localT * 4 + i) * 15}deg)`,
+              }}
+            >
+              {i % 2 ? "♪" : "♫"}
+            </div>
+          );
+        })}
+      </>
     );
   }
   if (scene.prop === "question") {
@@ -501,18 +537,26 @@ const Burst: React.FC<{ x: number; y: number; t: number }> = ({ x, y, t }) => {
 /* Composition                                                         */
 /* ------------------------------------------------------------------ */
 
-export const PasAPas: React.FC<PasAPasProps> = ({ title, audioFile, durationSeconds, scenes }) => {
+export const PasAPas: React.FC<PasAPasProps> = ({
+  title,
+  audioFile,
+  durationSeconds,
+  scenes,
+  bpm,
+  beatOffset = 0,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
   const scene = scenes.find((s) => t >= s.start && t < s.end) ?? scenes[scenes.length - 1];
   const localT = t - scene.start;
+  const beatBob = bpm ? -Math.abs(Math.sin((Math.PI * (t - beatOffset) * bpm) / 60)) * 18 : undefined;
   const fadeOut = interpolate(t, [durationSeconds - 0.8, durationSeconds], [1, 0], clamp);
   const endCard = interpolate(t, [durationSeconds - 2, durationSeconds - 1.4], [0, 1], clamp);
 
   // Quick white flash + slight zoom on each scene change
-  const cut = interpolate(localT, [0, 0.18], [1, 0], clamp);
-  const zoom = interpolate(localT, [0, 0.35], [1.04, 1], clamp);
+  const cut = scene.cont ? 0 : interpolate(localT, [0, 0.18], [1, 0], clamp);
+  const zoom = scene.cont ? 1 : interpolate(localT, [0, 0.35], [1.04, 1], clamp);
 
   // camera shake when the character hits the ground
   let shake = 0;
@@ -537,7 +581,7 @@ export const PasAPas: React.FC<PasAPasProps> = ({ title, audioFile, durationSeco
       {/* floor line */}
       <div style={{ position: "absolute", left: 0, right: 0, top: 985, height: 2, background: "rgba(29,36,51,0.06)" }} />
       <WorldProp scene={scene} localT={localT} />
-      <Character key={scene.start} scene={scene} localT={localT} />
+      <Character key={scene.start} scene={scene} localT={localT} beatBob={beatBob} />
       {scene.words.map((w, i) => (
         <KineticWord key={`${scene.start}-${i}`} w={w} t={localT} sceneEnd={scene.end - scene.start} />
       ))}
