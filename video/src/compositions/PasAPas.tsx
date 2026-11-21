@@ -8,6 +8,14 @@ import {
   useVideoConfig,
 } from "remotion";
 import timeline from "./pasAPas.timeline.json";
+import {
+  Backdrop,
+  BackdropLayer,
+  BigHeart,
+  ChapterPill,
+  GiantHand,
+  HandKind,
+} from "./PasAPasScenery";
 
 /* ------------------------------------------------------------------ */
 /* Types & props                                                       */
@@ -29,10 +37,14 @@ export type Word = {
   rotate?: number;
 };
 
-type Pose = "cheer" | "worried" | "heart" | "hold" | "shrug" | "walk" | "wave";
+type Pose =
+  | "cheer" | "worried" | "heart" | "hold" | "shrug" | "walk" | "wave"
+  | "kneel" | "point" | "reach" | "walkhand" | "umbrella" | "book";
 type Eyes = "open" | "happy" | "closed" | "worried" | "wink";
 type Mouth = "smile" | "open" | "frown" | "o" | "grin";
-type Prop = "none" | "cloud" | "sun" | "plan" | "question" | "rock" | "coffee" | "lantern" | "notes";
+type Prop =
+  | "none" | "cloud" | "sun" | "plan" | "question" | "rock" | "coffee" | "lantern" | "notes"
+  | "heart" | "heartfill" | "umbrella" | "book";
 
 export type Scene = {
   start: number;
@@ -49,6 +61,14 @@ export type Scene = {
   /** seconds into the scene: start of the stumble / getting back up */
   fallAt?: number;
   riseAt?: number;
+  /** illustrated background */
+  backdrop?: Backdrop;
+  /** giant hand helping the character */
+  hand?: HandKind;
+  /** seconds into the scene when the hand arrives (negative = already there) */
+  handAt?: number;
+  /** "Part · meaning" title shown at the start of a song section */
+  chapter?: string;
   words: Word[];
 };
 
@@ -193,6 +213,12 @@ const POSES: Record<Pose, [number, number]> = {
   shrug: [70, -70],
   walk: [0, -70],
   wave: [10, -150],
+  kneel: [18, -78],
+  point: [12, -95],
+  reach: [25, -150],
+  walkhand: [0, -150],
+  umbrella: [12, -22],
+  book: [20, -48],
 };
 
 const Arm: React.FC<{ x: number; angle: number; children?: React.ReactNode }> = ({
@@ -283,6 +309,35 @@ const HeldProp: React.FC<{ prop: Prop; frame: number }> = ({ prop, frame }) => {
       </g>
     );
   }
+  if (prop === "umbrella")
+    return (
+      <g transform="translate(250 448)">
+        <line x1={0} y1={30} x2={0} y2={-380} stroke={C.ink} strokeWidth={8} strokeLinecap="round" />
+        <path d="M0 30 q 0 24 -22 24" stroke={C.ink} strokeWidth={8} fill="none" strokeLinecap="round" />
+        <path
+          d="M-190 -360 Q -180 -560 0 -570 Q 180 -560 190 -360 Q 150 -390 95 -360 Q 48 -392 0 -360 Q -48 -392 -95 -360 Q -150 -390 -190 -360 Z"
+          fill={C.terracotta}
+          stroke={C.ink}
+          strokeWidth={6}
+          strokeLinejoin="round"
+        />
+        <path d="M0 -570 Q -60 -470 -95 -360 M0 -570 Q 60 -470 95 -360" stroke="#a5402d" strokeWidth={5} fill="none" />
+      </g>
+    );
+  if (prop === "book") {
+    const glow = 0.6 + Math.sin(frame / 7) * 0.2;
+    return (
+      <g transform="translate(250 420)">
+        {Array.from({ length: 9 }, (_, i) => (
+          <rect key={i} x={-5} y={-260} width={10} height={170} rx={5} fill={C.gold} opacity={0.35 * glow} transform={`rotate(${-60 + i * 15} 0 -40)`} />
+        ))}
+        <circle cx={0} cy={-40} r={90} fill={C.gold} opacity={0.25 * glow} />
+        <path d="M0 -10 Q -60 -40 -120 -20 L -120 60 Q -60 40 0 70 Z" fill="#fffaf0" stroke={C.ink} strokeWidth={5} strokeLinejoin="round" />
+        <path d="M0 -10 Q 60 -40 120 -20 L 120 60 Q 60 40 0 70 Z" fill="#fffaf0" stroke={C.ink} strokeWidth={5} strokeLinejoin="round" />
+        <path d="M-100 0 q 40 -14 80 2 M-100 20 q 40 -14 80 2 M20 2 q 40 -16 80 -2 M20 22 q 40 -16 80 -2" stroke="#c9b48a" strokeWidth={4} fill="none" />
+      </g>
+    );
+  }
   if (prop === "lantern") {
     const glow = 0.55 + Math.sin(frame / 8) * 0.12;
     return (
@@ -298,10 +353,14 @@ const HeldProp: React.FC<{ prop: Prop; frame: number }> = ({ prop, frame }) => {
   return null;
 };
 
-const Character: React.FC<{ scene: Scene; localT: number; beatBob?: number }> = ({
+const walkOffset = (scene: Scene, localT: number) =>
+  scene.pose === "walk" || scene.pose === "walkhand" ? (localT - 2.5) * 40 : 0;
+
+const Character: React.FC<{ scene: Scene; localT: number; beatBob?: number; lift?: number }> = ({
   scene,
   localT,
   beatBob,
+  lift = 0,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -310,7 +369,7 @@ const Character: React.FC<{ scene: Scene; localT: number; beatBob?: number }> = 
   const bob = beatBob ?? Math.sin(frame / 7) * 6;
   let legL = 0;
   let legR = 0;
-  if (scene.pose === "walk") {
+  if (scene.pose === "walk" || scene.pose === "walkhand") {
     const sw = Math.sin(frame / 5);
     la = sw * 22;
     legL = sw * 22;
@@ -330,7 +389,8 @@ const Character: React.FC<{ scene: Scene; localT: number; beatBob?: number }> = 
       interpolate(localT, [r0, r0 + 0.5], [0, 78], clamp);
   }
   const blink = Math.floor(frame / 3) % 40 === 0;
-  const walkX = scene.pose === "walk" ? (localT - 2.5) * 40 : 0;
+  const walkX = walkOffset(scene, localT);
+  const kneel = scene.pose === "kneel";
 
   return (
     <div
@@ -340,7 +400,7 @@ const Character: React.FC<{ scene: Scene; localT: number; beatBob?: number }> = 
         top: 300,
         width: 460,
         height: 690,
-        transform: `translateY(${(1 - enter) * 80 + bob}px) scale(${0.9 + enter * 0.1})`,
+        transform: `translateY(${(1 - enter) * 80 + bob - lift}px) scale(${0.9 + enter * 0.1})`,
         transformOrigin: "50% 100%",
       }}
     >
@@ -349,6 +409,17 @@ const Character: React.FC<{ scene: Scene; localT: number; beatBob?: number }> = 
         <ellipse cx={200} cy={588} rx={110 - Math.abs(bob) * 2} ry={14} fill="#1d2433" opacity={0.1} />
         <g transform={`rotate(${tilt} 200 585)`}>
           {/* legs */}
+          {kneel ? (
+            <g>
+              <rect x={150} y={536} width={46} height={44} rx={16} fill={PANTS} />
+              <ellipse cx={168} cy={578} rx={32} ry={12} fill={C.ink} />
+              <rect x={206} y={540} width={42} height={34} rx={14} fill={PANTS} />
+              <ellipse cx={262} cy={576} rx={44} ry={13} fill={PANTS} />
+              <ellipse cx={306} cy={578} rx={22} ry={11} fill={C.ink} />
+            </g>
+          ) : null}
+          <g transform={kneel ? "translate(0 80)" : undefined}>
+          {kneel ? null : (<>
           <g transform={`rotate(${legL} 175 470)`}>
             <rect x={156} y={460} width={38} height={110} rx={16} fill={PANTS} />
             <ellipse cx={170} cy={576} rx={30} ry={13} fill={C.ink} />
@@ -357,6 +428,7 @@ const Character: React.FC<{ scene: Scene; localT: number; beatBob?: number }> = 
             <rect x={206} y={460} width={38} height={110} rx={16} fill={PANTS} />
             <ellipse cx={232} cy={576} rx={30} ry={13} fill={C.ink} />
           </g>
+          </>)}
           {/* body */}
           <path d="M140 330 q 60 -26 120 0 l 14 150 q -74 22 -148 0 z" fill={SWEATER} />
           <path d="M176 318 q 24 16 48 0" stroke="#c99436" strokeWidth={8} fill="none" strokeLinecap="round" />
@@ -381,6 +453,7 @@ const Character: React.FC<{ scene: Scene; localT: number; beatBob?: number }> = 
               <HeldProp prop={scene.prop} frame={frame} />
             </g>
           </Arm>
+          </g>
         </g>
       </svg>
     </div>
@@ -397,9 +470,10 @@ const WorldProp: React.FC<{ scene: Scene; localT: number }> = ({ scene, localT }
   const inS = spring({ frame: (localT - 0.2) * fps, fps, config: { damping: 12 } });
   const x = scene.cx;
 
-  if (scene.prop === "cloud") {
+  if (scene.prop === "cloud" || scene.prop === "umbrella") {
+    const up = scene.prop === "umbrella" ? -150 : 0;
     return (
-      <div style={{ position: "absolute", left: x - 170, top: 110, transform: `scale(${inS})` }}>
+      <div style={{ position: "absolute", left: x - 170, top: 110 + up, transform: `scale(${inS})` }}>
         <svg width={340} height={300} viewBox="0 0 340 300">
           <g fill="#9aa7bd">
             <circle cx={90} cy={110} r={60} />
@@ -428,6 +502,17 @@ const WorldProp: React.FC<{ scene: Scene; localT: number }> = ({ scene, localT }
           <circle r={120} fill={C.gold} opacity={0.18} />
         </svg>
       </div>
+    );
+  }
+  if (scene.prop === "heart" || scene.prop === "heartfill") {
+    return (
+      <BigHeart
+        x={x}
+        y={215}
+        localT={localT}
+        fill={scene.prop === "heartfill"}
+        id={String(Math.round(scene.start * 100))}
+      />
     );
   }
   if (scene.prop === "notes") {
@@ -566,6 +651,10 @@ export const PasAPas: React.FC<PasAPasProps> = ({
     shake = localT >= hit ? Math.sin(localT * 90) * 14 * k : 0;
   }
   const lastEnd = scenes[scenes.length - 1].end;
+  const lift =
+    scene.hand === "carry"
+      ? spring({ frame: (localT - (scene.handAt ?? 0.4) - 0.3) * fps, fps, config: { damping: 14 } }) * 110
+      : 0;
   const outro = spring({ frame: (t - lastEnd + 0.4) * fps, fps, config: { damping: 12 } });
 
   return (
@@ -580,8 +669,20 @@ export const PasAPas: React.FC<PasAPasProps> = ({
       <AbsoluteFill style={{ transform: `translate(${shake}px, ${shake * 0.6}px) scale(${zoom})` }}>
       {/* floor line */}
       <div style={{ position: "absolute", left: 0, right: 0, top: 985, height: 2, background: "rgba(29,36,51,0.06)" }} />
+      <BackdropLayer kind={scene.backdrop} localT={localT} t={t} cont={scene.cont} />
       <WorldProp scene={scene} localT={localT} />
-      <Character key={scene.start} scene={scene} localT={localT} beatBob={beatBob} />
+      <Character key={scene.start} scene={scene} localT={localT} beatBob={beatBob} lift={lift} />
+      <GiantHand
+        info={{
+          kind: scene.hand ?? "none",
+          at: scene.handAt ?? 0.4,
+          left: scene.cx - 230 + walkOffset(scene, localT),
+          top: 300 + (beatBob ?? 0) - lift,
+          cx: scene.cx,
+          lift,
+        }}
+        localT={localT}
+      />
       {scene.words.map((w, i) => (
         <KineticWord key={`${scene.start}-${i}`} w={w} t={localT} sceneEnd={scene.end - scene.start} />
       ))}
@@ -622,6 +723,7 @@ export const PasAPas: React.FC<PasAPasProps> = ({
       >
         {title} ✦
       </div>
+      <ChapterPill text={scene.chapter} localT={localT} />
       <AbsoluteFill style={{ background: "#fff", opacity: cut * 0.6, pointerEvents: "none" }} />
     </AbsoluteFill>
   );

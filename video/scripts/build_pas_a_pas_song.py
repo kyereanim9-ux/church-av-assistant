@@ -67,33 +67,52 @@ LINES = [
 ]
 SONG_END = 146.0
 
-# keyword -> (pose, eyes, mouth, prop); first match wins
-MOODS = [
-    ("tombe ? tu", ("cheer", "worried", "open", "rock")),
-    ("mieux (amen", ("cheer", "happy", "grin", "none")),
-    ("soucis", ("worried", "worried", "frown", "cloud")),
-    ("confiance", ("heart", "closed", "smile", "sun")),
-    ("comprends", ("shrug", "open", "o", "question")),
-    ("avance", ("wave", "happy", "grin", "sun")),
-    ("cafe", ("hold", "wink", "grin", "coffee")),
-    ("courage", ("hold", "happy", "smile", "lantern")),
-    ("danse", ("cheer", "happy", "grin", "notes")),
-    ("amour", ("heart", "closed", "smile", "sun")),
-    ("peur", ("cheer", "happy", "grin", "none")),
-    ("joie", ("heart", "happy", "grin", "notes")),
-    ("ira bien", ("cheer", "happy", "grin", "none")),
-    ("matin", ("shrug", "happy", "grin", "none")),
-    ("faiblesses", ("heart", "closed", "smile", "sun")),
-    ("pluie", ("cheer", "happy", "grin", "cloud")),
-    ("lumiere", ("hold", "happy", "smile", "lantern")),
-    ("ame chante", ("wave", "happy", "open", "notes")),
-    ("rythme", ("cheer", "happy", "grin", "notes")),
-    ("note", ("wave", "happy", "open", "notes")),
-    ("hymne", ("heart", "closed", "open", "notes")),
-    ("plan", ("hold", "open", "grin", "plan")),
-    ("main dans", ("walk", "happy", "smile", "lantern")),
-    ("pas a pas", ("walk", "happy", "smile", "lantern")),
+# Staging, one entry per line of LINES: what the character does and what
+# illustrates the words. "then" overrides the second half of a long line.
+def S(pose, eyes, mouth, prop="none", cx=960, **kw):
+    return dict(pose=pose, eyes=eyes, mouth=mouth, prop=prop, cx=cx, **kw)
+
+
+PATH_HOLD = S("walkhand", "happy", "smile", "none", 700, backdrop="path", hand="hold")
+REFRAIN = [
+    dict(PATH_HOLD, chapter="Refrain · Marcher main dans la main"),
+    S("cheer", "happy", "grin", "notes", 960, backdrop="path"),
+    S("walk", "happy", "smile", "sun", 760, backdrop="path"),
+    S("walk", "closed", "smile", "heart", 640, backdrop="path"),
+    S("cheer", "happy", "grin", "none", 960, backdrop="path"),
+    S("heart", "happy", "grin", "heartfill", 1280),
+    PATH_HOLD,
+    S("cheer", "happy", "grin", "sun", 960, backdrop="path"),
 ]
+STAGING = [
+    S("cheer", "happy", "grin", "none", 960, chapter="Couplet 1 · Je fais de mon mieux"),
+    S("worried", "worried", "frown", "cloud", 960, then=dict(pose="reach", eyes="open", mouth="smile", prop="sun")),
+    S("point", "happy", "grin", "none", 600, hand="map", layout="top"),
+    S("shrug", "open", "o", "question", 960, then=dict(pose="heart", eyes="closed", mouth="smile", prop="none", hand="bless")),
+    S("cheer", "worried", "open", "rock", 760, hand="lift", chapter="Pré-refrain · Quand je tombe, Il me relève"),
+    S("cheer", "happy", "grin", "none", 760, hand="carry"),
+    S("hold", "wink", "grin", "coffee", 960),
+    S("kneel", "open", "smile", "none", 800, hand="staff", layout="top"),
+    *REFRAIN,
+    PATH_HOLD,
+    S("walk", "happy", "smile", "lantern", 1280, backdrop="path"),
+    S("cheer", "happy", "grin", "none", 960, backdrop="path"),
+    S("hold", "happy", "grin", "none", 960, backdrop="bedroom", layout="top",
+      chapter="Couplet 2 · Aimé malgré mes faiblesses",
+      then=dict(pose="heart", eyes="closed", mouth="smile", prop="heart")),
+    S("heart", "closed", "smile", "none", 1120, hand="bless"),
+    S("umbrella", "happy", "open", "umbrella", 960, then=dict(prop="umbrella")),
+    S("book", "happy", "smile", "book", 1280),
+    S("wave", "happy", "open", "notes", 640, backdrop="staff", chapter="Pont · Ma vie devient une louange"),
+    S("cheer", "happy", "grin", "notes", 960, backdrop="staff"),
+    S("wave", "happy", "open", "notes", 1280, backdrop="staff"),
+    S("heart", "closed", "open", "notes", 960, backdrop="staff"),
+    *[dict(r, chapter="Refrain · Encore, pas à pas") if k == 0 else r for k, r in enumerate(REFRAIN)],
+    S("walk", "happy", "smile", "lantern", 960, backdrop="path", chapter="Final · Avec toi"),
+    PATH_HOLD,
+    S("cheer", "happy", "grin", "sun", 960, hand="bless"),
+]
+assert len(STAGING) == len(LINES), (len(STAGING), len(LINES))
 HEROES = ["mieux", "soucis", "confiance", "comprends", "relèves", "soulèves", "parti", "courage",
           "danse", "amour", "peur", "cœur", "bien", "paix", "jamais", "nuages", "lumière",
           "s'envole", "console", "mélodie", "symphonie", "chemin", "main", "jour"]
@@ -178,10 +197,33 @@ def chunk_times(chunks, start, end, spoken):
     return times
 
 
-def place(items, cx, prop, seed, s0):
+def place(items, cx, prop, seed, s0, layout="side", hand="none"):
     """Stack the chunks in columns, sized to their real height, so nothing overlaps."""
     words = []
-    top_free = not (cx == 960 and prop in ("cloud", "question", "sun"))
+    if layout == "top":
+        x0, x1 = (70, 1250) if hand in ("map", "staff", "hold") else (70, 1850)
+        rows, row, width = [], [], 0
+        for it in items:
+            c, t, hero, adlib = it
+            size = 68 if adlib else (116 if hero else 84)
+            w = 0.58 * size * len(c) + 50
+            if row and width + w > x1 - x0:
+                rows.append(row)
+                row, width = [], 0
+            row.append((it, size, w))
+            width += w
+        if row:
+            rows.append(row)
+        y = 100
+        for row in rows:
+            h = max(sz for _, sz, _ in row) * 1.25
+            x = (x0 + x1) / 2 - sum(w for _, _, w in row) / 2
+            for (c, t, hero, adlib), sz, w in row:
+                words.append(dict(text=(c.upper() if hero and len(c) <= 10 else c), at=t, x=round(x + w / 2),
+                                  y=round(y + h / 2), size=sz, hero=hero, adlib=adlib))
+                x += w
+            y += h
+    top_free = not (cx == 960 and (prop in ("cloud", "question", "sun", "umbrella") or hand == "bless"))
     side_w = 760 if cx == 960 else 900
 
     def size_of(text, hero, adlib):
@@ -190,7 +232,7 @@ def place(items, cx, prop, seed, s0):
         return int(np.clip(side_w / (0.6 * max(4, len(text))), 80 if hero else 72, 165 if hero else 125))
 
     cols = {}  # x -> list of (item, size)
-    for k, (c, t, hero, adlib) in enumerate(items):
+    for k, (c, t, hero, adlib) in enumerate(items if layout != "top" else []):
         if hero and cx == 960 and top_free:
             words.append(dict(text=c.upper() if len(c) <= 10 else c, at=t, x=960, y=150,
                               size=min(190, int(1500 / (0.62 * max(4, len(c))))), hero=True, adlib=False))
@@ -199,7 +241,7 @@ def place(items, cx, prop, seed, s0):
             n_col = sum(1 for it in items if not (it[2] and top_free))
             x = 420 if sum(len(v) for v in cols.values()) < (n_col + 1) // 2 else 1500
         else:
-            x = 1380 if cx < 960 else 540
+            x = 1390 if cx < 960 else 530
         cols.setdefault(x, []).append(((c, t, hero, adlib), size_of(c, hero, adlib)))
     for x, col in cols.items():
         heights = [s * 1.22 for _, s in col]
@@ -249,9 +291,8 @@ def main():
     cxs = [960, 640, 1280, 960, 1280, 640]
     for i, (start, sung_end, text) in enumerate(LINES):
         nxt = LINES[i + 1][0] if i + 1 < len(LINES) else min(SONG_END - 9, sung_end + 2.5)
-        key = norm(text)
-        pose, eyes, mouth, prop = next((m for k, m in MOODS if k in key), ("wave", "happy", "smile", "none"))
-        cx = 960 if prop in ("cloud", "question") else cxs[i % len(cxs)]
+        base = STAGING[i]
+        cx = base["cx"]
         chunks, adlibs = chunks_of(text)
         times = chunk_times(chunks, start, sung_end, spoken)
         hero_idx = max(range(len(chunks)), key=lambda k: (any(h in chunks[k].lower() for h in HEROES), k))
@@ -260,23 +301,33 @@ def main():
         items += [(a, ad_t + n * 0.4, False, True) for n, a in enumerate(adlibs)]
         # long lines: split into two scenes so nothing has to wrap
         groups = [items]
-        if len(items) > 5:
+        if len(items) > 5 or ("then" in base and len(items) >= 4):
             h = (len(items) + 1) // 2
             groups = [items[:h], items[h:]]
         for g, group in enumerate(groups):
             s0 = round((start if g == 0 else group[0][1]) - 0.3, 3)
             e0 = round((groups[g + 1][0][1] - 0.3) if g + 1 < len(groups) else nxt - 0.3, 3)
-            words = place(group, cx, prop, i + g, s0)
-            sc = {"start": s0, "end": e0, "pose": pose, "eyes": eyes, "mouth": mouth,
+            st = dict(base, **(base.get("then", {}) if g else {}))
+            pose, prop = st["pose"], st["prop"]
+            words = place(group, cx, prop, i + g, s0, st.get("layout", "side"), st.get("hand", "none"))
+            sc = {"start": s0, "end": e0, "pose": pose, "eyes": st["eyes"], "mouth": st["mouth"],
                   "prop": prop, "cx": cx, "words": words}
+            for k in ("backdrop", "hand"):
+                if st.get(k):
+                    sc[k] = st[k]
             if g:
                 sc["cont"] = True
+                if base.get("hand") and base.get("hand") == st.get("hand"):
+                    sc["handAt"] = -1
+            elif st.get("chapter"):
+                sc["chapter"] = st["chapter"]
             if prop == "rock" and g == 0:
                 tomb = next((tt for w, tt in spoken if w.startswith("tomb") and start - 0.5 <= tt <= sung_end), start + 0.5)
                 rel = next((tt for w, tt in spoken if w.startswith("rel") and start <= tt <= sung_end + 0.5), tomb + 1.2)
                 sc["fall"] = True
                 sc["fallAt"] = round(tomb - s0, 3)
                 sc["riseAt"] = round(max(rel - s0 - 0.1, sc["fallAt"] + 0.9), 3)
+                sc["handAt"] = round(sc["riseAt"] - 0.45, 3)
             scenes.append(sc)
             print(f"{s0:6.1f}-{e0:6.1f} {pose:7} {prop:8} cx={cx:4} {[w['text'] for w in words]}")
 
