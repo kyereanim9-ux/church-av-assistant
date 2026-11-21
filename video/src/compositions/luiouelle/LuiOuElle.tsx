@@ -376,6 +376,47 @@ const EndCard: React.FC<{ episode: Episode; frame: number }> = ({
   );
 };
 
+/** Titre d'ouverture (séries 100+) : visible dès la 1re image, pendant la 1re réplique. */
+const Opener: React.FC<{ episode: Episode; frame: number }> = ({
+  episode,
+  frame,
+}) => {
+  if (episode.num < 100) return null;
+  const first = episode.lines[0];
+  const end = first.from + first.dur + 6;
+  if (frame > end + 12) return null;
+  const o = interpolate(frame, [end, end + 12], [1, 0], clamp);
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: 300,
+        width: "100%",
+        padding: "0 50px",
+        boxSizing: "border-box",
+        textAlign: "center",
+        fontFamily: FONT,
+        fontWeight: 900,
+        lineHeight: 1.12,
+        opacity: o,
+        textShadow: "0 4px 24px rgba(0,0,0,.95), 0 0 6px rgba(0,0,0,.8)",
+      }}
+    >
+      {episode.cover.map((l, i) => (
+        <div
+          key={i}
+          style={{
+            fontSize: Math.max(...episode.cover.map((c) => c.length)) > 20 ? 70 : 84,
+            color: i === 0 ? "#fff" : "#f6d48a",
+          }}
+        >
+          {nbsp(l)}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const Tag: React.FC<{ episode: Episode }> = ({ episode }) => (
   <div
     style={{
@@ -411,6 +452,7 @@ export const LuiOuElle: React.FC<LuiOuElleProps> = ({ episode }) => {
         }}
       />
       <Tag episode={episode} />
+      <Opener episode={episode} frame={frame} />
       <div
         style={{
           position: "absolute",

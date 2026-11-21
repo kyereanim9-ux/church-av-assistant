@@ -160,11 +160,12 @@ const Background: React.FC<{ frame: number; warm: number }> = ({
 };
 
 const Word: React.FC<{ frame: number }> = ({ frame }) => {
-  let idx = -1;
+  // Le premier mot est à l'écran dès la 1re image (accroche + vignette).
+  let idx = 0;
   for (let i = 0; i < units.length; i++) if (frame >= units[i].from - 2) idx = i;
-  if (idx < 0 || frame > END + 6) return null;
+  if (frame > END + 6) return null;
   const u = units[idx];
-  const k = frame - (u.from - 2);
+  const k = idx === 0 ? 99 : frame - (u.from - 2);
   const size = Math.min(
     u.key ? 190 : 130,
     Math.floor(1700 / Math.max(4, u.text.length)),
@@ -197,7 +198,7 @@ const Word: React.FC<{ frame: number }> = ({ frame }) => {
 
 /** La phrase entière en petit, pour suivre même sans le son. */
 const Sentence: React.FC<{ frame: number }> = ({ frame }) => {
-  const l = [...lines].reverse().find((x) => frame >= x.from - 4);
+  const l = [...lines].reverse().find((x) => frame >= x.from - 4) ?? lines[0];
   if (!l || frame > l.from + l.dur + 20 || frame > END) return null;
   return (
     <div
@@ -214,7 +215,7 @@ const Sentence: React.FC<{ frame: number }> = ({ frame }) => {
         lineHeight: 1.35,
         color: "rgba(255,255,255,.78)",
         textShadow: "0 2px 12px rgba(0,0,0,.9)",
-        opacity: interpolate(frame, [l.from - 4, l.from + 6], [0, 1], clamp),
+        opacity: l === lines[0] ? 1 : interpolate(frame, [l.from - 4, l.from + 6], [0, 1], clamp),
       }}
     >
       {l.text.replace(/ ([?!:;»])/g, " $1").replace(/« /g, "« ")}
