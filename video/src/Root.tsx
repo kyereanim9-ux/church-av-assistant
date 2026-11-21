@@ -60,6 +60,18 @@ export const RemotionRoot: React.FC = () => {
         })}
       />
       <Composition
+        id="PasAPasChanson3D"
+        component={PasAPas}
+        durationInFrames={146 * FPS}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={{ ...(songTimeline as PasAPasProps), mode3d: true }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: Math.round(props.durationSeconds * FPS),
+        })}
+      />
+      <Composition
         id="Lyrics"
         component={Lyrics}
         durationInFrames={60}

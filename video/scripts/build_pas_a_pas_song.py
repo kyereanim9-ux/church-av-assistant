@@ -73,7 +73,7 @@ def S(pose, eyes, mouth, prop="none", cx=960, **kw):
     return dict(pose=pose, eyes=eyes, mouth=mouth, prop=prop, cx=cx, **kw)
 
 
-PATH_HOLD = S("walkhand", "happy", "smile", "none", 700, backdrop="path", hand="hold")
+PATH_HOLD = S("walkhand", "happy", "smile", "none", 560, backdrop="path", hand="hold")
 REFRAIN = [
     dict(PATH_HOLD, chapter="Refrain · Marcher main dans la main"),
     S("cheer", "happy", "grin", "notes", 960, backdrop="path"),

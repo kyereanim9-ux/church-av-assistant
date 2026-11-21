@@ -16,6 +16,7 @@ import {
   GiantHand,
   HandKind,
 } from "./PasAPasScenery";
+import { Scene3D } from "./PasAPas3D";
 
 /* ------------------------------------------------------------------ */
 /* Types & props                                                       */
@@ -82,6 +83,8 @@ export type PasAPasProps = {
   bpm?: number;
   /** Time (s) of a downbeat, to phase the bounce. */
   beatOffset?: number;
+  /** Render the character, hand, props and sets in 3D. */
+  mode3d?: boolean;
 };
 
 /* ------------------------------------------------------------------ */
@@ -629,6 +632,7 @@ export const PasAPas: React.FC<PasAPasProps> = ({
   scenes,
   bpm,
   beatOffset = 0,
+  mode3d = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -669,6 +673,21 @@ export const PasAPas: React.FC<PasAPasProps> = ({
       <AbsoluteFill style={{ transform: `translate(${shake}px, ${shake * 0.6}px) scale(${zoom})` }}>
       {/* floor line */}
       <div style={{ position: "absolute", left: 0, right: 0, top: 985, height: 2, background: "rgba(29,36,51,0.06)" }} />
+      {mode3d ? (
+        <>
+          {scene.backdrop === "staff" ? <BackdropLayer kind="staff" localT={localT} t={t} cont={scene.cont} /> : null}
+          <Scene3D
+            scene={scene}
+            localT={localT}
+            t={t}
+            bob={beatBob ?? 0}
+            lift={lift}
+            walkX={walkOffset(scene, localT)}
+          />
+          {scene.prop === "notes" || scene.prop === "question" ? <WorldProp scene={scene} localT={localT} /> : null}
+        </>
+      ) : (
+        <>
       <BackdropLayer kind={scene.backdrop} localT={localT} t={t} cont={scene.cont} />
       <WorldProp scene={scene} localT={localT} />
       <Character key={scene.start} scene={scene} localT={localT} beatBob={beatBob} lift={lift} />
@@ -683,6 +702,8 @@ export const PasAPas: React.FC<PasAPasProps> = ({
         }}
         localT={localT}
       />
+        </>
+      )}
       {scene.words.map((w, i) => (
         <KineticWord key={`${scene.start}-${i}`} w={w} t={localT} sceneEnd={scene.end - scene.start} />
       ))}
