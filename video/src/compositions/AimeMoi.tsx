@@ -36,6 +36,8 @@ export type AimeMoiProps = {
   backgroundImage?: string;
   /** Colour grade instead of black & white. */
   color?: boolean;
+  /** Two words revealed on the sung beats of each interlude and at the end (e.g. LOVE / ME). */
+  pair?: [string, string];
 };
 
 export const aimeMoiDefaults = timeline as AimeMoiProps;
@@ -370,11 +372,44 @@ const Scanlines: React.FC = () => (
   />
 );
 
+/** First word on the first sung beat (red), second word on the next one (white). */
+const PairWords: React.FC<{ pair: [string, string]; lt: number; beats: number[]; big?: boolean }> = ({
+  pair,
+  lt,
+  beats,
+  big,
+}) => {
+  const b1 = beats[1] ?? 1;
+  return (
+    <>
+      {lt >= beats[0] - 0.05 ? (
+        <GlitchWord text={pair[0]} lt={lt} size={big ? 330 : 290} y={-90} color={RED} beats={beats} />
+      ) : null}
+      {lt >= b1 - 0.05 ? (
+        <GlitchWord
+          text={pair[1]}
+          lt={lt - b1}
+          size={big ? 260 : 230}
+          y={150}
+          beats={beats.map((b) => b - b1).filter((b) => b >= 0)}
+        />
+      ) : null}
+    </>
+  );
+};
+
 /* ------------------------------------------------------------------ */
 /* Composition                                                         */
 /* ------------------------------------------------------------------ */
 
-export const AimeMoi: React.FC<AimeMoiProps> = ({ audioFile, durationSeconds, events, backgroundImage, color }) => {
+export const AimeMoi: React.FC<AimeMoiProps> = ({
+  audioFile,
+  durationSeconds,
+  events,
+  backgroundImage,
+  color,
+  pair,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
@@ -434,7 +469,11 @@ export const AimeMoi: React.FC<AimeMoiProps> = ({ audioFile, durationSeconds, ev
             background: color ? "radial-gradient(circle at 50% 50%, rgba(224,24,45,0.28), #000 62%)" : "#000",
           }}
         >
-          <GlitchWord text="MOI" lt={lt} size={300} beats={ev.beats} />
+          {pair ? (
+            <PairWords pair={pair} lt={lt} beats={ev.beats ?? [0, 1]} />
+          ) : (
+            <GlitchWord text="MOI" lt={lt} size={300} beats={ev.beats} />
+          )}
           <Scanlines />
         </AbsoluteFill>
       ) : null}
@@ -444,16 +483,7 @@ export const AimeMoi: React.FC<AimeMoiProps> = ({ audioFile, durationSeconds, ev
             background: color ? "radial-gradient(circle at 50% 50%, rgba(224,24,45,0.3), #000 65%)" : "#000",
           }}
         >
-          <GlitchWord text="AIME" lt={lt} size={330} y={-90} color={RED} beats={ev.beats} />
-          {lt > (ev.beats?.[1] ?? 1.0) ? (
-            <GlitchWord
-              text="MOI"
-              lt={lt - (ev.beats?.[1] ?? 1.0)}
-              size={220}
-              y={150}
-              beats={(ev.beats ?? [0, 1]).map((b) => b - (ev.beats?.[1] ?? 1.0)).filter((b) => b >= 0)}
-            />
-          ) : null}
+          <PairWords pair={pair ?? ["AIME", "MOI"]} lt={lt} beats={ev.beats ?? [0, 1]} big />
           <Scanlines />
         </AbsoluteFill>
       ) : null}

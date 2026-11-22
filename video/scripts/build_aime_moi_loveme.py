@@ -118,11 +118,12 @@ def main():
     tail_i = int((total - 1.2) * SR)
     hits[tail_i:] *= np.linspace(1, 0, len(hits) - tail_i)[:, None]
 
-    mix = voice * 1.0 + bed * 0.55 + hits * 1.0 + fx * 0.7
+    # music only on the "love me" moments: the quotes are voice only
+    mix = voice * 1.0 + bed * 0.0 + hits * 1.0 + fx * 0.7
     mix /= np.max(np.abs(mix)) / 0.89
     os.makedirs(os.path.join(root, "public", "aime-moi"), exist_ok=True)
     write_wav(os.path.join(root, "public", "aime-moi", "couleur.wav"), mix[: int(total * SR)])
-    tl = {"audioFile": "aime-moi/couleur.wav", "durationSeconds": round(total, 3), "color": True, "events": events}
+    tl = {"audioFile": "aime-moi/couleur.wav", "durationSeconds": round(total, 3), "color": True, "pair": ["LOVE", "ME"], "events": events}
     with open(os.path.join(root, "src", "compositions", "aimeMoiCouleur.timeline.json"), "w") as f:
         json.dump(tl, f, ensure_ascii=False, indent=1)
     for e in events:

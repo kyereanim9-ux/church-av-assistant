@@ -2,6 +2,10 @@
  "audioFile": "aime-moi/couleur.wav",
  "durationSeconds": 56.253,
  "color": true,
+ "pair": [
+  "LOVE",
+  "ME"
+ ],
  "events": [
   {
    "type": "quote",
