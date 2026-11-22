@@ -5,6 +5,11 @@ import {
   announcementDefaults,
 } from "./compositions/Announcement";
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
+import {
+  Dialogue,
+  dialogueDefaults,
+  dialogueDuration,
+} from "./compositions/Dialogue";
 import { Rappel, rappelDefaults, rappelDuration } from "./compositions/Rappel";
 import {
   Story,
@@ -74,6 +79,18 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={rappelDefaults}
         calculateMetadata={({ props }) => ({
           durationInFrames: rappelDuration(props),
+        })}
+      />
+      <Composition
+        id="Dialogue"
+        component={Dialogue}
+        durationInFrames={60}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        defaultProps={dialogueDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: dialogueDuration(props),
         })}
       />
       <Composition

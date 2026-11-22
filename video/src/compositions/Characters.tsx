@@ -74,7 +74,10 @@ export const Person: React.FC<{
   offset?: number;
   /** 0 → 1 tap progress for the phone pose */
   tap?: number;
-}> = ({ look, pose, height, offset = 0, tap = 0 }) => {
+  /** Mouth moves while true */
+  talking?: boolean;
+  mood?: "sad" | "neutral" | "happy";
+}> = ({ look, pose, height, offset = 0, tap = 0, talking = false, mood }) => {
   const f = useCurrentFrame() + offset;
 
   // Body motion
@@ -120,7 +123,11 @@ export const Person: React.FC<{
 
   const shirtDark = darken(look.shirt, 0.82);
   const skinDark = darken(look.skin, 0.85);
-  const happy = pose === "cheer" || pose === "wave";
+  const happy = mood ? mood === "happy" : pose === "cheer" || pose === "wave";
+  const sad = mood === "sad";
+  const mouthOpen = talking
+    ? Math.abs(Math.sin(f / 2.3)) * (0.5 + 0.5 * Math.abs(Math.sin(f / 7)))
+    : 0;
 
   const arm = (x: number, angle: number) => (
     <g transform={`rotate(${angle} ${x} 140)`}>
@@ -266,13 +273,39 @@ export const Person: React.FC<{
         )}
         <circle cx={74} cy={96} r={7} fill="#f472b6" opacity={0.35} />
         <circle cx={126} cy={96} r={7} fill="#f472b6" opacity={0.35} />
-        {happy ? (
+        {sad ? (
+          <path
+            d="M78 72 L92 66 M108 66 L122 72"
+            stroke="#1f2937"
+            strokeWidth={3}
+            strokeLinecap="round"
+          />
+        ) : null}
+        {talking ? (
+          <ellipse
+            cx={100}
+            cy={103}
+            rx={happy ? 12 : 9}
+            ry={2 + mouthOpen * 9}
+            fill="#7f1d1d"
+            stroke="#1f2937"
+            strokeWidth={2.5}
+          />
+        ) : happy ? (
           <path
             d="M86 98 Q100 116 114 98 Z"
             fill="#7f1d1d"
             stroke="#1f2937"
             strokeWidth={2.5}
             strokeLinejoin="round"
+          />
+        ) : sad ? (
+          <path
+            d="M88 106 Q100 96 112 106"
+            fill="none"
+            stroke="#1f2937"
+            strokeWidth={3.5}
+            strokeLinecap="round"
           />
         ) : (
           <path
