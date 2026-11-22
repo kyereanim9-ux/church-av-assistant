@@ -18,9 +18,10 @@ import tempfile
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_aime_moi import FINAL, LEAD, QUOTES, TAIL, edge, reverb, riser, VOICE  # noqa: E402
+from build_aime_moi import FINAL, LEAD, QUOTES, edge, reverb, VOICE  # noqa: E402
 from build_pas_a_pas_audio import SR, add, fast_bp, fast_lp, noise, read_wav, write_wav  # noqa: E402
 
+GAP = 1.35  # gap after the voice clip: ~1 s of real silence once the reverb tail has died
 BED_START = 19.0  # instrumental, no vocals until ~59 s
 # (start, end, offset of "me" from start) for each interlude: single, isolated
 # "Love me" phrases from the song's intro (each followed by a short silence)
@@ -62,7 +63,7 @@ def main():
             clip, words = edge(text, VOICE, "-12%", "-6Hz", tmp)
             start = t
             v0 = start + LEAD
-            end = v0 + len(clip) / SR + TAIL
+            end = v0 + len(clip) / SR + GAP
             voice_clips.append((v0, clip))
             bed_parts.append((start, bed_pos, end - start))
             bed_pos += end - start
@@ -102,20 +103,13 @@ def main():
     duck = 1 - 0.5 * np.clip(envv / 0.05, 0, 1)
     bed *= np.convolve(duck, np.ones(6615) / 6615, "same")[:, None]
 
-    # the "love me" moments, full and bright, with a boom and a riser
+    # the "love me" moments, clean: no boom or riser before them
     hits = np.zeros((n, 2), np.float32)
     fx = np.zeros((n, 2), np.float32)
     for st, a, b in hit_parts:
         x = seg(song, a, b, 0.04)
         i = int(st * SR)
         hits[i: i + len(x)] += x[: n - i]
-        add(fx, riser(0.8), st - 0.8, 0.8)
-        d = 1.2
-        tt = np.arange(int(d * SR)) / SR
-        boom = np.sin(2 * np.pi * (45 + 60 * np.exp(-tt * 12)) * tt) * np.exp(-tt * 2.6)
-        add(fx, boom.astype(np.float32), st, 0.7)
-        g = fast_bp(noise(0.3), 800, 7000)[: int(0.3 * SR)] * ((np.floor(np.arange(int(0.3 * SR)) / SR * 28) % 3) == 0)
-        add(fx, g.astype(np.float32), st, 0.15)
     # let the last hit ring out
     tail_i = int((total - 1.2) * SR)
     hits[tail_i:] *= np.linspace(1, 0, len(hits) - tail_i)[:, None]
