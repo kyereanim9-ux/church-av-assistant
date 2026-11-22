@@ -22,16 +22,18 @@ from build_aime_moi import FINAL, LEAD, QUOTES, TAIL, edge, reverb, riser, VOICE
 from build_pas_a_pas_audio import SR, add, fast_bp, fast_lp, noise, read_wav, write_wav  # noqa: E402
 
 BED_START = 19.0  # instrumental, no vocals until ~59 s
-# (start, end, offset of "me" from start) for each interlude
+# (start, end, offset of "me" from start) for each interlude: single, isolated
+# "Love me" phrases from the song's intro (each followed by a short silence)
 HITS = [
-    (109.30, 112.50, 2.10),
-    (112.50, 115.70, 1.85),
-    (115.70, 118.45, 1.60),
-    (203.15, 205.60, 0.75),
-    (205.60, 209.00, 1.25),
+    (0.30, 2.95, 0.84),
+    (3.20, 5.95, 0.90),
+    (6.20, 8.95, 0.84),
+    (12.50, 14.25, 0.60),
+    (3.20, 5.95, 0.90),
 ]
-END = (121.15, 127.40)  # "love me, love me, love me" -> AIME / MOI
-END_BEATS = [0.13, 1.73, 3.41]
+# ending: "oh, love me. Oh, love me baby... you should say that you love me"
+END = (251.90, 264.60)
+END_BEATS = [0.90, 2.24, 3.46, 4.14, 4.94, 10.66, 11.14]
 
 
 def seg(song, a, b, fade=0.06):
