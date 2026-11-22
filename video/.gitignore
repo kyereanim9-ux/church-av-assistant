@@ -8,3 +8,6 @@ out
 
 # Python bytecode from the audio/timeline scripts
 __pycache__/
+
+# mixes built from user-supplied songs (not ours to commit)
+public/aime-moi/couleur.wav

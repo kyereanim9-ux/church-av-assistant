@@ -7,7 +7,7 @@ import {
 import { FoundMe, foundMeDefaults } from "./compositions/FoundMe";
 import { PasAPas, pasAPasDefaults, PasAPasProps } from "./compositions/PasAPas";
 import songTimeline from "./compositions/pasAPasSong.timeline.json";
-import { AimeMoi, aimeMoiDefaults } from "./compositions/AimeMoi";
+import { AimeMoi, aimeMoiCouleurDefaults, aimeMoiDefaults } from "./compositions/AimeMoi";
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
 
 const FPS = 30;
@@ -80,6 +80,18 @@ export const RemotionRoot: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={aimeMoiDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: Math.round(props.durationSeconds * FPS),
+        })}
+      />
+      <Composition
+        id="AimeMoiCouleur"
+        component={AimeMoi}
+        durationInFrames={57 * FPS}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        defaultProps={aimeMoiCouleurDefaults}
         calculateMetadata={({ props }) => ({
           durationInFrames: Math.round(props.durationSeconds * FPS),
         })}

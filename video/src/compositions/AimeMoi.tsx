@@ -11,6 +11,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import timeline from "./aimeMoi.timeline.json";
+import colorTimeline from "./aimeMoiCouleur.timeline.json";
 
 /* "AIME-MOI": deep quotes shown as comments over a moody black & white
    night scene, each read aloud, separated by glitchy "MOI" interludes. */
@@ -23,6 +24,8 @@ type Ev = {
   ago?: string;
   text?: string;
   words?: { w: string; t: number }[];
+  /** seconds into a hit/end where the glitch fires (sung "love" / "me") */
+  beats?: number[];
 };
 
 export type AimeMoiProps = {
@@ -31,9 +34,12 @@ export type AimeMoiProps = {
   events: Ev[];
   /** Optional photo in public/ to use instead of the drawn night scene. */
   backgroundImage?: string;
+  /** Colour grade instead of black & white. */
+  color?: boolean;
 };
 
 export const aimeMoiDefaults = timeline as AimeMoiProps;
+export const aimeMoiCouleurDefaults = colorTimeline as AimeMoiProps;
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const RED = "#e0182d";
@@ -42,8 +48,37 @@ const RED = "#e0182d";
 /* Night scene (drawn), black & white                                  */
 /* ------------------------------------------------------------------ */
 
-const NightScene: React.FC<{ t: number }> = ({ t }) => {
+const NightScene: React.FC<{ t: number; color?: boolean }> = ({ t, color }) => {
   const frame = useCurrentFrame();
+  const P = color
+    ? {
+        sky: ["#050a18", "#0c1834", "#2c3b5e", "#0a0d16"],
+        lamp: ["#ffe2a8", "#ffb35c", "#c2682a"],
+        field: ["#3b3424", "#272117", "#0c0a07"],
+        grass: "#a9925c",
+        track: "#4e4130",
+        lights: ["#ffcf7a", "#9fd0ff"],
+        stripeA: "#141a2e",
+        stripeB: "#efe4cc",
+        rim: "#ffb466",
+        skin: "#5b3a28",
+        ear: "#7a4e36",
+        horizon: "#1b2236",
+      }
+    : {
+        sky: ["#0a0a0b", "#151517", "#2b2b2d", "#0d0d0e"],
+        lamp: ["#fff", "#ddd", "#888"],
+        field: ["#4a4844", "#36342f", "#151413"],
+        grass: "#b5b0a6",
+        track: "#5e5b55",
+        lights: ["#fff", "#fff"],
+        stripeA: "#0f0f0f",
+        stripeB: "#8f8f8f",
+        rim: "#fff",
+        skin: "#202020",
+        ear: "#262626",
+        horizon: "#1d1d1e",
+      };
   const grass = useMemo(
     () =>
       Array.from({ length: 900 }, (_, i) => {
@@ -68,30 +103,30 @@ const NightScene: React.FC<{ t: number }> = ({ t }) => {
     <svg viewBox="0 0 1080 1920" width={1080} height={1920} style={{ position: "absolute", inset: 0 }}>
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#0a0a0b" />
-          <stop offset="0.45" stopColor="#151517" />
-          <stop offset="0.58" stopColor="#2b2b2d" />
-          <stop offset="1" stopColor="#0d0d0e" />
+          <stop offset="0" stopColor={P.sky[0]} />
+          <stop offset="0.45" stopColor={P.sky[1]} />
+          <stop offset="0.58" stopColor={P.sky[2]} />
+          <stop offset="1" stopColor={P.sky[3]} />
         </linearGradient>
         <linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#4a4844" />
-          <stop offset="0.5" stopColor="#36342f" />
-          <stop offset="1" stopColor="#151413" />
+          <stop offset="0" stopColor={P.field[0]} />
+          <stop offset="0.5" stopColor={P.field[1]} />
+          <stop offset="1" stopColor={P.field[2]} />
         </linearGradient>
         <radialGradient id="lamp" cx="0.92" cy="0.03" r="0.75">
-          <stop offset="0" stopColor="#fff" stopOpacity={0.95 * flicker} />
-          <stop offset="0.12" stopColor="#ddd" stopOpacity={0.45 * flicker} />
-          <stop offset="0.45" stopColor="#888" stopOpacity={0.12 * flicker} />
+          <stop offset="0" stopColor={P.lamp[0]} stopOpacity={0.95 * flicker} />
+          <stop offset="0.12" stopColor={P.lamp[1]} stopOpacity={0.45 * flicker} />
+          <stop offset="0.45" stopColor={P.lamp[2]} stopOpacity={0.14 * flicker} />
           <stop offset="1" stopColor="#000" stopOpacity="0" />
         </radialGradient>
         <pattern id="stripes" width="40" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(-4)">
-          <rect width="40" height="26" fill="#0f0f0f" />
-          <rect y="0" width="40" height="11" fill="#8f8f8f" />
+          <rect width="40" height="26" fill={P.stripeA} />
+          <rect y="0" width="40" height="11" fill={P.stripeB} />
         </pattern>
         <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor="#000" stopOpacity="0.7" />
           <stop offset="0.6" stopColor="#000" stopOpacity="0.35" />
-          <stop offset="1" stopColor="#fff" stopOpacity="0.15" />
+          <stop offset="1" stopColor={P.rim} stopOpacity="0.22" />
         </linearGradient>
         <filter id="soft">
           <feGaussianBlur stdDeviation="3" />
@@ -99,14 +134,14 @@ const NightScene: React.FC<{ t: number }> = ({ t }) => {
       </defs>
       <rect width="1080" height="1920" fill="url(#sky)" />
       {/* horizon & distant lights */}
-      <path d="M0 1105 Q 300 1085 540 1100 T 1080 1095 L1080 1130 L0 1130 Z" fill="#1d1d1e" />
+      <path d="M0 1105 Q 300 1085 540 1100 T 1080 1095 L1080 1130 L0 1130 Z" fill={P.horizon} />
       {[90, 210, 330, 600, 780, 930].map((x, i) => (
-        <circle key={x} cx={x} cy={1098 + (i % 2) * 6} r={3 + (i % 3)} fill="#fff" opacity={0.5 + 0.3 * Math.sin(frame / 9 + i)} filter="url(#soft)" />
+        <circle key={x} cx={x} cy={1098 + (i % 2) * 6} r={3 + (i % 3)} fill={P.lights[i % 2]} opacity={0.5 + 0.3 * Math.sin(frame / 9 + i)} filter="url(#soft)" />
       ))}
       <rect y="1110" width="1080" height="810" fill="url(#field)" />
       {/* tracks in the field */}
-      <path d="M-40 1600 C 300 1460, 700 1520, 1120 1380" stroke="#5e5b55" strokeWidth={50} fill="none" opacity={0.35} />
-      <path d="M-40 1820 C 360 1660, 760 1760, 1120 1600" stroke="#5e5b55" strokeWidth={70} fill="none" opacity={0.3} />
+      <path d="M-40 1600 C 300 1460, 700 1520, 1120 1380" stroke={P.track} strokeWidth={50} fill="none" opacity={0.35} />
+      <path d="M-40 1820 C 360 1660, 760 1760, 1120 1600" stroke={P.track} strokeWidth={70} fill="none" opacity={0.3} />
       {grass.map((g, i) => (
         <line
           key={i}
@@ -114,12 +149,13 @@ const NightScene: React.FC<{ t: number }> = ({ t }) => {
           y1={g.y}
           x2={g.x + Math.sin(g.a + Math.sin(t * 0.8 + g.x / 200) * 0.15) * g.h}
           y2={g.y - Math.cos(g.a) * g.h}
-          stroke="#b5b0a6"
+          stroke={P.grass}
           strokeOpacity={g.o}
           strokeWidth={g.w}
         />
       ))}
       <rect width="1080" height="1920" fill="url(#lamp)" />
+      {color ? <rect width="1080" height="1920" fill="#2d5bd6" opacity={0.08} /> : null}
       {/* figure from behind, backlit by the street lamp, looking to the left */}
       <g transform={`translate(${540 + sway} 0) scale(${breathe} 1)`}>
         <path
@@ -130,12 +166,12 @@ const NightScene: React.FC<{ t: number }> = ({ t }) => {
           d="M-470 1920 C -470 1650 -430 1530 -270 1470 C -170 1432 -100 1405 -78 1335 L 78 1335 C 100 1405 170 1432 270 1470 C 430 1530 470 1650 470 1920 Z"
           fill="url(#rim)"
         />
-        <path d="M78 1335 C 100 1405 170 1432 270 1470 C 430 1530 470 1650 470 1920" stroke="#fff" strokeOpacity={0.22} strokeWidth={6} fill="none" />
-        <path d="M-74 1340 C -76 1270 -66 1230 -58 1195 L 58 1195 C 66 1230 76 1270 74 1340 Q 0 1362 -74 1340 Z" fill="#202020" />
-        <path d="M58 1200 C 66 1240 74 1280 74 1338" stroke="#fff" strokeOpacity={0.25} strokeWidth={5} fill="none" />
+        <path d="M78 1335 C 100 1405 170 1432 270 1470 C 430 1530 470 1650 470 1920" stroke={P.rim} strokeOpacity={0.35} strokeWidth={6} fill="none" />
+        <path d="M-74 1340 C -76 1270 -66 1230 -58 1195 L 58 1195 C 66 1230 76 1270 74 1340 Q 0 1362 -74 1340 Z" fill={P.skin} />
+        <path d="M58 1200 C 66 1240 74 1280 74 1338" stroke={P.rim} strokeOpacity={0.4} strokeWidth={5} fill="none" />
         <ellipse cx={0} cy={1085} rx={128} ry={152} fill="#1b1b1b" />
-        <ellipse cx={-126} cy={1110} rx={21} ry={40} fill="#262626" />
-        <path d="M-118 1150 Q -128 1200 -96 1232 Q -88 1190 -100 1150 Z" fill="#2a2a2a" />
+        <ellipse cx={-126} cy={1110} rx={21} ry={40} fill={P.ear} />
+        <path d="M-118 1150 Q -128 1200 -96 1232 Q -88 1190 -100 1150 Z" fill={P.ear} />
         {[
           [-110, 1000, 52], [-70, 955, 58], [-15, 935, 62], [45, 945, 58], [100, 985, 52], [125, 1045, 40],
           [-125, 1050, 38], [-40, 990, 60], [40, 995, 60], [0, 1060, 70], [80, 1110, 52], [-80, 1100, 50],
@@ -151,7 +187,7 @@ const NightScene: React.FC<{ t: number }> = ({ t }) => {
         ].map((d) => (
           <path key={d} d={d} stroke="#0d0d0d" strokeWidth={24} strokeLinecap="round" fill="none" />
         ))}
-        <path d="M60 920 C 120 950 158 1010 152 1080 C 148 1120 138 1150 120 1180" stroke="#fff" strokeOpacity={0.28} strokeWidth={7} fill="none" strokeLinecap="round" />
+        <path d="M60 920 C 120 950 158 1010 152 1080 C 148 1120 138 1150 120 1180" stroke={P.rim} strokeOpacity={0.45} strokeWidth={7} fill="none" strokeLinecap="round" />
       </g>
     </svg>
   );
@@ -270,17 +306,22 @@ const CommentCard: React.FC<{ ev: Ev; lt: number }> = ({ ev, lt }) => {
 /* Glitch title                                                        */
 /* ------------------------------------------------------------------ */
 
-const GlitchWord: React.FC<{ text: string; lt: number; size: number; y?: number; color?: string }> = ({
+const GlitchWord: React.FC<{ text: string; lt: number; size: number; y?: number; color?: string; beats?: number[] }> = ({
   text,
   lt,
   size,
   y = 0,
   color = "#fff",
+  beats,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const punch = spring({ frame: lt * fps, fps, config: { damping: 9, mass: 0.6 } });
-  const glitching = lt < 0.35 || (lt > 1.2 && lt < 1.45) || random(`g${frame}`) > 0.9;
+  const lastBeat = Math.max(0, ...(beats ?? [0]).filter((b) => b <= lt));
+  const punch = Math.min(
+    spring({ frame: lt * fps, fps, config: { damping: 9, mass: 0.6 } }),
+    0.92 + 0.08 * spring({ frame: (lt - lastBeat) * fps, fps, config: { damping: 9, mass: 0.6 } }),
+  );
+  const glitching = (beats ?? [0, 1.2]).some((b) => lt > b - 0.03 && lt < b + 0.3) || random(`g${frame}`) > 0.93;
   const jx = glitching ? (random(`x${frame}`) - 0.5) * 40 : 0;
   const split = glitching ? 14 + random(`s${frame}`) * 18 : 6;
   const base: React.CSSProperties = {
@@ -333,7 +374,7 @@ const Scanlines: React.FC = () => (
 /* Composition                                                         */
 /* ------------------------------------------------------------------ */
 
-export const AimeMoi: React.FC<AimeMoiProps> = ({ audioFile, durationSeconds, events, backgroundImage }) => {
+export const AimeMoi: React.FC<AimeMoiProps> = ({ audioFile, durationSeconds, events, backgroundImage, color }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
@@ -349,11 +390,11 @@ export const AimeMoi: React.FC<AimeMoiProps> = ({ audioFile, durationSeconds, ev
     <AbsoluteFill style={{ background: "#000", opacity: fadeIn * fadeOut, overflow: "hidden" }}>
       {audioFile ? <Audio src={staticFile(audioFile)} /> : null}
       {isScene ? (
-        <AbsoluteFill style={{ transform: `scale(${zoom})`, filter: "grayscale(1) contrast(1.12) brightness(0.95)" }}>
+        <AbsoluteFill style={{ transform: `scale(${zoom})`, filter: color ? "saturate(1.15) contrast(1.06)" : "grayscale(1) contrast(1.12) brightness(0.95)" }}>
           {backgroundImage ? (
             <Img src={staticFile(backgroundImage)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           ) : (
-            <NightScene t={t} />
+            <NightScene t={t} color={color} />
           )}
           <Grain />
         </AbsoluteFill>
@@ -388,15 +429,31 @@ export const AimeMoi: React.FC<AimeMoiProps> = ({ audioFile, durationSeconds, ev
         </AbsoluteFill>
       ) : null}
       {ev.type === "hit" ? (
-        <AbsoluteFill style={{ background: "#000" }}>
-          <GlitchWord text="MOI" lt={lt} size={300} />
+        <AbsoluteFill
+          style={{
+            background: color ? "radial-gradient(circle at 50% 50%, rgba(224,24,45,0.28), #000 62%)" : "#000",
+          }}
+        >
+          <GlitchWord text="MOI" lt={lt} size={300} beats={ev.beats} />
           <Scanlines />
         </AbsoluteFill>
       ) : null}
       {ev.type === "end" ? (
-        <AbsoluteFill style={{ background: "#000" }}>
-          <GlitchWord text="AIME" lt={lt} size={330} y={-90} color={RED} />
-          {lt > 1.0 ? <GlitchWord text="MOI" lt={lt - 1.0} size={220} y={150} /> : null}
+        <AbsoluteFill
+          style={{
+            background: color ? "radial-gradient(circle at 50% 50%, rgba(224,24,45,0.3), #000 65%)" : "#000",
+          }}
+        >
+          <GlitchWord text="AIME" lt={lt} size={330} y={-90} color={RED} beats={ev.beats} />
+          {lt > (ev.beats?.[1] ?? 1.0) ? (
+            <GlitchWord
+              text="MOI"
+              lt={lt - (ev.beats?.[1] ?? 1.0)}
+              size={220}
+              y={150}
+              beats={(ev.beats ?? [0, 1]).map((b) => b - (ev.beats?.[1] ?? 1.0)).filter((b) => b >= 0)}
+            />
+          ) : null}
           <Scanlines />
         </AbsoluteFill>
       ) : null}

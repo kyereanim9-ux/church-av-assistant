@@ -1,0 +1,454 @@
+{
+ "audioFile": "aime-moi/couleur.wav",
+ "durationSeconds": 56.253,
+ "color": true,
+ "events": [
+  {
+   "type": "quote",
+   "start": 0.4,
+   "end": 5.451,
+   "user": "ame.silencieuse",
+   "ago": "42 min",
+   "text": "Le ciel cache ses étoiles le jour… comme un homme cache ses larmes.",
+   "words": [
+    {
+     "w": "Le",
+     "t": 0.475
+    },
+    {
+     "w": "ciel",
+     "t": 0.745
+    },
+    {
+     "w": "cache",
+     "t": 1.014
+    },
+    {
+     "w": "ses",
+     "t": 1.313
+    },
+    {
+     "w": "étoiles",
+     "t": 1.469
+    },
+    {
+     "w": "le",
+     "t": 1.909
+    },
+    {
+     "w": "jour",
+     "t": 2.066
+    },
+    {
+     "w": "comme",
+     "t": 2.676
+    },
+    {
+     "w": "un",
+     "t": 2.918
+    },
+    {
+     "w": "homme",
+     "t": 2.989
+    },
+    {
+     "w": "cache",
+     "t": 3.216
+    },
+    {
+     "w": "ses",
+     "t": 3.514
+    },
+    {
+     "w": "larmes",
+     "t": 3.656
+    }
+   ]
+  },
+  {
+   "type": "hit",
+   "start": 5.451,
+   "end": 8.651,
+   "beats": [
+    0.12,
+    2.1
+   ]
+  },
+  {
+   "type": "quote",
+   "start": 8.651,
+   "end": 14.236,
+   "user": "nuit_sans_lune",
+   "ago": "38 min",
+   "text": "Beaucoup restent quand il fait beau. Très peu restent quand il pleut.",
+   "words": [
+    {
+     "w": "Beaucoup",
+     "t": 0.482
+    },
+    {
+     "w": "restent",
+     "t": 0.922
+    },
+    {
+     "w": "quand",
+     "t": 1.263
+    },
+    {
+     "w": "il",
+     "t": 1.434
+    },
+    {
+     "w": "fait",
+     "t": 1.661
+    },
+    {
+     "w": "beau",
+     "t": 1.845
+    },
+    {
+     "w": "Très",
+     "t": 3.131
+    },
+    {
+     "w": "peu",
+     "t": 3.401
+    },
+    {
+     "w": "restent",
+     "t": 3.557
+    },
+    {
+     "w": "quand",
+     "t": 3.898
+    },
+    {
+     "w": "il",
+     "t": 4.068
+    },
+    {
+     "w": "pleut",
+     "t": 4.31
+    }
+   ]
+  },
+  {
+   "type": "hit",
+   "start": 14.236,
+   "end": 17.436,
+   "beats": [
+    0.12,
+    1.85
+   ]
+  },
+  {
+   "type": "quote",
+   "start": 17.436,
+   "end": 24.468,
+   "user": "le.marcheur",
+   "ago": "31 min",
+   "text": "Ne cours pas après ceux qui partent. Un chemin qui se vide fait de la place à ceux qui arrivent.",
+   "words": [
+    {
+     "w": "Ne",
+     "t": 0.473
+    },
+    {
+     "w": "cours",
+     "t": 0.7
+    },
+    {
+     "w": "pas",
+     "t": 0.956
+    },
+    {
+     "w": "après",
+     "t": 1.126
+    },
+    {
+     "w": "ceux",
+     "t": 1.453
+    },
+    {
+     "w": "qui",
+     "t": 1.638
+    },
+    {
+     "w": "partent",
+     "t": 1.808
+    },
+    {
+     "w": "Un",
+     "t": 3.278
+    },
+    {
+     "w": "chemin",
+     "t": 3.491
+    },
+    {
+     "w": "qui",
+     "t": 3.832
+    },
+    {
+     "w": "se",
+     "t": 4.031
+    },
+    {
+     "w": "vide",
+     "t": 4.173
+    },
+    {
+     "w": "fait",
+     "t": 4.386
+    },
+    {
+     "w": "de",
+     "t": 4.556
+    },
+    {
+     "w": "la",
+     "t": 4.67
+    },
+    {
+     "w": "place",
+     "t": 4.784
+    },
+    {
+     "w": "à",
+     "t": 5.096
+    },
+    {
+     "w": "ceux",
+     "t": 5.181
+    },
+    {
+     "w": "qui",
+     "t": 5.352
+    },
+    {
+     "w": "arrivent",
+     "t": 5.565
+    }
+   ]
+  },
+  {
+   "type": "hit",
+   "start": 24.468,
+   "end": 27.218,
+   "beats": [
+    0.12,
+    1.6
+   ]
+  },
+  {
+   "type": "quote",
+   "start": 27.218,
+   "end": 32.407,
+   "user": "coeur.en.veille",
+   "ago": "24 min",
+   "text": "J'ai tout donné sans compter… et j'ai oublié d'en garder un peu pour moi.",
+   "words": [
+    {
+     "w": "J'ai",
+     "t": 0.477
+    },
+    {
+     "w": "tout",
+     "t": 0.761
+    },
+    {
+     "w": "donné",
+     "t": 0.946
+    },
+    {
+     "w": "sans",
+     "t": 1.244
+    },
+    {
+     "w": "compter",
+     "t": 1.443
+    },
+    {
+     "w": "et",
+     "t": 2.267
+    },
+    {
+     "w": "j'ai",
+     "t": 2.352
+    },
+    {
+     "w": "oublié",
+     "t": 2.551
+    },
+    {
+     "w": "d'en",
+     "t": 2.92
+    },
+    {
+     "w": "garder",
+     "t": 3.077
+    },
+    {
+     "w": "un",
+     "t": 3.46
+    },
+    {
+     "w": "peu",
+     "t": 3.545
+    },
+    {
+     "w": "pour",
+     "t": 3.73
+    },
+    {
+     "w": "moi",
+     "t": 3.929
+    }
+   ]
+  },
+  {
+   "type": "hit",
+   "start": 32.407,
+   "end": 34.857,
+   "beats": [
+    0.12,
+    0.75
+   ]
+  },
+  {
+   "type": "quote",
+   "start": 34.857,
+   "end": 41.228,
+   "user": "ombre_douce",
+   "ago": "12 min",
+   "text": "Le silence d'un homme n'est pas du vide. C'est tout ce qu'il n'a jamais pu dire.",
+   "words": [
+    {
+     "w": "Le",
+     "t": 0.474
+    },
+    {
+     "w": "silence",
+     "t": 0.73
+    },
+    {
+     "w": "d'un",
+     "t": 1.128
+    },
+    {
+     "w": "homme",
+     "t": 1.298
+    },
+    {
+     "w": "n'est",
+     "t": 1.525
+    },
+    {
+     "w": "pas",
+     "t": 1.682
+    },
+    {
+     "w": "du",
+     "t": 1.852
+    },
+    {
+     "w": "vide",
+     "t": 1.994
+    },
+    {
+     "w": "C'est",
+     "t": 3.436
+    },
+    {
+     "w": "tout",
+     "t": 3.72
+    },
+    {
+     "w": "ce",
+     "t": 3.947
+    },
+    {
+     "w": "qu'il",
+     "t": 4.103
+    },
+    {
+     "w": "n'a",
+     "t": 4.33
+    },
+    {
+     "w": "jamais",
+     "t": 4.472
+    },
+    {
+     "w": "pu",
+     "t": 4.813
+    },
+    {
+     "w": "dire",
+     "t": 4.984
+    }
+   ]
+  },
+  {
+   "type": "hit",
+   "start": 41.228,
+   "end": 44.628,
+   "beats": [
+    0.12,
+    1.25
+   ]
+  },
+  {
+   "type": "final",
+   "start": 44.628,
+   "end": 48.803,
+   "user": "",
+   "ago": "",
+   "text": "Aime-toi… avant que le monde t'apprenne à t'oublier.",
+   "words": [
+    {
+     "w": "Aime-toi",
+     "t": 0.476
+    },
+    {
+     "w": "avant",
+     "t": 1.314
+    },
+    {
+     "w": "que",
+     "t": 1.613
+    },
+    {
+     "w": "le",
+     "t": 1.769
+    },
+    {
+     "w": "monde",
+     "t": 1.868
+    },
+    {
+     "w": "t'apprenne",
+     "t": 2.096
+    },
+    {
+     "w": "à",
+     "t": 2.55
+    },
+    {
+     "w": "t'oublier",
+     "t": 2.621
+    }
+   ]
+  },
+  {
+   "type": "end",
+   "start": 48.803,
+   "end": 56.253,
+   "beats": [
+    0.13,
+    1.73,
+    3.41
+   ]
+  }
+ ]
+}
