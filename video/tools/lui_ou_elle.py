@@ -434,6 +434,10 @@ HOOK = {
     "ep3_celle_qui_s_est_eteinte": ("E", "Qui t'a dit que tu étais « trop » ?"),
     "ep4_celui_qui_s_est_eteint": ("L", "Un homme ne devrait pas se plaindre. C'est ce qu'elle t'a dit ?"),
     "ep5_je_t_entends": ("E", "Trois phrases peuvent sauver ton couple. Tu en dis zéro."),
+    "cq2_fais_ce_que_tu_veux": ("L", "« Fais ce que tu veux », ce n'est pas un oui. C'est qu'il a renoncé à être entendu."),
+    "cq3_je_suis_juste_fatiguee": ("E", "Elle n'est pas fatiguée de sa journée. Elle est fatiguée de tout porter seule."),
+    "cq4_c_est_rien": ("L", "Quand il te dit « c'est rien »… c'est presque toujours beaucoup."),
+    "cq5_comme_d_habitude": ("E", "Tu lui dis encore bonjour chaque matin… mais tu ne la regardes plus."),
 }
 
 # Variantes d'accroche à tester en « Reel d'essai » : (épisode, suffixe, (qui, texte), couverture).
