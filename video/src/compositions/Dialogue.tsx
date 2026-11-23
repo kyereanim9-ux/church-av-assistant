@@ -74,7 +74,7 @@ export const dialogueDefaults: DialogueProps = {
     },
     {
       who: "B",
-      seconds: 5.76,
+      seconds: 6.84,
       text: "Attends… Tu demandes à Dieu d'ouvrir un chemin, et juste après, tu dis que rien ne changera ?",
     },
     {
@@ -84,14 +84,14 @@ export const dialogueDefaults: DialogueProps = {
     },
     {
       who: "B",
-      seconds: 5.28,
+      seconds: 6.91,
       poseB: "point",
       text: "Tes paroles ne montrent pas seulement ce que tu penses. Elles façonnent aussi ce que tu crois.",
     },
     { who: "A", seconds: 1.87, moodA: "neutral", text: "Comment ça ?" },
     {
       who: "B",
-      seconds: 6.58,
+      seconds: 7.97,
       text: "Si tu répètes « je ne peux pas », tu finiras par arrêter d'essayer. Ta bouche doit être d'accord avec ta foi.",
     },
     {
@@ -103,7 +103,7 @@ export const dialogueDefaults: DialogueProps = {
     },
     {
       who: "B",
-      seconds: 5.83,
+      seconds: 7.78,
       moodB: "happy",
       text: "Ce n'est pas parce que tu ne vois rien que Dieu ne travaille pas. Une porte fermée ne veut pas dire qu'une autre ne va pas s'ouvrir.",
     },
@@ -116,7 +116,7 @@ export const dialogueDefaults: DialogueProps = {
     },
     {
       who: "B",
-      seconds: 5.57,
+      seconds: 7.25,
       poseA: "idle",
       poseB: "wave",
       text: "Amen ! Tu traverses peut-être un chapitre difficile, mais ce chapitre n'est pas toute ton histoire.",
