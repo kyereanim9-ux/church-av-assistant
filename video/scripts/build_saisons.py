@@ -220,7 +220,13 @@ def main():
     # ambiences step back while the voice speaks, so a soft natural voice stays clear
     amb_duck = 1 - 0.75 * np.clip(envv / 0.04, 0, 1)
     amb *= np.convolve(amb_duck, np.ones(6615) / 6615, "same")[:, None]
-    mix = voice * 1.0 + mus * 0.65 + amb * 0.55
+    BGM = float(os.environ.get("BGM_LEVEL", "0.28"))
+    bgm = mus * BGM + amb * BGM * 0.85
+    speaking = envv > 0.02
+    v_db = 20 * np.log10(np.sqrt(np.mean(voice[speaking, 0] ** 2)) + 1e-9)
+    b_db = 20 * np.log10(np.sqrt(np.mean(bgm[speaking, 0] ** 2)) + 1e-9)
+    print(f"voice is {v_db - b_db:.1f} dB above the background while speaking")
+    mix = voice * 1.0 + bgm
     mix /= np.max(np.abs(mix)) / 0.89
     out_dir = os.path.join(root, "public", "saisons")
     os.makedirs(out_dir, exist_ok=True)
