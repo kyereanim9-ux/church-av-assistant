@@ -1,6 +1,6 @@
 # Fabrique les voix, les bruitages, la musique de fond et le plan de montage (timeline.json)
 import json, os, subprocess, sys, wave, hashlib
-from episodes import EPISODES
+EPISODES = __import__(os.environ.get('EP_MODULE', 'episodes')).EPISODES
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "build")
@@ -147,7 +147,8 @@ def build(ep):
     subprocess.run(args, check=True)
 
     tl = {"num": ep["num"], "title": ep["title"], "tag": ep.get("tag", ""), "cover": ep["cover"],
-          "total": total, "shots": shots}
+          "total": total, "shots": shots,
+          **{k: ep[k] for k in ("header", "verseLabel", "coverLines", "coverLabel") if k in ep}}
     with open(os.path.join(d, "timeline.json"), "w") as f:
         json.dump(tl, f, ensure_ascii=False, indent=1)
     print(f"Épisode {ep['num']} : {total:.1f} s, {len(clips)} sons")

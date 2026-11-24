@@ -53,7 +53,7 @@ const EXPR = {
   worried:{bi:-13,bo:5,lid:.3,m:'frown'}, suspicious:{bi:9,bo:2,lid:.55,m:'side',asym:true},
   cold:{bi:5,bo:2,lid:.58,m:'flat'}, angry:{bi:15,bo:-7,lid:.45,m:'angry'},
   shocked:{bi:-17,bo:-14,lid:.02,m:'o'}, cry:{bi:-13,bo:7,lid:.52,m:'frown',tears:true},
-  soft:{bi:-5,bo:2,lid:.42,m:'smile'}
+  soft:{bi:-5,bo:2,lid:.42,m:'smile'}, pray:{bi:-6,bo:4,lid:1.0,m:'flat'}
 };
 
 /* ---------- Décor ---------- */
@@ -306,9 +306,52 @@ const DEFS = `<defs>
 </defs>`;
 
 function header(){
+  if(TL.header) return `<div class="ov hdr-label">${esc(TL.header.label)}</div>
+   <div class="ov hdr-part">${esc(TL.header.big)}<b>${esc(TL.header.accent||'')}</b></div>
+   <div class="ov hdr-title">${esc(TL.title)}</div>`;
   return `<div class="ov hdr-label">LUI OU ELLE ? · SAISON 2</div>
    <div class="ov hdr-part">PARTIE <b>${TL.num}</b></div>
    <div class="ov hdr-title">${esc(TL.title)}</div>`;
+}
+function headPos(shot, who){
+  const chars = shot.chars||[]; const i = chars.findIndex(c=>c.who===who); if(i<0) return null;
+  const join = chars.some(c=>c.hands==='join');
+  let pos = chars.length===1 ? [[540,1085,1.0]] : (join ? [[335,1120,0.78],[745,1120,0.78]] : [[300,1120,0.78],[780,1120,0.78]]);
+  const [x,y,sc] = pos[i]; return {x, y: y-430*sc, sc};
+}
+function gaugeColor(v){ return v<30?'#e5484d':v<60?'#f0a540':'#46c37b'; }
+function gaugeOv(shot,lt){
+  let ov='';
+  for(const g of (shot.gauge||[])){
+    const h = headPos(shot,g.who); if(!h) continue;
+    const [a,b] = g.v; let tc = 0.5;
+    if(g.at!==undefined && g.at>=0 && shot.lines[g.at]) tc = shot.lines[g.at].end+0.15;
+    const k = ease((lt-tc)/0.7), v = Math.round(a+(b-a)*k);
+    const app = fade(lt, g.appear||0, 0.35);
+    const big = (h.sc>0.9 ? 1 : 0.8)*(g.scale||1);
+    ov += `<div style="position:absolute;left:${h.x-120*big}px;top:${h.y-120*big}px;width:${240*big}px;text-align:center;opacity:${app};transform:scale(${0.8+0.2*app})">
+      <span style="display:inline-block;background:rgba(10,7,6,.8);border:5px solid ${gaugeColor(v)};border-radius:60px;padding:${8*big}px ${30*big}px;font-size:${70*big}px;font-weight:1000;color:#fff;box-shadow:0 0 30px ${gaugeColor(v)}88">
+      <span style="color:${gaugeColor(v)}">♥</span> ${v}</span></div>`;
+    if(b!==a && lt>tc && lt<tc+1.6){
+      const d=b-a, o=1-ease((lt-tc-0.9)/0.7);
+      ov += `<div style="position:absolute;left:${h.x+70*big}px;top:${h.y-190*big-40*ease((lt-tc)/1.6)}px;font-size:${56*big}px;font-weight:1000;color:${d<0?'#ff6b6b':'#6fe39c'};opacity:${o};text-shadow:0 3px 10px #000">${d>0?'+':''}${d}</div>`;
+    }
+  }
+  return ov;
+}
+function bubbleOv(shot,lt){
+  let ov='';
+  for(const l of shot.lines){
+    if(!l.bubble || lt<l.start-0.1 || lt>l.end+0.6) continue;
+    const who = l.who==='T'?'M':l.who; const h = headPos(shot, who); if(!h) continue;
+    const w = 460, x = Math.max(20, Math.min(1080-w-20, h.x-w/2));
+    const o = fade(lt,l.start-0.1,0.3);
+    ov += `<div style="position:absolute;left:${x}px;top:${h.y-200}px;width:${w}px;opacity:${o};transform:scale(${0.85+0.15*o})">
+      <div style="background:#fff;color:#1a1a1a;border-radius:44px;padding:22px 28px;font-size:40px;font-weight:800;line-height:1.2;text-align:center;font-style:italic;box-shadow:0 6px 24px rgba(0,0,0,.5)">${esc(l.text)}</div>
+      <div style="width:30px;height:30px;border-radius:50%;background:#fff;margin:8px 0 0 ${h.x-x-10}px"></div>
+      <div style="width:16px;height:16px;border-radius:50%;background:#fff;margin:6px 0 0 ${h.x-x-2}px"></div></div>`;
+  }
+  return ov;
 }
 function shotAt(t){
   for(const s of TL.shots) if(t < s.start+s.dur) return s;
@@ -338,7 +381,7 @@ function render(t){
       <div style="width:120px;height:4px;background:#f0a540;margin:0 auto 46px;opacity:.8"></div>
       <div class="verse">${esc(v.text)}</div>
       <div class="ref" style="margin-top:44px;opacity:${fade(lt,ref.start-0.2)}">${esc(ref.text.toUpperCase())}</div></div>`;
-    ov += `<div class="ov hdr-label" style="opacity:.8">LUI OU ELLE ? · PARTIE ${TL.num}</div>`;
+    ov += `<div class="ov hdr-label" style="opacity:.8">${esc(TL.verseLabel||('LUI OU ELLE ? · PARTIE '+TL.num))}</div>`;
   } else if(sc==='message'){
     const parts = shot.text.split('\n');
     ov += `<div class="ov msg-label" style="opacity:${fade(lt,0.1)}">LUMIÈRE POUR TON CŒUR</div>
@@ -356,12 +399,13 @@ function render(t){
     const last = shot.lines[shot.lines.length-1];
     if(shot.stampEnd && last && lt > last.end+0.25) ov += `<div class="ov stamp" style="opacity:${fade(lt,last.end+0.25,0.25)}"><span>${esc(shot.stampEnd)}</span></div>`;
     for(const l of shot.lines){
-      if(lt>=l.start-0.05 && lt<=l.end+0.3 && l.text!==shot.stamp){
+      if(lt>=l.start-0.05 && lt<=l.end+0.3 && l.text!==shot.stamp && !l.bubble){
         const cls = l.who==='N'?'n':(l.think?'think':'');
         ov += `<div class="ov cap ${cls}"><span>${esc(l.text)}${l.think?'<small>(dans sa tête)</small>':''}</span></div>`;
       }
     }
   }
+  if(sc==='room'){ ov += gaugeOv(shot,lt) + bubbleOv(shot,lt); }
   // fondus
   let black = 0;
   if(lt<0.25) black = Math.max(black, 0.55*(1-lt/0.25));
@@ -379,6 +423,13 @@ function renderCover(){
     `<linearGradient id="fadeB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".92"/></linearGradient>
      <rect y="980" width="1080" height="940" fill="url(#fadeB)"/>`;
   document.getElementById('svg').innerHTML = svg;
+  if(TL.coverLines){
+    const sh2 = {...shot, lines:[]};
+    document.getElementById('ovl').innerHTML = `<div class="ov cv-label">${esc(TL.coverLabel||'LUMIÈRE POUR TON CŒUR')}</div>`+
+      `<div class="ov" style="top:330px;padding:0 50px">`+TL.coverLines.map(([t,c,sz])=>`<div style="font-size:${sz||92}px;font-weight:1000;line-height:1.08;color:${c||'#fff'};text-shadow:0 5px 24px #000">${esc(t)}</div>`).join('')+`</div>`+
+      gaugeOv({...sh2, gauge:(c.gauge||[])}, 5)+bubbleOv({...sh2, lines:(c.bubbles||[]).map(b=>({...b,bubble:true,start:0,end:10}))},1);
+    return;
+  }
   document.getElementById('ovl').innerHTML = `<div class="ov cv-label">LUI OU ELLE ? · SAISON 2</div>
     <div class="ov cv-title">${esc(TL.title.toUpperCase())}</div>
     <div class="ov cv-part">PARTIE <b>${TL.num}</b></div>
