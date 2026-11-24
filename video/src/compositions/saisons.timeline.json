@@ -1,0 +1,783 @@
+{
+ "audioFile": "saisons/mix.wav",
+ "durationSeconds": 74.216,
+ "sections": [
+  {
+   "palette": 0,
+   "start": 1.2,
+   "title": ""
+  },
+  {
+   "palette": 1,
+   "start": 6.697,
+   "title": "HIVER"
+  },
+  {
+   "palette": 2,
+   "start": 16.025,
+   "title": "PRINTEMPS"
+  },
+  {
+   "palette": 3,
+   "start": 25.745,
+   "title": "ÉTÉ"
+  },
+  {
+   "palette": 4,
+   "start": 37.063,
+   "title": "AUTOMNE"
+  },
+  {
+   "palette": 5,
+   "start": 48.295,
+   "title": ""
+  },
+  {
+   "palette": 6,
+   "start": 59.604,
+   "title": ""
+  }
+ ],
+ "sentences": [
+  {
+   "start": 1.2,
+   "end": 3.198,
+   "text": "Dieu n'a pas fait ta vie en un seul jour.",
+   "words": [
+    {
+     "w": "Dieu",
+     "t": -0.112
+    },
+    {
+     "w": "n'a",
+     "t": 0.173
+    },
+    {
+     "w": "pas",
+     "t": 0.323
+    },
+    {
+     "w": "fait",
+     "t": 0.499
+    },
+    {
+     "w": "ta",
+     "t": 0.676
+    },
+    {
+     "w": "vie",
+     "t": 0.825
+    },
+    {
+     "w": "en",
+     "t": 1.002
+    },
+    {
+     "w": "un",
+     "t": 1.097
+    },
+    {
+     "w": "seul",
+     "t": 1.247
+    },
+    {
+     "w": "jour",
+     "t": 1.491
+    }
+   ]
+  },
+  {
+   "start": 3.648,
+   "end": 4.747,
+   "text": "Il l'a faite en saisons.",
+   "words": [
+    {
+     "w": "Il",
+     "t": -0.12
+    },
+    {
+     "w": "l'a",
+     "t": 0.097
+    },
+    {
+     "w": "faite",
+     "t": 0.233
+    },
+    {
+     "w": "en",
+     "t": 0.491
+    },
+    {
+     "w": "saisons",
+     "t": 0.573
+    }
+   ]
+  },
+  {
+   "start": 7.697,
+   "end": 8.504,
+   "text": "Il y a l'hiver.",
+   "words": [
+    {
+     "w": "Il",
+     "t": -0.119
+    },
+    {
+     "w": "y",
+     "t": 0.085
+    },
+    {
+     "w": "a",
+     "t": 0.18
+    },
+    {
+     "w": "l'hiver",
+     "t": 0.221
+    }
+   ]
+  },
+  {
+   "start": 8.954,
+   "end": 10.621,
+   "text": "Le temps où rien ne semble pousser.",
+   "words": [
+    {
+     "w": "Le",
+     "t": -0.12
+    },
+    {
+     "w": "temps",
+     "t": 0.138
+    },
+    {
+     "w": "où",
+     "t": 0.356
+    },
+    {
+     "w": "rien",
+     "t": 0.424
+    },
+    {
+     "w": "ne",
+     "t": 0.641
+    },
+    {
+     "w": "semble",
+     "t": 0.777
+    },
+    {
+     "w": "pousser",
+     "t": 1.13
+    }
+   ]
+  },
+  {
+   "start": 11.071,
+   "end": 14.075,
+   "text": "Mais sous la neige, les racines travaillent en silence.",
+   "words": [
+    {
+     "w": "Mais",
+     "t": -0.118
+    },
+    {
+     "w": "sous",
+     "t": 0.14
+    },
+    {
+     "w": "la",
+     "t": 0.303
+    },
+    {
+     "w": "neige",
+     "t": 0.412
+    },
+    {
+     "w": "les",
+     "t": 1.173
+    },
+    {
+     "w": "racines",
+     "t": 1.308
+    },
+    {
+     "w": "travaillent",
+     "t": 1.716
+    },
+    {
+     "w": "en",
+     "t": 2.11
+    },
+    {
+     "w": "silence",
+     "t": 2.192
+    }
+   ]
+  },
+  {
+   "start": 17.025,
+   "end": 17.975,
+   "text": "Puis vient le printemps.",
+   "words": [
+    {
+     "w": "Puis",
+     "t": -0.114
+    },
+    {
+     "w": "vient",
+     "t": 0.117
+    },
+    {
+     "w": "le",
+     "t": 0.294
+    },
+    {
+     "w": "printemps",
+     "t": 0.389
+    }
+   ]
+  },
+  {
+   "start": 18.425,
+   "end": 20.723,
+   "text": "Ce que tu croyais mort recommence à fleurir.",
+   "words": [
+    {
+     "w": "Ce",
+     "t": -0.124
+    },
+    {
+     "w": "que",
+     "t": 0.134
+    },
+    {
+     "w": "tu",
+     "t": 0.27
+    },
+    {
+     "w": "croyais",
+     "t": 0.419
+    },
+    {
+     "w": "mort",
+     "t": 0.786
+    },
+    {
+     "w": "recommence",
+     "t": 1.031
+    },
+    {
+     "w": "à",
+     "t": 1.574
+    },
+    {
+     "w": "fleurir",
+     "t": 1.656
+    }
+   ]
+  },
+  {
+   "start": 21.173,
+   "end": 23.795,
+   "text": "Doucement. Sans faire de bruit.",
+   "words": [
+    {
+     "w": "Doucement",
+     "t": -0.113
+    },
+    {
+     "w": "Sans",
+     "t": 1.522
+    },
+    {
+     "w": "faire",
+     "t": 1.807
+    },
+    {
+     "w": "de",
+     "t": 2.065
+    },
+    {
+     "w": "bruit",
+     "t": 2.201
+    }
+   ]
+  },
+  {
+   "start": 26.745,
+   "end": 27.963,
+   "text": "Ensuite, l'été.",
+   "words": [
+    {
+     "w": "Ensuite",
+     "t": -0.12
+    },
+    {
+     "w": "l'été",
+     "t": 0.695
+    }
+   ]
+  },
+  {
+   "start": 28.413,
+   "end": 31.906,
+   "text": "Le temps de la lumière, de la récolte, et de la joie partagée.",
+   "words": [
+    {
+     "w": "Le",
+     "t": -0.118
+    },
+    {
+     "w": "temps",
+     "t": 0.126
+    },
+    {
+     "w": "de",
+     "t": 0.289
+    },
+    {
+     "w": "la",
+     "t": 0.412
+    },
+    {
+     "w": "lumière",
+     "t": 0.493
+    },
+    {
+     "w": "de",
+     "t": 1.281
+    },
+    {
+     "w": "la",
+     "t": 1.403
+    },
+    {
+     "w": "récolte",
+     "t": 1.512
+    },
+    {
+     "w": "et",
+     "t": 2.314
+    },
+    {
+     "w": "de",
+     "t": 2.368
+    },
+    {
+     "w": "la",
+     "t": 2.477
+    },
+    {
+     "w": "joie",
+     "t": 2.572
+    },
+    {
+     "w": "partagée",
+     "t": 2.789
+    }
+   ]
+  },
+  {
+   "start": 32.356,
+   "end": 35.113,
+   "text": "Profite… mais n'oublie jamais qui a fait pousser le fruit.",
+   "words": [
+    {
+     "w": "Profite",
+     "t": -0.111
+    },
+    {
+     "w": "mais",
+     "t": 0.663
+    },
+    {
+     "w": "n'oublie",
+     "t": 0.785
+    },
+    {
+     "w": "jamais",
+     "t": 1.084
+    },
+    {
+     "w": "qui",
+     "t": 1.397
+    },
+    {
+     "w": "a",
+     "t": 1.628
+    },
+    {
+     "w": "fait",
+     "t": 1.709
+    },
+    {
+     "w": "pousser",
+     "t": 1.886
+    },
+    {
+     "w": "le",
+     "t": 2.212
+    },
+    {
+     "w": "fruit",
+     "t": 2.334
+    }
+   ]
+  },
+  {
+   "start": 38.063,
+   "end": 39.483,
+   "text": "Et puis, l'automne.",
+   "words": [
+    {
+     "w": "Et",
+     "t": -0.121
+    },
+    {
+     "w": "puis",
+     "t": 0.069
+    },
+    {
+     "w": "l'automne",
+     "t": 0.707
+    }
+   ]
+  },
+  {
+   "start": 39.933,
+   "end": 41.681,
+   "text": "Le temps de lâcher ce qui doit tomber.",
+   "words": [
+    {
+     "w": "Le",
+     "t": -0.12
+    },
+    {
+     "w": "temps",
+     "t": 0.111
+    },
+    {
+     "w": "de",
+     "t": 0.288
+    },
+    {
+     "w": "lâcher",
+     "t": 0.41
+    },
+    {
+     "w": "ce",
+     "t": 0.777
+    },
+    {
+     "w": "qui",
+     "t": 0.927
+    },
+    {
+     "w": "doit",
+     "t": 1.09
+    },
+    {
+     "w": "tomber",
+     "t": 1.266
+    }
+   ]
+  },
+  {
+   "start": 42.131,
+   "end": 43.798,
+   "text": "Les arbres ne pleurent pas leurs feuilles.",
+   "words": [
+    {
+     "w": "Les",
+     "t": -0.121
+    },
+    {
+     "w": "arbres",
+     "t": 0.097
+    },
+    {
+     "w": "ne",
+     "t": 0.464
+    },
+    {
+     "w": "pleurent",
+     "t": 0.586
+    },
+    {
+     "w": "pas",
+     "t": 0.844
+    },
+    {
+     "w": "leurs",
+     "t": 0.993
+    },
+    {
+     "w": "feuilles",
+     "t": 1.17
+    }
+   ]
+  },
+  {
+   "start": 44.248,
+   "end": 46.345,
+   "text": "Ils savent que c'est le prix du prochain printemps.",
+   "words": [
+    {
+     "w": "Ils",
+     "t": -0.118
+    },
+    {
+     "w": "savent",
+     "t": 0.113
+    },
+    {
+     "w": "que",
+     "t": 0.344
+    },
+    {
+     "w": "c'est",
+     "t": 0.507
+    },
+    {
+     "w": "le",
+     "t": 0.643
+    },
+    {
+     "w": "prix",
+     "t": 0.765
+    },
+    {
+     "w": "du",
+     "t": 0.955
+    },
+    {
+     "w": "prochain",
+     "t": 1.091
+    },
+    {
+     "w": "printemps",
+     "t": 1.499
+    }
+   ]
+  },
+  {
+   "start": 48.295,
+   "end": 50.784,
+   "text": "Alors, si tu traverses un hiver aujourd'hui…",
+   "words": [
+    {
+     "w": "Alors",
+     "t": -0.126
+    },
+    {
+     "w": "si",
+     "t": 0.689
+    },
+    {
+     "w": "tu",
+     "t": 0.838
+    },
+    {
+     "w": "traverses",
+     "t": 1.001
+    },
+    {
+     "w": "un",
+     "t": 1.477
+    },
+    {
+     "w": "hiver",
+     "t": 1.558
+    },
+    {
+     "w": "aujourd'hui",
+     "t": 1.912
+    }
+   ]
+  },
+  {
+   "start": 51.234,
+   "end": 53.378,
+   "text": "ne crois pas que c'est la fin de ton histoire.",
+   "words": [
+    {
+     "w": "ne",
+     "t": -0.119
+    },
+    {
+     "w": "crois",
+     "t": 0.099
+    },
+    {
+     "w": "pas",
+     "t": 0.33
+    },
+    {
+     "w": "que",
+     "t": 0.506
+    },
+    {
+     "w": "c'est",
+     "t": 0.683
+    },
+    {
+     "w": "la",
+     "t": 0.832
+    },
+    {
+     "w": "fin",
+     "t": 0.968
+    },
+    {
+     "w": "de",
+     "t": 1.172
+    },
+    {
+     "w": "ton",
+     "t": 1.294
+    },
+    {
+     "w": "histoire",
+     "t": 1.444
+    }
+   ]
+  },
+  {
+   "start": 53.828,
+   "end": 56.169,
+   "text": "Une saison, ce n'est pas une sentence.",
+   "words": [
+    {
+     "w": "Une",
+     "t": -0.114
+    },
+    {
+     "w": "saison",
+     "t": 0.117
+    },
+    {
+     "w": "ce",
+     "t": 0.864
+    },
+    {
+     "w": "n'est",
+     "t": 1.0
+    },
+    {
+     "w": "pas",
+     "t": 1.136
+    },
+    {
+     "w": "une",
+     "t": 1.299
+    },
+    {
+     "w": "sentence",
+     "t": 1.517
+    }
+   ]
+  },
+  {
+   "start": 56.619,
+   "end": 57.654,
+   "text": "C'est un passage.",
+   "words": [
+    {
+     "w": "C'est",
+     "t": -0.117
+    },
+    {
+     "w": "un",
+     "t": 0.141
+    },
+    {
+     "w": "passage",
+     "t": 0.304
+    }
+   ]
+  },
+  {
+   "start": 59.604,
+   "end": 61.21,
+   "text": "Et celui qui a créé les saisons…",
+   "words": [
+    {
+     "w": "Et",
+     "t": -0.118
+    },
+    {
+     "w": "celui",
+     "t": 0.072
+    },
+    {
+     "w": "qui",
+     "t": 0.385
+    },
+    {
+     "w": "a",
+     "t": 0.616
+    },
+    {
+     "w": "créé",
+     "t": 0.697
+    },
+    {
+     "w": "les",
+     "t": 0.969
+    },
+    {
+     "w": "saisons",
+     "t": 1.105
+    }
+   ]
+  },
+  {
+   "start": 61.66,
+   "end": 63.966,
+   "text": "n'a jamais oublié de faire revenir le printemps.",
+   "words": [
+    {
+     "w": "n'a",
+     "t": -0.116
+    },
+    {
+     "w": "jamais",
+     "t": 0.102
+    },
+    {
+     "w": "oublié",
+     "t": 0.441
+    },
+    {
+     "w": "de",
+     "t": 0.835
+    },
+    {
+     "w": "faire",
+     "t": 0.998
+    },
+    {
+     "w": "revenir",
+     "t": 1.216
+    },
+    {
+     "w": "le",
+     "t": 1.61
+    },
+    {
+     "w": "printemps",
+     "t": 1.718
+    }
+   ]
+  }
+ ],
+ "verse": {
+  "start": 65.016,
+  "text": "« Il y a un temps pour tout, un temps pour toute chose sous les cieux. »",
+  "ref": "Ecclésiaste 3:1"
+ },
+ "cta": {
+  "start": 70.016,
+  "text": "Partage ce message à quelqu'un qui traverse son hiver."
+ }
+}
