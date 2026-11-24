@@ -16,7 +16,8 @@ import tempfile
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_aime_moi import edge, piano, reverb  # noqa: E402
+from build_aime_moi import piano, reverb  # noqa: E402
+from voice_source import VOICE_DIR, speaker  # noqa: E402
 from build_pas_a_pas_audio import SR, add, env, fast_bp, fast_lp, midi, noise, tone, write_wav  # noqa: E402
 
 VOICE = os.environ.get("TEMPETE_VOICE", "fr-FR-RemyMultilingualNeural")
@@ -58,7 +59,7 @@ VERSE_REF = "Marc 4:39"
 CTA = "Envoie ce message à quelqu'un qui traverse une tempête."
 
 START = 1.4
-GAP = 0.5
+GAP = 0.7 if VOICE_DIR else 0.5  # natural recordings get a calmer pace
 SECTION_GAP = 1.6
 VERSE_LEN = 5.4
 CTA_LEN = 3.6
@@ -165,6 +166,7 @@ def main():
     sentences, sections, clips = [], [], []
     t = START
     with tempfile.TemporaryDirectory() as tmp:
+        speak = speaker(tmp, VOICE, RATE, PITCH)
         for k, (pal, title, lines) in enumerate(SECTIONS):
             if k:
                 t += SECTION_GAP if pal != 3 else 2.4
@@ -172,7 +174,7 @@ def main():
             if title:
                 t += 1.1
             for line in lines:
-                clip, words = edge(line, VOICE, RATE, PITCH, tmp)
+                clip, words = speak(line)
                 clips.append((t, clip))
                 sentences.append({
                     "start": round(t, 3), "end": round(t + len(clip) / SR, 3), "text": line,

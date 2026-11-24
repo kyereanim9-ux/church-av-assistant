@@ -15,7 +15,8 @@ import tempfile
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_aime_moi import edge, piano, reverb  # noqa: E402
+from build_aime_moi import piano, reverb  # noqa: E402
+from voice_source import VOICE_DIR, speaker  # noqa: E402
 from build_pas_a_pas_audio import SR, add, env, fast_bp, fast_lp, midi, noise, tone, write_wav  # noqa: E402
 
 # the most natural French neural voice available; override with SAISONS_VOICE
@@ -62,7 +63,7 @@ VERSE_REF = "Ecclésiaste 3:1"
 CTA = "Partage ce message à quelqu'un qui traverse son hiver."
 
 START = 1.2
-GAP = 0.45
+GAP = 0.7 if VOICE_DIR else 0.45  # natural recordings get a calmer pace
 SECTION_GAP = 1.5
 VERSE_LEN = 5.0
 CTA_LEN = 3.6
@@ -168,6 +169,7 @@ def main():
     sentences, sections, voice_clips = [], [], []
     t = START
     with tempfile.TemporaryDirectory() as tmp:
+        speak = speaker(tmp, VOICE, VOICE_RATE, VOICE_PITCH)
         for k, (pal, title, lines) in enumerate(SECTIONS):
             if k:
                 t += SECTION_GAP
@@ -175,7 +177,7 @@ def main():
             if title:
                 t += 1.0  # let the title breathe before the voice
             for line in lines:
-                clip, words = edge(line, VOICE, VOICE_RATE, VOICE_PITCH, tmp)
+                clip, words = speak(line)
                 voice_clips.append((t, clip))
                 sentences.append({
                     "start": round(t, 3), "end": round(t + len(clip) / SR, 3), "text": line,
@@ -201,7 +203,7 @@ def main():
 
     mus = music(total, sec_t, intensity)[:n]
     envv = np.convolve(np.abs(voice[:, 0]), np.ones(2205) / 2205, "same")
-    duck = 1 - 0.4 * np.clip(envv / 0.05, 0, 1)
+    duck = 1 - 0.6 * np.clip(envv / 0.04, 0, 1)
     mus *= np.convolve(duck, np.ones(8820) / 8820, "same")[:, None]
 
     amb = np.zeros((n, 2), np.float32)
@@ -215,7 +217,10 @@ def main():
             add(amb, whoosh(), s["start"] - 0.9, 0.8)
             add(amb, soft_hit(), s["start"], 0.6)
 
-    mix = voice * 1.0 + mus * 0.75 + amb * 0.6
+    # ambiences step back while the voice speaks, so a soft natural voice stays clear
+    amb_duck = 1 - 0.75 * np.clip(envv / 0.04, 0, 1)
+    amb *= np.convolve(amb_duck, np.ones(6615) / 6615, "same")[:, None]
+    mix = voice * 1.0 + mus * 0.65 + amb * 0.55
     mix /= np.max(np.abs(mix)) / 0.89
     out_dir = os.path.join(root, "public", "saisons")
     os.makedirs(out_dir, exist_ok=True)
