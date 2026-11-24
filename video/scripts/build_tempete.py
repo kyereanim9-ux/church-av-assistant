@@ -239,7 +239,13 @@ def main():
     amb_duck = 1 - 0.78 * np.clip(envv / 0.04, 0, 1)
     amb_duck = np.convolve(amb_duck, np.ones(6615) / 6615, "same")[:, None]
     write_wav(os.path.join(out_dir, "voice-check.wav"), voice[: int(total * SR)] / max(1e-6, np.max(np.abs(voice))) * 0.9)
-    mix = voice * 1.0 + mus * 0.6 + amb * 0.5 * amb_duck
+    BGM = float(os.environ.get("BGM_LEVEL", "0.13"))
+    bgm = mus * BGM + amb * BGM * 0.85 * amb_duck
+    speaking = envv > 0.02
+    v_db = 20 * np.log10(np.sqrt(np.mean(voice[speaking, 0] ** 2)) + 1e-9)
+    b_db = 20 * np.log10(np.sqrt(np.mean(bgm[speaking, 0] ** 2)) + 1e-9)
+    print(f"voice is {v_db - b_db:.1f} dB above the background while speaking")
+    mix = voice * 1.0 + bgm
     mix /= np.max(np.abs(mix)) / 0.89
     write_wav(os.path.join(out_dir, "mix.wav"), mix[: int(total * SR)])
     tl = {

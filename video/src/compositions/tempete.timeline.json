@@ -1,6 +1,6 @@
 {
  "audioFile": "tempete/mix.wav",
- "durationSeconds": 80.079,
+ "durationSeconds": 88.032,
  "sections": [
   {
    "palette": 0,
@@ -9,827 +9,828 @@
   },
   {
    "palette": 1,
-   "start": 8.529,
+   "start": 9.32,
    "title": "LA TEMPÊTE"
   },
   {
    "palette": 2,
-   "start": 25.929,
+   "start": 28.601,
    "title": ""
   },
   {
    "palette": 3,
-   "start": 39.006,
+   "start": 42.47,
    "title": "LE CALME"
   },
   {
    "palette": 4,
-   "start": 46.422,
+   "start": 51.029,
    "title": ""
   },
   {
    "palette": 5,
-   "start": 62.522,
+   "start": 69.022,
    "title": ""
   }
  ],
  "sentences": [
   {
    "start": 1.4,
-   "end": 3.189,
+   "end": 3.372,
    "text": "Il y a des jours où tout est calme…",
    "words": [
     {
      "w": "Il",
-     "t": -0.055
+     "t": 0.0
     },
     {
      "w": "y",
-     "t": 0.091
+     "t": 0.11
     },
     {
      "w": "a",
-     "t": 0.171
+     "t": 0.216
     },
     {
      "w": "des",
-     "t": 0.224
+     "t": 0.237
     },
     {
      "w": "jours",
-     "t": 0.397
+     "t": 0.386
     },
     {
      "w": "où",
-     "t": 0.889
+     "t": 0.641
     },
     {
      "w": "tout",
-     "t": 0.968
+     "t": 1.003
     },
     {
      "w": "est",
-     "t": 1.101
+     "t": 1.173
     },
     {
-     "w": "calme",
-     "t": 1.221
+     "w": "calme…",
+     "t": 1.365
     }
    ]
   },
   {
-   "start": 3.689,
-   "end": 6.429,
+   "start": 4.072,
+   "end": 7.02,
    "text": "et puis, sans prévenir, le vent se lève.",
    "words": [
     {
      "w": "et",
-     "t": -0.059
+     "t": 0.106
     },
     {
-     "w": "puis",
-     "t": 0.034
+     "w": "puis,",
+     "t": 0.128
     },
     {
      "w": "sans",
-     "t": 0.659
+     "t": 0.681
     },
     {
-     "w": "prévenir",
-     "t": 0.832
+     "w": "prévenir,",
+     "t": 0.915
     },
     {
      "w": "le",
-     "t": 1.816
+     "t": 1.915
     },
     {
      "w": "vent",
-     "t": 1.922
+     "t": 2.021
     },
     {
      "w": "se",
-     "t": 2.082
+     "t": 2.191
     },
     {
-     "w": "lève",
-     "t": 2.255
+     "w": "lève.",
+     "t": 2.468
     }
    ]
   },
   {
-   "start": 9.629,
-   "end": 12.38,
+   "start": 10.42,
+   "end": 13.147,
    "text": "Les vagues montent. Le ciel se ferme.",
    "words": [
     {
      "w": "Les",
-     "t": -0.069
+     "t": 0.08
     },
     {
      "w": "vagues",
-     "t": 0.131
+     "t": 0.165
     },
     {
-     "w": "montent",
-     "t": 0.423
+     "w": "montent.",
+     "t": 0.484
     },
     {
      "w": "Le",
-     "t": 1.447
+     "t": 1.399
     },
     {
      "w": "ciel",
-     "t": 1.634
+     "t": 1.527
     },
     {
      "w": "se",
-     "t": 1.966
+     "t": 1.782
     },
     {
-     "w": "ferme",
-     "t": 2.139
+     "w": "ferme.",
+     "t": 2.101
     }
    ]
   },
   {
-   "start": 12.88,
-   "end": 15.662,
+   "start": 13.847,
+   "end": 16.846,
    "text": "Et ta petite barque semble bien trop fragile pour tout ça.",
    "words": [
     {
      "w": "Et",
-     "t": -0.138
+     "t": 0.051
     },
     {
      "w": "ta",
-     "t": 0.022
+     "t": 0.136
     },
     {
      "w": "petite",
-     "t": 0.155
+     "t": 0.243
     },
     {
      "w": "barque",
-     "t": 0.527
+     "t": 0.477
     },
     {
      "w": "semble",
-     "t": 0.953
+     "t": 0.902
     },
     {
      "w": "bien",
-     "t": 1.312
+     "t": 1.221
     },
     {
      "w": "trop",
-     "t": 1.511
+     "t": 1.604
     },
     {
      "w": "fragile",
-     "t": 1.684
+     "t": 1.838
     },
     {
      "w": "pour",
-     "t": 2.11
+     "t": 2.179
     },
     {
      "w": "tout",
-     "t": 2.269
+     "t": 2.455
     },
     {
-     "w": "ça",
-     "t": 2.402
+     "w": "ça.",
+     "t": 2.626
     }
    ]
   },
   {
-   "start": 16.162,
-   "end": 19.369,
+   "start": 17.546,
+   "end": 21.098,
    "text": "Tu rames de toutes tes forces… mais l'eau continue d'entrer.",
    "words": [
     {
      "w": "Tu",
-     "t": -0.067
+     "t": 0.037
     },
     {
      "w": "rames",
-     "t": 0.066
+     "t": 0.144
     },
     {
      "w": "de",
-     "t": 0.319
+     "t": 0.441
     },
     {
      "w": "toutes",
-     "t": 0.439
+     "t": 0.654
     },
     {
      "w": "tes",
-     "t": 0.625
+     "t": 0.91
     },
     {
-     "w": "forces",
-     "t": 0.744
+     "w": "forces…",
+     "t": 1.165
     },
     {
      "w": "mais",
-     "t": 1.928
+     "t": 1.888
     },
     {
      "w": "l'eau",
-     "t": 2.088
+     "t": 2.218
     },
     {
      "w": "continue",
-     "t": 2.234
+     "t": 2.314
     },
     {
-     "w": "d'entrer",
-     "t": 2.673
+     "w": "d'entrer.",
+     "t": 3.239
     }
    ]
   },
   {
-   "start": 19.869,
-   "end": 23.829,
+   "start": 21.798,
+   "end": 26.301,
    "text": "Et au fond de toi, une question : est-ce que Dieu dort pendant ma tempête ?",
    "words": [
     {
      "w": "Et",
-     "t": -0.057
+     "t": 0.031
     },
     {
      "w": "au",
-     "t": 0.063
-    },
-    {
-     "w": "fond",
      "t": 0.116
     },
     {
-     "w": "de",
-     "t": 0.302
+     "w": "fond",
+     "t": 0.244
     },
     {
-     "w": "toi",
-     "t": 0.435
+     "w": "de",
+     "t": 0.393
+    },
+    {
+     "w": "toi,",
+     "t": 0.541
     },
     {
      "w": "une",
-     "t": 1.1
+     "t": 1.159
     },
     {
      "w": "question",
-     "t": 1.193
+     "t": 1.371
+    },
+    {
+     "w": ":",
+     "t": 2.116
     },
     {
      "w": "est-ce",
-     "t": 2.138
+     "t": 2.52
     },
     {
      "w": "que",
-     "t": 2.324
+     "t": 2.627
     },
     {
      "w": "Dieu",
-     "t": 2.457
+     "t": 2.839
     },
     {
      "w": "dort",
-     "t": 2.63
+     "t": 3.201
     },
     {
      "w": "pendant",
-     "t": 2.949
+     "t": 3.563
     },
     {
      "w": "ma",
-     "t": 3.188
-    },
-    {
-     "w": "tempête",
-     "t": 3.294
+     "t": 3.797
     }
    ]
   },
   {
-   "start": 25.929,
-   "end": 28.168,
+   "start": 28.601,
+   "end": 30.773,
    "text": "Les disciples se sont posé la même question.",
    "words": [
     {
      "w": "Les",
-     "t": -0.06
+     "t": 0.014
     },
     {
      "w": "disciples",
-     "t": 0.099
+     "t": 0.141
     },
     {
      "w": "se",
-     "t": 0.711
+     "t": 0.482
     },
     {
      "w": "sont",
-     "t": 0.857
+     "t": 0.695
     },
     {
      "w": "posé",
-     "t": 1.003
+     "t": 0.844
     },
     {
      "w": "la",
-     "t": 1.309
+     "t": 1.205
     },
     {
      "w": "même",
-     "t": 1.429
+     "t": 1.333
     },
     {
-     "w": "question",
-     "t": 1.628
+     "w": "question.",
+     "t": 1.546
     }
    ]
   },
   {
-   "start": 28.668,
-   "end": 31.758,
+   "start": 31.473,
+   "end": 34.545,
    "text": "Ils étaient dans la barque… et Jésus dormait à l'arrière.",
    "words": [
     {
      "w": "Ils",
-     "t": -0.057
+     "t": 0.007
     },
     {
      "w": "étaient",
-     "t": 0.09
+     "t": 0.135
     },
     {
      "w": "dans",
-     "t": 0.369
+     "t": 0.348
     },
     {
      "w": "la",
-     "t": 0.489
+     "t": 0.539
     },
     {
-     "w": "barque",
-     "t": 0.595
+     "w": "barque…",
+     "t": 0.667
     },
     {
      "w": "et",
-     "t": 1.672
+     "t": 1.305
     },
     {
      "w": "Jésus",
-     "t": 1.725
+     "t": 1.497
     },
     {
      "w": "dormait",
-     "t": 2.071
+     "t": 1.859
     },
     {
      "w": "à",
-     "t": 2.404
+     "t": 2.305
     },
     {
-     "w": "l'arrière",
-     "t": 2.47
+     "w": "l'arrière.",
+     "t": 2.795
     }
    ]
   },
   {
-   "start": 32.258,
-   "end": 36.106,
+   "start": 35.245,
+   "end": 39.37,
    "text": "Alors ils l'ont réveillé : Maître, cela ne te fait rien que nous périssions ?",
    "words": [
     {
      "w": "Alors",
-     "t": -0.062
+     "t": 0.0
     },
     {
      "w": "ils",
-     "t": 0.244
+     "t": 0.201
     },
     {
      "w": "l'ont",
-     "t": 0.324
+     "t": 0.478
     },
     {
      "w": "réveillé",
-     "t": 0.443
+     "t": 0.563
     },
     {
-     "w": "Maître",
-     "t": 1.387
+     "w": ":",
+     "t": 1.031
+    },
+    {
+     "w": "Maître,",
+     "t": 2.031
     },
     {
      "w": "cela",
-     "t": 2.092
+     "t": 2.307
     },
     {
      "w": "ne",
-     "t": 2.332
+     "t": 2.478
     },
     {
      "w": "te",
-     "t": 2.438
+     "t": 2.563
     },
     {
      "w": "fait",
-     "t": 2.558
+     "t": 2.733
     },
     {
      "w": "rien",
-     "t": 2.691
+     "t": 3.052
     },
     {
      "w": "que",
-     "t": 2.957
+     "t": 3.535
     },
     {
      "w": "nous",
-     "t": 3.063
-    },
-    {
-     "w": "périssions",
-     "t": 3.169
+     "t": 3.868
     }
    ]
   },
   {
-   "start": 40.106,
-   "end": 40.895,
+   "start": 43.57,
+   "end": 44.502,
    "text": "Il s'est levé.",
    "words": [
     {
      "w": "Il",
-     "t": -0.066
+     "t": 0.0
     },
     {
      "w": "s'est",
-     "t": 0.12
+     "t": 0.232
     },
     {
-     "w": "levé",
-     "t": 0.293
+     "w": "levé.",
+     "t": 0.338
     }
    ]
   },
   {
-   "start": 41.395,
-   "end": 42.452,
+   "start": 45.202,
+   "end": 46.398,
    "text": "Il a parlé au vent.",
    "words": [
     {
      "w": "Il",
-     "t": -0.069
+     "t": 0.091
     },
     {
      "w": "a",
-     "t": 0.104
+     "t": 0.113
     },
     {
      "w": "parlé",
-     "t": 0.171
+     "t": 0.24
     },
     {
      "w": "au",
-     "t": 0.583
+     "t": 0.581
     },
     {
-     "w": "vent",
-     "t": 0.663
+     "w": "vent.",
+     "t": 0.836
     }
    ]
   },
   {
-   "start": 42.952,
-   "end": 44.322,
+   "start": 47.098,
+   "end": 48.729,
    "text": "Et il y eut un grand calme.",
    "words": [
     {
      "w": "Et",
-     "t": -0.151
+     "t": 0.072
     },
     {
      "w": "il",
-     "t": 0.022
+     "t": 0.115
     },
     {
      "w": "y",
-     "t": 0.195
+     "t": 0.264
     },
     {
      "w": "eut",
-     "t": 0.301
+     "t": 0.413
     },
     {
      "w": "un",
-     "t": 0.461
+     "t": 0.54
     },
     {
      "w": "grand",
-     "t": 0.554
+     "t": 0.732
     },
     {
-     "w": "calme",
-     "t": 0.78
+     "w": "calme.",
+     "t": 0.987
     }
    ]
   },
   {
-   "start": 46.422,
-   "end": 49.146,
+   "start": 51.029,
+   "end": 53.894,
    "text": "Remarque bien : il n'a pas empêché la tempête.",
    "words": [
     {
      "w": "Remarque",
-     "t": -0.06
+     "t": 0.014
     },
     {
      "w": "bien",
-     "t": 0.458
+     "t": 0.439
+    },
+    {
+     "w": ":",
+     "t": 1.014
     },
     {
      "w": "il",
-     "t": 1.177
+     "t": 1.216
     },
     {
      "w": "n'a",
-     "t": 1.256
+     "t": 1.312
     },
     {
      "w": "pas",
-     "t": 1.363
+     "t": 1.461
     },
     {
      "w": "empêché",
-     "t": 1.509
+     "t": 2.014
     },
     {
      "w": "la",
-     "t": 1.948
-    },
-    {
-     "w": "tempête",
-     "t": 2.041
+     "t": 2.205
     }
    ]
   },
   {
-   "start": 49.646,
-   "end": 51.786,
+   "start": 54.594,
+   "end": 57.048,
    "text": "Il était dans la barque, au milieu d'elle.",
    "words": [
     {
      "w": "Il",
-     "t": -0.063
+     "t": 0.028
     },
     {
      "w": "était",
-     "t": 0.083
+     "t": 0.113
     },
     {
      "w": "dans",
-     "t": 0.283
+     "t": 0.347
     },
     {
      "w": "la",
-     "t": 0.403
+     "t": 0.602
     },
     {
-     "w": "barque",
-     "t": 0.522
+     "w": "barque,",
+     "t": 0.772
     },
     {
      "w": "au",
-     "t": 1.28
+     "t": 1.389
     },
     {
      "w": "milieu",
-     "t": 1.32
+     "t": 1.474
     },
     {
-     "w": "d'elle",
-     "t": 1.653
+     "w": "d'elle.",
+     "t": 2.155
     }
    ]
   },
   {
-   "start": 52.286,
-   "end": 54.494,
+   "start": 57.748,
+   "end": 59.869,
    "text": "Ta tempête ne prouve pas son absence.",
    "words": [
     {
      "w": "Ta",
-     "t": -0.133
+     "t": 0.031
     },
     {
      "w": "tempête",
-     "t": 0.04
+     "t": 0.116
     },
     {
      "w": "ne",
-     "t": 0.678
+     "t": 0.605
     },
     {
      "w": "prouve",
-     "t": 0.838
+     "t": 0.818
     },
     {
      "w": "pas",
-     "t": 1.091
+     "t": 1.137
     },
     {
      "w": "son",
-     "t": 1.224
+     "t": 1.35
     },
     {
-     "w": "absence",
-     "t": 1.37
+     "w": "absence.",
+     "t": 1.52
     }
    ]
   },
   {
-   "start": 54.994,
-   "end": 60.422,
+   "start": 60.569,
+   "end": 66.722,
    "text": "Parfois, il calme la tempête… et parfois, il calme son enfant au milieu de la tempête.",
    "words": [
     {
-     "w": "Parfois",
-     "t": -0.058
+     "w": "Parfois,",
+     "t": 0.319
     },
     {
      "w": "il",
-     "t": 0.726
+     "t": 1.064
     },
     {
      "w": "calme",
-     "t": 0.846
+     "t": 1.17
     },
     {
      "w": "la",
-     "t": 1.125
+     "t": 1.574
     },
     {
-     "w": "tempête",
-     "t": 1.218
+     "w": "tempête…",
+     "t": 1.702
     },
     {
      "w": "et",
-     "t": 2.428
+     "t": 2.66
     },
     {
-     "w": "parfois",
-     "t": 2.455
+     "w": "parfois,",
+     "t": 2.702
     },
     {
      "w": "il",
-     "t": 3.266
+     "t": 3.447
     },
     {
      "w": "calme",
-     "t": 3.399
+     "t": 3.553
     },
     {
      "w": "son",
-     "t": 3.705
+     "t": 3.957
     },
     {
      "w": "enfant",
-     "t": 3.851
+     "t": 4.149
     },
     {
      "w": "au",
-     "t": 4.224
+     "t": 4.553
     },
     {
      "w": "milieu",
-     "t": 4.29
+     "t": 4.83
     },
     {
      "w": "de",
-     "t": 4.596
+     "t": 5.149
     },
     {
      "w": "la",
-     "t": 4.676
+     "t": 5.383
     },
     {
-     "w": "tempête",
-     "t": 4.769
+     "w": "tempête.",
+     "t": 5.489
     }
    ]
   },
   {
-   "start": 62.522,
-   "end": 63.512,
+   "start": 69.022,
+   "end": 70.24,
    "text": "Alors respire.",
    "words": [
     {
      "w": "Alors",
-     "t": -0.071
+     "t": 0.0
     },
     {
-     "w": "respire",
-     "t": 0.275
+     "w": "respire.",
+     "t": 0.247
     }
    ]
   },
   {
-   "start": 64.012,
-   "end": 66.473,
+   "start": 70.94,
+   "end": 73.891,
    "text": "Celui qui commande aux vagues tient aussi ta barque.",
    "words": [
     {
      "w": "Celui",
-     "t": -0.067
+     "t": 0.021
     },
     {
      "w": "qui",
-     "t": 0.319
+     "t": 0.362
     },
     {
      "w": "commande",
-     "t": 0.452
+     "t": 0.489
     },
     {
      "w": "aux",
-     "t": 0.824
+     "t": 0.979
     },
     {
      "w": "vagues",
-     "t": 0.877
+     "t": 1.043
     },
     {
      "w": "tient",
-     "t": 1.369
+     "t": 1.404
     },
     {
      "w": "aussi",
-     "t": 1.582
+     "t": 1.766
     },
     {
      "w": "ta",
-     "t": 1.808
+     "t": 2.149
     },
     {
-     "w": "barque",
-     "t": 1.941
+     "w": "barque.",
+     "t": 2.383
     }
    ]
   },
   {
-   "start": 66.973,
-   "end": 69.379,
+   "start": 74.591,
+   "end": 77.132,
    "text": "Le calme vient. Il arrive toujours.",
    "words": [
     {
      "w": "Le",
-     "t": -0.163
+     "t": 0.015
     },
     {
      "w": "calme",
-     "t": 0.117
+     "t": 0.143
     },
     {
-     "w": "vient",
-     "t": 0.489
+     "w": "vient.",
+     "t": 0.611
     },
     {
      "w": "Il",
-     "t": 1.343
+     "t": 1.334
     },
     {
      "w": "arrive",
-     "t": 1.516
+     "t": 1.419
     },
     {
-     "w": "toujours",
-     "t": 1.809
+     "w": "toujours.",
+     "t": 1.994
     }
    ]
   }
  ],
  "flashes": [
-  5.9,
-  10.018,
-  13.751,
-  17.713,
-  20.309,
-  24.096,
-  28.654,
-  31.986,
-  34.633
+  6.4,
+  10.518,
+  14.251,
+  18.213,
+  20.809,
+  24.596,
+  29.154,
+  32.486,
+  35.133,
+  39.641
  ],
  "verse": {
-  "start": 70.479,
+  "start": 78.432,
   "text": "« Silence ! tais-toi ! Et le vent cessa, et il y eut un grand calme. »",
   "ref": "Marc 4:39"
  },
  "cta": {
-  "start": 75.879,
+  "start": 83.832,
   "text": "Envoie ce message à quelqu'un qui traverse une tempête."
  }
 }
