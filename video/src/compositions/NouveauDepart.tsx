@@ -92,8 +92,15 @@ const extra: Partial<NdLine>[] = [
   }, // 16
   { shot: "wide", moodJ: "happy" }, // 17
   {}, // 18
-  { shot: "wide", poseJ: "cheer", poseS: "wave" }, // 19
-  { shot: "wide" }, // 20 narrator
+  {
+    poseS: "point",
+    verse: {
+      text: "Servez l'Éternel avec joie, venez avec allégresse en sa présence !",
+      ref: "Psaume 100:2",
+    },
+  }, // 19 évangélisation avec joie
+  { shot: "wide", poseJ: "cheer", poseS: "wave" }, // 20
+  { shot: "wide" }, // 21 narrator
 ];
 
 export const nouveauDepartDefaults: NouveauDepartProps = {
