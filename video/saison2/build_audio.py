@@ -55,6 +55,8 @@ SFX_EXPR = {
     "zip": ("(random(0)*2-1)*0.7*(0.6+0.4*sin(2*PI*45*t))*lt(t,1.0)", 1.1, ",bandpass=f=2800:w=1800"),
     "bell": ("0.5*sin(2*PI*880*t)*exp(-3*t)*lt(t,0.6)+0.5*sin(2*PI*698*(t-0.6))*exp(-3*(t-0.6))*gt(t,0.6)", 1.8, ""),
     "ring": ("0.35*(sin(2*PI*440*t)+sin(2*PI*480*t))*lt(mod(t,3),1.2)", 3.2, ""),
+    "heart": ("0.9*sin(2*PI*48*t)*exp(-22*t)+0.7*sin(2*PI*44*(t-0.24))*exp(-22*(t-0.24))*gt(t,0.24)", 0.8, ",lowpass=f=200,volume=2.2"),
+    "whoosh": ("(random(0)*2-1)*sin(PI*t/0.9)*0.8", 0.9, ",bandpass=f=900:w=1400"),
     "hit": ("0.9*sin(2*PI*52*t)*exp(-3.5*t)+0.4*sin(2*PI*104*t)*exp(-6*t)", 1.5, ""),
 }
 
@@ -116,6 +118,16 @@ def build(ep):
             length += sh.get("blackEnd", 0)
         for (at, name) in sh.get("sfx", []):
             clips.append((sfx(name), t + at, 1.0))
+        if sh.get("tension"):  # battements de cœur + nappe grave pendant tout le plan
+            k = 0.3
+            while k < length - 0.4:
+                clips.append((sfx("heart"), t + k, 0.9)); k += 0.9
+            dr = os.path.join(CACHE, f"drone_{round(length, 2)}.wav")
+            if not os.path.exists(dr):
+                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi", "-i",
+                                f"aevalsrc='0.35*sin(2*PI*55*t)+0.2*sin(2*PI*82.4*t)*(0.6+0.4*sin(2*PI*0.4*t))+0.12*sin(2*PI*58.3*t)':s=22050:d={length}",
+                                "-af", f"lowpass=f=400,volume=0.55,afade=t=in:d=0.8,afade=t=out:st={max(length-0.6, 0)}:d=0.6", dr], check=True)
+            clips.append((dr, t, 1.0))
         s["lines"] = lines_out
         s["dur"] = round(length, 3)
         shots.append(s)

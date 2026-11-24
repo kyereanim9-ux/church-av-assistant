@@ -39,7 +39,7 @@ html,body{margin:0;padding:0;background:#000;width:1080px;height:1920px;overflow
 </style></head>
 <body><div id="stage"><svg id="svg" width="1080" height="1920" viewBox="0 0 1080 1920"></svg><div id="ovl"></div></div>
 <script>
-let TL = null;
+let TL = null; let UIDP = '';
 function setTimeline(tl){ TL = tl; }
 const SKIN = '#8b5a3c', SKIN_D = '#6e442c', HAIR = '#15100e';
 const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
@@ -82,6 +82,16 @@ function room(o,t){
    <circle cx="75" cy="110" r="55" fill="#f6b04a" opacity=".25"/><rect x="62" y="110" width="26" height="50" fill="#efe3c9"/><path d="M75,80 C83,96 82,108 75,110 C68,108 67,96 75,80Z" fill="#ffb347"/></g>`;
   // rayon de lumière
   s += `<polygon points="370,420 370,800 900,1520 560,1520" fill="${night?'#9fb4e0':'#f6b866'}" opacity="${night?0.04:0.06}"/>`;
+  // ambiance : pluie sur la vitre la nuit, poussière dans le rayon le jour
+  if(night){
+    s += `<clipPath id="${UIDP}win"><rect x="70" y="380" width="300" height="430"/></clipPath><g clip-path="url(#${UIDP}win)" opacity=".55">`;
+    for(let i=0;i<34;i++){ const x=70+((i*97)%300), sp=520+(i*37)%260, y=380+(((t*sp)+i*131)%470)-40;
+      s += `<line x1="${x}" y1="${y}" x2="${x-5}" y2="${y+26}" stroke="#bcd0f5" stroke-width="2.4"/>`; }
+    s += `</g>`;
+  } else {
+    for(let i=0;i<22;i++){ const k=((t*0.035+i*0.137)%1), x=380+((i*173)%420)+Math.sin(t*0.6+i)*18+k*160, y=520+k*900;
+      s += `<circle cx="${x}" cy="${y}" r="${2+(i%3)}" fill="#ffd9a0" opacity="${0.35*Math.sin(Math.PI*k)}"/>`; }
+  }
   // sol
   s += `<rect y="1500" width="1080" height="420" fill="#160f0c"/><rect y="1500" width="1080" height="8" fill="#2a1c16"/>
    <ellipse cx="540" cy="1700" rx="470" ry="110" fill="#2c1714" opacity=".8"/>`;
@@ -152,8 +162,11 @@ function character(c,x,y,sc,shot,lt,t,uid){
   if(c.prop==='envelope'){
     s += `<g transform="translate(0,282) rotate(-4)"><rect x="-105" y="-70" width="210" height="140" rx="8" fill="#3f73ba"/><path d="M-105,-70 L0,8 L105,-70" stroke="#2c5a99" stroke-width="6" fill="none"/></g>`;
   }
-  // cou + tête
+  // cou + tête (la tête bouge un peu quand le personnage parle)
   s += `<rect x="-38" y="-95" width="76" height="80" fill="${SKIN_D}"/>`;
+  const tilt = look*2.5 + (open>0 ? Math.sin(tt*6.5+phase)*2.4 : Math.sin(tt*0.7+phase)*0.8) + (e.m==='frown'?1.6:0);
+  const nod = open>0 ? Math.abs(Math.sin(tt*3.2+phase))*3 : 0;
+  s += `<g transform="translate(0,${nod}) rotate(${tilt},0,-110)">`;
   if(isG){
     s += `<g fill="${HAIR}">`+[[-98,-225,52],[98,-225,52],[-70,-292,58],[70,-292,58],[0,-318,62],[-108,-170,30],[108,-170,30],[0,-388,56],[-38,-405,34],[38,-405,34]].map(a=>`<circle cx="${a[0]}" cy="${a[1]}" r="${a[2]}"/>`).join('')+`</g>`;
   }
@@ -193,7 +206,7 @@ function character(c,x,y,sc,shot,lt,t,uid){
     s += `<path d="M178,70 C230,0 190,-90 130,-150" stroke="${sleeve}" stroke-width="80" fill="none" stroke-linecap="round"/>`;
     s += `<rect x="96" y="-250" width="40" height="96" rx="10" fill="#0d0d10" transform="rotate(12,116,-200)"/><ellipse cx="122" cy="-160" rx="34" ry="42" fill="${SKIN}"/>`;
   }
-  s += `</g></g>`;
+  s += `</g></g></g>`;
   if(c.prop==='phone' && shot.glow!==false){
     s += `<ellipse cx="${x}" cy="${y-170*sc}" rx="${160*sc}" ry="${190*sc}" fill="url(#pglow)" style="mix-blend-mode:screen" opacity="${0.75+0.1*Math.sin(t*3)}"/>`;
   }
@@ -222,7 +235,7 @@ function roomScene(shot,lt,t){
   let suit='';
   chars.forEach((c,i)=>{
     const [x,y,sc]=pos[i];
-    s += character(c,x,y,sc,shot,lt,t,'c'+i);
+    s += character(c,x,y,sc,shot,lt,t,UIDP+'c'+i);
     if(c.suitcase) suit = chars.length===1 ? suitcase(870,1480,1.0) : suitcase(540,1600,0.85);
   });
   if(join) s += joinedHands(pos[0][0],pos[1][0],pos[0][1]+300*0.78,t);
@@ -302,6 +315,7 @@ const DEFS = `<defs>
  <radialGradient id="cglow"><stop offset="0" stop-color="#ffb04a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb04a" stop-opacity="0"/></radialGradient>
  <radialGradient id="pglow"><stop offset="0" stop-color="#bcd6ff" stop-opacity=".55"/><stop offset="1" stop-color="#bcd6ff" stop-opacity="0"/></radialGradient>
  <radialGradient id="night" cx=".5" cy=".7" r=".8"><stop offset="0" stop-color="#1a2036"/><stop offset="1" stop-color="#05070c"/></radialGradient>
+ <radialGradient id="redvig" cx=".5" cy=".5" r=".75"><stop offset=".45" stop-color="#5a0000" stop-opacity="0"/><stop offset="1" stop-color="#7a0000" stop-opacity=".85"/></radialGradient>
  <radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".7"/></radialGradient>
 </defs>`;
 
@@ -318,6 +332,20 @@ function headPos(shot, who){
   const join = chars.some(c=>c.hands==='join');
   let pos = chars.length===1 ? [[540,1085,1.0]] : (join ? [[335,1120,0.78],[745,1120,0.78]] : [[300,1120,0.78],[780,1120,0.78]]);
   const [x,y,sc] = pos[i]; return {x, y: y-430*sc, sc};
+}
+function camFocus(shot, lt){
+  const chars = shot.chars||[];
+  let prev=null, cur=null, st=0, punch=null;
+  for(const l of shot.lines){
+    if(lt < l.start-0.1) break;
+    const w = l.who==='T'?'M':l.who;
+    if(chars.some(c=>c.who===w)){ prev=cur; cur=w; st=l.start; punch = l.punch ? l : null; }
+  }
+  const off = w => { if(!w || chars.length<2) return 0; const h=headPos(shot,w); return (h.x-540)*0.2; };
+  const k = ease((lt-st+0.1)/0.7);
+  let x = off(prev) + (off(cur)-off(prev))*k, z = chars.length<2 ? 0 : 0.05*(cur?1:0), cy = 1050;
+  if(punch){ const p = ease((lt-punch.start+0.05)/0.25); const h = headPos(shot,cur); z += 0.28*p; cy = 1050+(h.y-1050)*0.55*p; x += (h.x-540-x)*0.6*p; }
+  return {x, z, cy};
 }
 function gaugeColor(v){ return v<30?'#e5484d':v<60?'#f0a540':'#46c37b'; }
 function gaugeOv(shot,lt){
@@ -357,20 +385,33 @@ function shotAt(t){
   for(const s of TL.shots) if(t < s.start+s.dur) return s;
   return TL.shots[TL.shots.length-1];
 }
-function render(t){
-  const shot = shotAt(t), lt = t-shot.start;
-  let svg = DEFS, ov = '';
-  const sc = shot.scene;
+function sceneSvg(shot, lt, t){
+  const sc = shot.scene; let svg = '';
   if(sc==='room'){
-    const z = 1+0.045*lt/shot.dur;
+    const f = camFocus(shot, lt);
+    const z = 1+0.045*lt/shot.dur + f.z + (shot.tension ? 0.08*lt/shot.dur : 0);
     let sh=0, sy=0;
     if(shot.shake && shot.lines.some(l=>lt>=l.start&&lt<=l.end+0.15)){ sh=Math.sin(t*61)*shot.shake; sy=Math.cos(t*47)*shot.shake; }
-    svg += `<g transform="translate(${540+sh},${1050+sy}) scale(${z}) translate(-540,-1050)">${roomScene(shot,lt,t)}</g>`+overlayTone(shot,t);
+    svg += `<g transform="translate(${540+sh},${1050+sy}) scale(${z}) translate(${-540-f.x},${-f.cy})">${roomScene(shot,lt,t)}</g>`+overlayTone(shot,t);
   }
   else if(sc==='phone') svg += phoneScene(shot,lt,t);
   else if(sc==='envelope') svg += envelopeScene(shot,lt,t);
   else if(sc==='document') svg += documentScene(shot,lt,t);
   else svg += darkScene(t, sc==='verse'?1640:1560);
+  if(shot.tension){
+    const beat = Math.exp(-((lt%0.9)*7)) + 0.6*Math.exp(-(((lt+0.62)%0.9)*9));
+    svg += `<rect width="1080" height="1920" fill="url(#redvig)" opacity="${0.35+0.4*Math.min(1,beat)}"/>`;
+  }
+  return svg;
+}
+function render(t){
+  const shot = shotAt(t), lt = t-shot.start;
+  let svg = DEFS, ov = '';
+  const sc = shot.scene;
+  const idx = TL.shots.indexOf(shot), prev = idx>0 ? TL.shots[idx-1] : null;
+  const XF = 0.35, xfade = prev && lt < XF && !prev.blackEnd && !shot.cut && !prev.suivre;
+  UIDP = ''; svg += sceneSvg(shot, lt, t);
+  if(xfade){ UIDP = 'p'; svg += `<g opacity="${1-ease(lt/XF)}">${sceneSvg(prev, prev.dur-0.01, t)}</g>`; UIDP = ''; }
 
   if(sc==='verse'){
     const L = r=>shot.lines.find(l=>l.role===r);
@@ -395,9 +436,9 @@ function render(t){
   } else {
     ov += header();
     if(shot.label) ov += `<div class="ov label"><span>${esc(shot.label.toUpperCase())}</span></div>`;
-    if(shot.stamp && lt < shot.dur - (shot.blackEnd||0)) ov += `<div class="ov stamp" style="opacity:${fade(lt,0.15,0.3)}"><span>${esc(shot.stamp)}</span></div>`;
+    if(shot.stamp && lt < shot.dur - (shot.blackEnd||0)) { const k=fade(lt,0.15,0.3); ov += `<div class="ov stamp" style="opacity:${k};transform:scale(${1.35-0.35*k}) rotate(${(1-k)*-3}deg)"><span>${esc(shot.stamp)}</span></div>`; }
     const last = shot.lines[shot.lines.length-1];
-    if(shot.stampEnd && last && lt > last.end+0.25) ov += `<div class="ov stamp" style="opacity:${fade(lt,last.end+0.25,0.25)}"><span>${esc(shot.stampEnd)}</span></div>`;
+    if(shot.stampEnd && last && lt > last.end+0.25) { const k=fade(lt,last.end+0.25,0.25); ov += `<div class="ov stamp" style="opacity:${k};transform:scale(${1.35-0.35*k}) rotate(${(1-k)*3}deg)"><span>${esc(shot.stampEnd)}</span></div>`; }
     for(const l of shot.lines){
       if(lt>=l.start-0.05 && lt<=l.end+0.3 && l.text!==shot.stamp && !l.bubble){
         const cls = l.who==='N'?'n':(l.think?'think':'');
@@ -406,9 +447,21 @@ function render(t){
     }
   }
   if(sc==='room'){ ov += gaugeOv(shot,lt) + bubbleOv(shot,lt); }
+  let filt = '';
+  if(shot.flashback){ filt = 'sepia(.85) contrast(1.08) brightness(.88)';
+    ov += `<div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 2px,transparent 2px 5px);opacity:${0.6+0.4*Math.sin(t*40)}"></div>`; }
+  if(shot.flash){ filt = 'saturate(1.4) contrast(1.15)';
+    ov += `<div style="position:absolute;inset:0;border:14px solid #e5484d;opacity:${0.5+0.5*Math.sin(t*20)}"></div>`; }
+  const lastL = shot.lines[shot.lines.length-1];
+  if(shot.suivre && lastL && lt > lastL.end+0.3){
+    const k = fade(lt, lastL.end+0.3, 0.35);
+    filt = `grayscale(${k}) brightness(${1-0.3*k})`;
+    ov += `<div class="ov" style="top:860px;opacity:${k};transform:scale(${1.3-0.3*k})"><span style="display:inline-block;font-size:110px;font-weight:1000;letter-spacing:4px;color:#fff;text-shadow:0 6px 30px #000">À SUIVRE…</span></div>`;
+  }
+  document.getElementById('svg').style.filter = filt;
   // fondus
   let black = 0;
-  if(lt<0.25) black = Math.max(black, 0.55*(1-lt/0.25));
+  if(lt<0.25 && !xfade) black = Math.max(black, 0.55*(1-lt/0.25));
   if(t<0.4) black = Math.max(black, 1-t/0.4);
   if(shot.blackEnd && lt > shot.dur-shot.blackEnd) black = Math.max(black, ease((lt-(shot.dur-shot.blackEnd))/0.15));
   if(t > TL.total-0.6) black = Math.max(black, (t-(TL.total-0.6))/0.6);
@@ -417,6 +470,7 @@ function render(t){
   document.getElementById('ovl').innerHTML = ov;
 }
 function renderCover(){
+  document.getElementById('svg').style.filter = '';
   const c = TL.cover;
   const shot = {...c, lines:[], dur:10, glow:true};
   let svg = DEFS + roomScene(shot,1.2,2.0) + overlayTone(shot,2.0) +
