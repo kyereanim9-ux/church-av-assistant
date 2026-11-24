@@ -18,7 +18,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_aime_moi import edge, piano, reverb  # noqa: E402
 from build_pas_a_pas_audio import SR, add, env, fast_bp, fast_lp, midi, noise, tone, write_wav  # noqa: E402
 
-VOICE = "fr-FR-HenriNeural"
+# the most natural French neural voice available; override with SAISONS_VOICE
+VOICE = os.environ.get("SAISONS_VOICE", "fr-FR-RemyMultilingualNeural")
+VOICE_RATE, VOICE_PITCH = ("-8%", "-4Hz") if "Henri" in VOICE else ("-4%", "+0Hz")
 
 # (palette index, title shown at section start, sentences)
 SECTIONS = [
@@ -173,7 +175,7 @@ def main():
             if title:
                 t += 1.0  # let the title breathe before the voice
             for line in lines:
-                clip, words = edge(line, VOICE, "-8%", "-4Hz", tmp)
+                clip, words = edge(line, VOICE, VOICE_RATE, VOICE_PITCH, tmp)
                 voice_clips.append((t, clip))
                 sentences.append({
                     "start": round(t, 3), "end": round(t + len(clip) / SR, 3), "text": line,

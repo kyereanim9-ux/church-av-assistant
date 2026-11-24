@@ -11,3 +11,4 @@ __pycache__/
 
 # mixes built from user-supplied songs (not ours to commit)
 public/aime-moi/couleur.wav
+public/tempete/voice-check.wav

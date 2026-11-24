@@ -9,6 +9,7 @@ import { PasAPas, pasAPasDefaults, PasAPasProps } from "./compositions/PasAPas";
 import songTimeline from "./compositions/pasAPasSong.timeline.json";
 import { AimeMoi, aimeMoiCouleurDefaults, aimeMoiDefaults } from "./compositions/AimeMoi";
 import { Saisons, saisonsDefaults } from "./compositions/Saisons";
+import { Tempete, tempeteDefaults } from "./compositions/Tempete";
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
 
 const FPS = 30;
@@ -105,6 +106,18 @@ export const RemotionRoot: React.FC = () => {
         width={1080}
         height={1920}
         defaultProps={saisonsDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: Math.round(props.durationSeconds * FPS),
+        })}
+      />
+      <Composition
+        id="Tempete"
+        component={Tempete}
+        durationInFrames={81 * FPS}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        defaultProps={tempeteDefaults}
         calculateMetadata={({ props }) => ({
           durationInFrames: Math.round(props.durationSeconds * FPS),
         })}

@@ -10,8 +10,8 @@ import timeline from "./saisons.timeline.json";
    spring sunrise), with a French voice-over, captions and season titles. */
 
 type Word = { w: string; t: number };
-type Sentence = { start: number; end: number; text: string; words: Word[] };
-type Section = { palette: number; start: number; title: string };
+export type Sentence = { start: number; end: number; text: string; words: Word[] };
+export type Section = { palette: number; start: number; title: string };
 export type SaisonsProps = {
   audioFile: string;
   durationSeconds: number;
@@ -431,7 +431,7 @@ const World: React.FC<{ t: number; p: Pal; endT: number }> = ({ t, p, endT }) =>
 /* Overlays                                                            */
 /* ------------------------------------------------------------------ */
 
-const Caption: React.FC<{ s: Sentence; t: number }> = ({ s, t }) => {
+export const Caption: React.FC<{ s: Sentence; t: number }> = ({ s, t }) => {
   const lt = t - s.start;
   const tokens = s.text.split(/\s+/);
   const times: number[] = [];
@@ -470,7 +470,7 @@ const Caption: React.FC<{ s: Sentence; t: number }> = ({ s, t }) => {
   );
 };
 
-const SeasonTitle: React.FC<{ title: string; lt: number }> = ({ title, lt }) => {
+export const SeasonTitle: React.FC<{ title: string; lt: number }> = ({ title, lt }) => {
   if (!title || lt < 0 || lt > 3.4) return null;
   const o = interpolate(lt, [0, 0.6, 2.6, 3.4], [0, 1, 1, 0], clamp);
   const spread = interpolate(lt, [0, 3.4], [10, 34], clamp);
