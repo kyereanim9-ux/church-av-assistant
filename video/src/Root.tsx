@@ -6,6 +6,11 @@ import {
 } from "./compositions/Announcement";
 import { Lyrics, lyricsDefaults } from "./compositions/Lyrics";
 import {
+  NouveauDepart,
+  nouveauDepartDefaults,
+  nouveauDepartDuration,
+} from "./compositions/NouveauDepart";
+import {
   Dialogue,
   dialogueDefaults,
   dialogueDuration,
@@ -91,6 +96,18 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={dialogueDefaults}
         calculateMetadata={({ props }) => ({
           durationInFrames: dialogueDuration(props),
+        })}
+      />
+      <Composition
+        id="NouveauDepart"
+        component={NouveauDepart}
+        durationInFrames={60}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        defaultProps={nouveauDepartDefaults}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: nouveauDepartDuration(props),
         })}
       />
       <Composition
