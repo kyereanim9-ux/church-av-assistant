@@ -73,8 +73,8 @@ const extra: Partial<NdLine>[] = [
   {
     moodS: "happy",
     verse: {
-      text: "Ne pensez plus aux événements passés… Voici, je vais faire une chose nouvelle.",
-      ref: "Ésaïe 43:18-19",
+      text: "Oubliant ce qui est en arrière et me portant vers ce qui est en avant, je cours vers le but…",
+      ref: "Philippiens 3:13-14",
     },
   }, // 13
   { moodJ: "neutral" }, // 14
