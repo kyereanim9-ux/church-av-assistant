@@ -8,7 +8,7 @@ S_SAY = "Esse"
 
 EPISODES = [
   {
-    "num": 1, "title": "23h47", "tag": "À REGARDER EN PREMIER",
+    "num": 1, "hook": "Elle lui cache un homme. Depuis 1 an.", "title": "23h47", "tag": "À REGARDER EN PREMIER",
     "cover": {"scene": "room", "night": True, "chars": [{"who": "M", "expr": "suspicious", "prop": "phone"}]},
     "shots": [
       {"scene": "room", "flash": True, "cut": True, "chars": [{"who": "M", "expr": "angry"}, {"who": "G", "expr": "angry"}], "shake": 10,
@@ -52,7 +52,7 @@ EPISODES = [
     ],
   },
   {
-    "num": 2, "title": "La voix",
+    "num": 2, "hook": "Qui est l'homme au téléphone ?", "title": "La voix",
     "cover": {"scene": "room", "chars": [{"who": "M", "expr": "cold", "look": 1}, {"who": "G", "expr": "worried", "look": -0.6}]},
     "shots": [
       {"scene": "phone", "call": True, "answer": 0, "from": "S.", "label": "Précédemment", "cut": True, "min": 2.4,
@@ -93,7 +93,7 @@ EPISODES = [
     ],
   },
   {
-    "num": 3, "title": "La porte",
+    "num": 3, "hook": "Il l'a suivie. Il n'aurait pas dû.", "title": "La porte",
     "cover": {"scene": "room", "chars": [{"who": "M", "expr": "angry"}, {"who": "G", "expr": "shocked"}]},
     "shots": [
       {"scene": "room", "label": "Précédemment", "cut": True, "chars": [{"who": "G", "expr": "soft", "look": 0.7}, {"who": "P", "expr": "cry", "look": -0.7}], "min": 2.4,
@@ -131,7 +131,7 @@ EPISODES = [
     ],
   },
   {
-    "num": 4, "title": "Le père", "tag": "FIN",
+    "num": 4, "hook": "15 ans de silence. Ce soir, tout sort.", "title": "Le père", "tag": "FIN",
     "cover": {"scene": "room", "warm": True, "chars": [{"who": "M", "expr": "sad", "look": 0.6}, {"who": "P", "expr": "sad", "look": -0.6}]},
     "shots": [
       {"scene": "room", "night": True, "flashback": True, "cut": True, "label": "15 ans plus tôt",
