@@ -98,5 +98,6 @@ when no `DATABASE_URL` is available in the session.
 - `remotion-video` (`.claude/skills/remotion-video/`): videos made with code in `video/`.
 - `3d` (`.claude/skills/3d/`): any 3D model, scene, render or viewer.
 - `animate` (`.claude/skills/animate/`): `/animate <idea>` writes the story and prompts for an animated short film.
+- `voix-off` (`.claude/skills/voix-off/`): the saved ElevenLabs narrator voice (Julia), music prompt, sync, ducking and loudness for every video voice-over.
 - `hyperframes` plugin (enabled in `.claude/settings.json`): animated videos from HTML, with voice-over and sound effects. Local French voice needs `pip install kokoro-onnx soundfile`.
 - `films/` : films animés HyperFrames (hors application, ne jamais importer depuis `src/`).
